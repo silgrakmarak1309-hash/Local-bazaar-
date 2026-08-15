@@ -50,19 +50,8 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      margin: 0 auto;
-    }
-
-    @media (min-width: 768px) {
-      .app-frame {
-        max-width: 520px;
-        box-shadow: 0 0 50px rgba(0,0,0,0.12);
-        border-left: 1px solid var(--border-color);
-        border-right: 1px solid var(--border-color);
-      }
-      body {
-        background-color: #f1f5f9;
-      }
+      margin: 0;
+      padding: 0;
     }
 
     /* AUTH LOGIN SCREEN (Sky Blue theme matching Native Compose) */
@@ -70,7 +59,9 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       min-height: 100vh;
+      width: 100%;
       background-color: #e0f2fe;
       padding: 30px 20px;
     }
@@ -78,15 +69,18 @@
     .auth-hero {
       text-align: center;
       margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    .auth-logo {
+    .auth-logo-badge {
       width: 80px;
       height: 80px;
       border-radius: 22px;
-      object-fit: cover;
-      box-shadow: 0 10px 25px rgba(14, 116, 144, 0.25);
       margin-bottom: 12px;
-      border: 3px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     .auth-hero h1 {
       font-size: 26px;
@@ -103,6 +97,7 @@
 
     .auth-card {
       width: 100%;
+      max-width: 440px;
       background: white;
       border-radius: 24px;
       padding: 24px 20px;
@@ -478,9 +473,9 @@
     /* Listings Grid */
     .listings-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      padding: 0 16px 16px 16px;
+      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+      gap: 14px;
+      padding: 0 16px 20px 16px;
     }
     .listing-card {
       background: var(--card-bg);
@@ -496,7 +491,7 @@
     .card-img-wrap {
       position: relative;
       width: 100%;
-      height: 125px;
+      height: 140px;
       background: #f1f5f9;
     }
     .card-img-wrap img {
@@ -584,12 +579,13 @@
       gap: 2px;
     }
 
-    /* Fixed Bottom Navigation */
+    /* Fixed Bottom Navigation (Full Screen Responsive) */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
+      width: 100%;
       height: 70px;
       background: white;
       border-top: 1px solid var(--border-color);
@@ -598,8 +594,8 @@
       justify-content: space-around;
       padding: 0 10px;
       z-index: 100;
-      max-width: 520px;
-      margin: 0 auto;
+      margin: 0;
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
     }
 
     .nav-item {
@@ -608,29 +604,29 @@
       align-items: center;
       gap: 3px;
       color: #64748b;
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
       transition: all 0.2s;
     }
     .nav-item i {
-      font-size: 19px;
+      font-size: 20px;
     }
     .nav-item.active {
       color: var(--primary);
     }
 
     .nav-sell-btn {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       border-radius: 50%;
       background: linear-gradient(135deg, #16a34a, #15803d);
       color: white;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 22px;
       margin-top: -26px;
       box-shadow: 0 8px 18px rgba(22, 163, 74, 0.4);
       border: 3px solid white;
@@ -656,13 +652,14 @@
     }
     .modal-sheet {
       width: 100%;
-      max-width: 520px;
+      max-width: 600px;
       background: white;
       border-radius: 28px 28px 0 0;
       padding: 24px;
-      max-height: 85vh;
+      max-height: 88vh;
       overflow-y: auto;
       animation: slideUp 0.3s ease;
+      margin: 0 auto;
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -819,9 +816,23 @@
     <!-- AUTH SCREEN (Sky Blue theme) -->
     <div id="authScreen" class="auth-container">
       <div class="auth-hero">
-        <img src="/app-icon.jpg" alt="Logo" class="auth-logo">
+        <div class="auth-logo-badge">
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 22px; box-shadow: 0 10px 25px rgba(14, 116, 144, 0.25); border: 3px solid white;">
+            <rect width="80" height="80" rx="22" fill="url(#authGrad)"/>
+            <path d="M25 26H30L34 48H55L59 32H32" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="36" cy="56" r="3.5" fill="#fef08a"/>
+            <circle cx="53" cy="56" r="3.5" fill="#fef08a"/>
+            <path d="M42 22L45 18M45 18L48 22M45 18V28" stroke="#fef08a" stroke-width="3" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="authGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#0284c7"/>
+                <stop offset="1" stop-color="#0369a1"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
         <h1>LocalBazaar</h1>
-        <p>India\'s Hyper-Local Marketplace & Classifieds</p>
+        <p>India's Hyper-Local Marketplace & Classifieds</p>
       </div>
 
       <div class="auth-card">
@@ -872,7 +883,21 @@
       <header class="app-header">
         <div class="top-bar-brand">
           <div class="brand-group" onclick="showLocationPicker()">
-            <img src="/app-icon.jpg" alt="Logo" class="app-logo">
+            <div style="width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+              <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 12px; box-shadow: 0 3px 10px rgba(21, 128, 61, 0.25);">
+                <rect width="48" height="48" rx="12" fill="url(#headerGrad)"/>
+                <path d="M14 16H18L21 32H35L38 20H19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="23" cy="37" r="2.5" fill="#fef08a"/>
+                <circle cx="33" cy="37" r="2.5" fill="#fef08a"/>
+                <path d="M26 13L28 10M28 10L30 13M28 10V16" stroke="#fef08a" stroke-width="2" stroke-linecap="round"/>
+                <defs>
+                  <linearGradient id="headerGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#16a34a"/>
+                    <stop offset="1" stop-color="#15803d"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
             <div class="brand-text">
               <h1>Meri Local Bazaar</h1>
               <p>Your Local Market, One App</p>
