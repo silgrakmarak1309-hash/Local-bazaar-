@@ -1,6 +1,0 @@
-{
-  "name": "Local Bazaar",
-  "description": "Neighborhood marketplace connecting local shops, farmers, and buyers with fresh goods and fast local delivery.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

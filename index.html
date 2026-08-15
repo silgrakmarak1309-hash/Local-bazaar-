@@ -1,1489 +1,1855 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#2e7d32">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="mobile-web-app-capable" content="yes">
-  <link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#15803d" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <title>Meri Local Bazaar - Your Local Market, One App</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/jpeg" href="/app-icon.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
-          colors: {
-            bazaar: {
-              green: '#2e7d32',
-              darkGreen: '#1b5e20',
-              lightGreen: '#e8f5e9',
-              accent: '#388e3c',
-              cardBg: '#ffffff',
-              surface: '#f8fafc'
-            }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    body {
-      background-color: #f8fafc;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+    :root {
+      --primary: #15803d;
+      --primary-dark: #166534;
+      --primary-light: #dcfce7;
+      --accent: #f59e0b;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
       width: 100%;
-      min-height: 100vh;
+      height: 100%;
+      background-color: var(--bg-color);
+      color: var(--text-main);
       overflow-x: hidden;
     }
-    .app-viewport {
+
+    .app-frame {
       width: 100%;
-      max-width: 100%;
       min-height: 100vh;
-      background: #f8fafc;
-      position: relative;
+      background-color: var(--bg-color);
       display: flex;
       flex-direction: column;
-      margin: 0;
-      padding: 0;
-      box-shadow: none;
-      border: none;
+      position: relative;
+      margin: 0 auto;
     }
+
+    @media (min-width: 768px) {
+      .app-frame {
+        max-width: 520px;
+        box-shadow: 0 0 50px rgba(0,0,0,0.12);
+        border-left: 1px solid var(--border-color);
+        border-right: 1px solid var(--border-color);
+      }
+      body {
+        background-color: #f1f5f9;
+      }
+    }
+
+    /* AUTH LOGIN SCREEN (Sky Blue theme matching Native Compose) */
+    .auth-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      background-color: #e0f2fe;
+      padding: 30px 20px;
+    }
+
+    .auth-hero {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .auth-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 22px;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(14, 116, 144, 0.25);
+      margin-bottom: 12px;
+      border: 3px solid white;
+    }
+    .auth-hero h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.5px;
+    }
+    .auth-hero p {
+      font-size: 13px;
+      color: #0369a1;
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .auth-card {
+      width: 100%;
+      background: white;
+      border-radius: 24px;
+      padding: 24px 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      border: 1px solid rgba(226, 232, 240, 0.8);
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: #f1f5f9;
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 20px;
+    }
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #64748b;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .auth-tab.active {
+      background: white;
+      color: #0284c7;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+    }
+
+    .google-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: white;
+      border: 1.5px solid #cbd5e1;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1e293b;
+      cursor: pointer;
+      margin-bottom: 18px;
+      transition: background 0.2s;
+    }
+    .google-btn:hover {
+      background: #f8fafc;
+    }
+
+    .or-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      margin: 16px 0;
+    }
+    .or-divider::before, .or-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .or-divider::before { margin-right: 10px; }
+    .or-divider::after { margin-left: 10px; }
+
+    .input-field {
+      width: 100%;
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 12px 14px;
+      font-size: 14px;
+      color: #0f172a;
+      outline: none;
+      margin-bottom: 12px;
+      transition: border-color 0.2s;
+    }
+    .input-field:focus {
+      background: white;
+      border-color: #0284c7;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+      transition: opacity 0.2s;
+      margin-top: 6px;
+    }
+    .submit-btn:active {
+      opacity: 0.9;
+    }
+
+    .toggle-auth-text {
+      text-align: center;
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 18px;
+    }
+    .toggle-auth-text span {
+      color: #0284c7;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Google Account Picker Sheet */
+    .google-account-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      cursor: pointer;
+      border: 1px solid #f1f5f9;
+      margin-bottom: 8px;
+      transition: background 0.2s;
+    }
+    .google-account-item:hover {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+    }
+    .google-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 17px;
+    }
+
+    /* MAIN APP STYLING */
+    .app-header {
+      background: white;
+      padding: 12px 16px 10px 16px;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .top-bar-brand {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .app-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .brand-text h1 {
+      font-size: 19px;
+      font-weight: 800;
+      color: var(--primary-dark);
+      letter-spacing: -0.4px;
+      line-height: 1.1;
+    }
+
+    .brand-text p {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .location-badge {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #f1f5f9;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      cursor: pointer;
+      border: 1px solid #e2e8f0;
+      max-width: 170px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .location-badge i {
+      color: #dc2626;
+      font-size: 11px;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: #f1f5f9;
+      padding: 9px 14px;
+      border-radius: 12px;
+      gap: 8px;
+      border: 1px solid transparent;
+      transition: all 0.2s;
+    }
+    .search-box:focus-within {
+      background: white;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(21, 128, 61, 0.15);
+    }
+    .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 13.5px;
+      color: var(--text-main);
+    }
+
+    /* Screen Views */
+    .app-screen {
+      display: none;
+      padding-bottom: 85px;
+    }
+    .app-screen.active {
+      display: block;
+    }
+
+    /* Hero Banner */
+    .hero-banner {
+      background: linear-gradient(135deg, #15803d, #166534);
+      margin: 14px 16px;
+      padding: 18px 20px;
+      border-radius: 20px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(21, 128, 61, 0.25);
+    }
+    .hero-tag {
+      background: rgba(255,255,255,0.2);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hero-banner h2 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+    .hero-banner p {
+      font-size: 12.5px;
+      opacity: 0.9;
+      line-height: 1.4;
+      max-width: 90%;
+    }
+
+    /* Categories Horizontal Scroll */
+    .category-scroll {
+      display: flex;
+      gap: 12px;
+      padding: 6px 16px 14px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .category-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .cat-chip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      flex-shrink: 0;
+      width: 72px;
+    }
+    .cat-icon-wrap {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: white;
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: var(--primary);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+    }
+    .cat-chip.active .cat-icon-wrap {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      transform: scale(1.05);
+    }
+    .cat-chip span {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .cat-chip.active span {
+      color: var(--primary);
+      font-weight: 700;
+    }
+
+    /* Filter Badges */
+    .filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 12px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-pill {
+      background: white;
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .filter-pill.active {
+      background: var(--primary-light);
+      border-color: var(--primary);
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 16px 10px 16px;
+    }
+    .section-title h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Listings Grid */
+    .listings-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 16px 16px 16px;
+    }
+    .listing-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+    .card-img-wrap {
+      position: relative;
+      width: 100%;
+      height: 125px;
+      background: #f1f5f9;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .card-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
+      color: white;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+    }
+    .card-fav-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: white;
+      border: none;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    }
+    .card-fav-btn.active {
+      color: #dc2626;
+    }
+    .card-body {
+      padding: 10px 12px 12px 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex-grow: 1;
+      gap: 6px;
+    }
+    .card-price {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .card-title {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-loc {
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .card-footer-seller {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 6px;
+      margin-top: 2px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .seller-rating {
+      color: #f59e0b;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+    }
+
+    /* Fixed Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      background: white;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 0 10px;
+      z-index: 100;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      color: #64748b;
+      font-size: 10px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-item i {
+      font-size: 19px;
+    }
+    .nav-item.active {
+      color: var(--primary);
+    }
+
+    .nav-sell-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-top: -26px;
+      box-shadow: 0 8px 18px rgba(22, 163, 74, 0.4);
+      border: 3px solid white;
+      cursor: pointer;
+    }
+
+    /* Modals */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 200;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+    .modal-sheet {
+      width: 100%;
+      max-width: 520px;
+      background: white;
+      border-radius: 28px 28px 0 0;
+      padding: 24px;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .modal-close {
+      float: right;
+      background: #f1f5f9;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 14px;
+      cursor: pointer;
+      color: #64748b;
+    }
+
+    .action-btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn-call {
+      background: #15803d;
+      color: white;
+      padding: 13px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    .btn-wa {
+      background: #25d366;
+      color: white;
+      padding: 13px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 4px;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      outline: none;
+    }
+
+    /* Image upload box */
+    .image-uploader-box {
+      border: 2px dashed #94a3b8;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      background: #f8fafc;
+      margin-bottom: 12px;
+      transition: all 0.2s;
+    }
+    .image-uploader-box:hover {
+      border-color: var(--primary);
+      background: #f0fdf4;
+    }
+
+    .preview-image-wrap {
+      position: relative;
+      display: inline-block;
+      margin-top: 8px;
+    }
+    .preview-image-wrap img {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      object-fit: cover;
+      border: 1px solid #cbd5e1;
+    }
+    .preview-remove-btn {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    /* Admin Panel Styling */
+    .admin-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    .admin-badge {
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+    }
+    .admin-badge-active { background: #dcfce7; color: #166534; }
+    .admin-badge-blocked { background: #fee2e2; color: #991b1b; }
+
+    .admin-user-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+    .admin-btn-action {
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-block { background: #fee2e2; color: #dc2626; }
+    .btn-unblock { background: #dcfce7; color: #16a34a; }
   </style>
 </head>
-<body class="font-sans antialiased text-slate-900 bg-slate-50">
+<body>
 
-<div class="app-viewport" id="appRoot">
-
-  <!-- ======================================================== -->
-  <!-- SCREEN: AUTH (Continue with Google / Phone OTP)          -->
-  <!-- ======================================================== -->
-  <div id="screenAuth" class="fixed inset-0 z-50 bg-gradient-to-b from-green-900 via-emerald-800 to-slate-950 text-white flex flex-col justify-between p-6 w-full h-full overflow-y-auto">
+  <div class="app-frame">
     
-    <!-- Top Branding -->
-    <div class="pt-6 text-center space-y-2">
-      <div class="w-16 h-16 mx-auto rounded-2xl bg-white shadow-xl flex items-center justify-center text-3xl">
-        🛍️
-      </div>
-      <h1 class="text-2xl font-black tracking-tight">Meri Local Bazaar</h1>
-      <p class="text-xs text-green-200 font-medium">Your Local Market, One App</p>
-      
-      <div class="inline-flex items-center gap-1.5 bg-white/10 px-3 py-0.5 rounded-full text-[10px] font-medium backdrop-blur border border-white/10">
-        <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i>
-        <span>Direct WhatsApp Connect • Verified Sellers</span>
-      </div>
-    </div>
-
-    <!-- Auth Box -->
-    <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-2xl space-y-3.5 my-auto">
-      <div class="text-center space-y-0.5">
-        <h3 class="font-extrabold text-base text-slate-900">Login or Create Account</h3>
-        <p class="text-[11px] text-slate-500">Sign in to buy, sell, chat and manage orders</p>
+    <!-- AUTH SCREEN (Sky Blue theme) -->
+    <div id="authScreen" class="auth-container">
+      <div class="auth-hero">
+        <img src="/app-icon.jpg" alt="Logo" class="auth-logo">
+        <h1>LocalBazaar</h1>
+        <p>India\'s Hyper-Local Marketplace & Classifieds</p>
       </div>
 
-      <!-- Google Button -->
-      <button onclick="openGoogleChooser()" class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-bold py-2.5 px-4 rounded-2xl flex items-center justify-center gap-2.5 transition shadow-sm">
-        <svg class="w-4 h-4" viewBox="0 0 24 24">
-          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-        </svg>
-        <span class="text-xs">Continue with Google</span>
-      </button>
-
-      <div class="flex items-center gap-2">
-        <div class="flex-1 h-[1px] bg-slate-200"></div>
-        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">OR PHONE OTP</span>
-        <div class="flex-1 h-[1px] bg-slate-200"></div>
-      </div>
-
-      <!-- Phone Step 1 -->
-      <div id="phoneStep1" class="space-y-2.5">
-        <div class="flex items-center border border-slate-200 rounded-2xl p-1.5 bg-slate-50 focus-within:border-green-600 focus-within:bg-white transition">
-          <span class="text-xs font-bold text-slate-600 px-2 border-r border-slate-200">+91</span>
-          <input id="loginPhoneInput" type="tel" maxlength="10" placeholder="Enter 10-digit mobile" class="w-full px-2.5 py-1 text-xs font-semibold bg-transparent focus:outline-none" />
-        </div>
-        <button onclick="sendPhoneOTP()" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl shadow transition text-xs flex items-center justify-center gap-1.5">
-          <span>Get Verification OTP</span>
-          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-        </button>
-      </div>
-
-      <!-- Phone Step 2 (OTP) -->
-      <div id="phoneStep2" class="space-y-2.5 hidden">
-        <div class="text-center">
-          <p class="text-[11px] text-slate-600">Enter 4-digit OTP sent to <b id="displayOtpPhone" class="text-slate-900 font-mono">+91 9876543210</b></p>
-        </div>
-        <div class="flex justify-center gap-2">
-          <input type="text" maxlength="1" value="5" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
-          <input type="text" maxlength="1" value="2" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
-          <input type="text" maxlength="1" value="8" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
-          <input type="text" maxlength="1" value="4" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
-        </div>
-        <button onclick="verifyPhoneOTP()" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl shadow transition text-xs">
-          Verify OTP & Sign In
-        </button>
-      </div>
-
-      <!-- Guest Skip -->
-      <button onclick="enterAsGuest()" class="w-full text-center text-xs text-green-700 font-bold hover:underline pt-0.5">
-        Browse as Guest →
-      </button>
-    </div>
-
-    <!-- Bottom Notice -->
-    <div class="text-center text-[10px] text-green-200 pb-1">
-      100% Safe • Local Direct Contact • Zero Commission
-    </div>
-  </div>
-
-  <!-- Google Account Picker Bottom Sheet / Modal -->
-  <div id="googleChooserModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-xs w-full p-5 space-y-3.5 shadow-2xl text-slate-900">
-      <div class="flex items-center justify-between border-b pb-2.5">
-        <div class="flex items-center gap-2">
-          <svg class="w-4 h-4" viewBox="0 0 24 24">
-            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
-          </svg>
-          <span class="font-bold text-xs">Choose Google Account</span>
-        </div>
-        <button onclick="closeModal('googleChooserModal')" class="text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-4 h-4"></i>
-        </button>
-      </div>
-
-      <div class="space-y-2 text-xs">
-        <div onclick="loginWithGoogleUser('Silgrak Marak', 'silgrakmarak1309@gmail.com', 'SM', true)" class="flex items-center gap-2.5 p-2.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/70 hover:bg-emerald-100 cursor-pointer transition">
-          <div class="w-8 h-8 rounded-full bg-emerald-700 text-white font-bold flex items-center justify-center text-xs shadow">
-            SM
-          </div>
-          <div class="flex-1 overflow-hidden">
-            <div class="flex items-center gap-1.5">
-              <p class="font-bold text-slate-900 truncate">Silgrak Marak</p>
-              <span class="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full">ADMIN</span>
-            </div>
-            <p class="text-[10px] text-emerald-800 font-semibold truncate">silgrakmarak1309@gmail.com</p>
-          </div>
-          <i data-lucide="shield-check" class="w-4 h-4 text-emerald-700"></i>
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <div class="auth-tab active" id="tabEmailGoogle" onclick="switchAuthTab('email')">Email / Google</div>
+          <div class="auth-tab" id="tabPhoneOtp" onclick="switchAuthTab('phone')">Phone OTP</div>
         </div>
 
-        <div onclick="loginWithGoogleUser('Sengmi Marak', 'sengmimarak12@gmail.com', 'SE', false)" class="flex items-center gap-2.5 p-2.5 rounded-2xl border border-slate-200 hover:bg-green-50 hover:border-green-500 cursor-pointer transition">
-          <div class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shadow">
-            SE
-          </div>
-          <div class="flex-1 overflow-hidden">
-            <p class="font-bold text-slate-800 truncate">Sengmi Marak</p>
-            <p class="text-[10px] text-slate-500 truncate">sengmimarak12@gmail.com</p>
-          </div>
-          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
-        </div>
-
-        <div onclick="promptCustomGoogleLogin()" class="flex items-center gap-2.5 p-2.5 rounded-2xl border border-dashed border-slate-300 hover:bg-slate-50 hover:border-slate-400 cursor-pointer transition text-slate-700">
-          <div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 font-bold">
-            <i data-lucide="plus" class="w-4 h-4"></i>
-          </div>
-          <div class="flex-1 overflow-hidden">
-            <p class="font-bold text-xs truncate">Use another Google account</p>
-            <p class="text-[9px] text-slate-400">Sign in with any Gmail ID</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ======================================================== -->
-  <!-- TOP APP BAR (EXACT AS SCREENSHOT)                        -->
-  <!-- ======================================================== -->
-  <header class="sticky top-0 z-30 bg-white border-b border-slate-100 shadow-sm px-4 pt-3 pb-2.5">
-    <!-- Top Row: Logo, Title, Location, Actions -->
-    <div class="flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5">
-        <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl shadow-md font-black">
-          🛍️
-        </div>
-        <div>
-          <h1 class="font-black text-sm text-green-900 leading-tight">Meri Local Bazaar</h1>
-          <p class="text-[10px] text-slate-400 font-medium">Your Local Market, One App</p>
-        </div>
-      </div>
-
-      <!-- Location Selector Pill -->
-      <button onclick="openLocationModal()" class="flex items-center gap-1 text-[11px] text-slate-700 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full font-semibold transition max-w-[170px] truncate">
-        <i data-lucide="map-pin" class="w-3 h-3 text-red-500 shrink-0"></i>
-        <span id="currentLocationLabel" class="truncate">West Garo Hills (Tura), Me..</span>
-        <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
-      </button>
-    </div>
-
-    <!-- Search Input Bar -->
-    <div class="mt-2.5">
-      <div class="flex items-center bg-slate-100 rounded-2xl px-3 py-2 border border-slate-200/60">
-        <i data-lucide="search" class="w-4 h-4 text-slate-400 mr-2 shrink-0"></i>
-        <input id="appSearchInput" oninput="handleSearch(this.value)" type="text" placeholder="Search groceries, mobiles, services, items..." class="w-full text-xs bg-transparent focus:outline-none font-medium placeholder-slate-400" />
-      </div>
-    </div>
-  </header>
-
-  <!-- ======================================================== -->
-  <!-- MAIN SCROLLABLE CONTENT BODY                             -->
-  <!-- ======================================================== -->
-  <main class="flex-1 overflow-y-auto px-4 py-3 pb-24 space-y-4">
-
-    <!-- ======================================= -->
-    <!-- 1. HOME SCREEN (EXACT AS SCREENSHOT)    -->
-    <!-- ======================================= -->
-    <div id="viewHome" class="space-y-3.5">
-      
-      <!-- Exact Green Hero Banner (Local Superstore - Buy & Sell Locally) -->
-      <div class="rounded-3xl bg-gradient-to-r from-green-700 via-emerald-600 to-teal-700 text-white p-4 shadow-sm relative overflow-hidden flex items-center justify-between">
-        <div class="space-y-1 relative z-10 max-w-[65%]">
-          <span class="inline-flex items-center gap-1 bg-white/20 text-[9px] px-2 py-0.5 rounded-full font-bold backdrop-blur">
-            <i data-lucide="store" class="w-2.5 h-2.5"></i> LOCAL SUPERSTORE
-          </span>
-          <h2 class="text-base font-black tracking-tight leading-tight">Buy & Sell Locally</h2>
-          <p class="text-[10px] text-green-100 leading-snug">Connect instantly with verified neighborhood sellers & fresh local grocery markets.</p>
-        </div>
-        <!-- Right Grocery Basket Illustration -->
-        <div class="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-4xl shadow-inner shrink-0">
-          🧺
-        </div>
-      </div>
-
-      <!-- Exact Circular Categories Horizontal Scroll Row -->
-      <div>
-        <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1 text-center" id="circularCategoryRow">
-          <!-- Injected via JS -->
-        </div>
-      </div>
-
-      <!-- Exact Filter Chips (Verified Sellers, Services Only, Products) -->
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
-        <button onclick="toggleFilter('verified')" id="chipVerified" class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition">
-          <i data-lucide="check-circle" class="w-3 h-3 text-emerald-600"></i>
-          <span>Verified Sellers</span>
+        <!-- Google One-Tap Direct -->
+        <button class="google-btn" onclick="openGoogleAccountPicker()">
+          <i class="fa-solid fa-circle-user" style="color: #0284c7; font-size: 18px;"></i>
+          <span>Sign in with Google Account</span>
         </button>
 
-        <button onclick="toggleFilter('services')" id="chipServices" class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition">
-          <span>🤝 Services Only</span>
-        </button>
+        <div class="or-divider">or sign in with email</div>
 
-        <button onclick="toggleFilter('products')" id="chipProducts" class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition">
-          <span>🛍️ Products</span>
-        </button>
-      </div>
-
-      <!-- Section Heading: "Popular Near You" -->
-      <div class="space-y-2.5">
-        <div class="flex items-center justify-between">
-          <h3 class="font-extrabold text-xs text-slate-900 flex items-center gap-1.5">
-            <span>Popular Near You</span>
-            <span class="text-[11px] font-normal text-slate-500" id="itemCount">(8 items found)</span>
-          </h3>
-        </div>
-
-        <!-- 2-Column (Mobile) to 3-4 Column (Tablet/Desktop) Product Cards Grid -->
-        <div id="homeListingsGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5">
-          <!-- Injected via JS -->
-        </div>
-      </div>
-
-    </div>
-
-    <!-- ======================================= -->
-    <!-- 2. CATEGORIES SCREEN                    -->
-    <!-- ======================================= -->
-    <div id="viewCategories" class="hidden space-y-3">
-      <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5">
-        <h2 class="text-sm font-extrabold text-emerald-950">All Marketplace Categories</h2>
-        <p class="text-[11px] text-emerald-800">Browse verified listings by category across your district</p>
-      </div>
-
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3" id="allCategoriesGrid">
-        <!-- Injected Categories -->
-      </div>
-    </div>
-
-    <!-- ======================================= -->
-    <!-- 3. CHAT SCREEN (WhatsApp / Inquiries)   -->
-    <!-- ======================================= -->
-    <div id="viewChat" class="hidden space-y-3">
-      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex items-center justify-between">
-        <div>
-          <h2 class="text-sm font-extrabold text-slate-900">Seller & Buyer Inquiries</h2>
-          <p class="text-[11px] text-slate-500">1-Tap WhatsApp & Direct Messages</p>
-        </div>
-        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
-          3 Active Chats
-        </span>
-      </div>
-
-      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y divide-slate-100" id="chatList">
-        <!-- Injected Chats -->
-      </div>
-    </div>
-
-    <!-- ======================================= -->
-    <!-- 4. PROFILE SCREEN (WITH LOGOUT BUTTON)  -->
-    <!-- ======================================= -->
-    <div id="viewProfile" class="hidden space-y-3">
-      
-      <!-- User Profile Card -->
-      <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-3">
-        <div class="flex items-center gap-3.5">
-          <div id="profileAvatarLarge" class="w-14 h-14 rounded-2xl bg-emerald-700 text-white font-black text-lg flex items-center justify-center shadow-md">
-            SM
+        <!-- Email Sign In Form -->
+        <div id="emailFormSection">
+          <div id="nameInputWrapper" style="display: none;">
+            <input type="text" id="authName" class="input-field" placeholder="Full Name (e.g. Silgrak Marak)">
           </div>
-          <div class="space-y-0.5">
-            <h2 id="profileName" class="font-black text-base text-slate-900">Silgrak Marak</h2>
-            <p id="profileEmail" class="text-xs text-slate-500 font-medium">marakrangsilchi17@gmail.com</p>
-            <span class="inline-block bg-green-100 text-green-800 text-[9px] font-bold px-2 py-0.5 rounded-full">
-              ✓ Verified Local Member
-            </span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-2 pt-2 border-t text-center">
-          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-            <p class="text-[10px] font-semibold text-slate-500">My Listings</p>
-            <p class="text-sm font-black text-slate-900" id="statListings">3</p>
-          </div>
-          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-            <p class="text-[10px] font-semibold text-slate-500">In Cart</p>
-            <p class="text-sm font-black text-green-700" id="statCart">0</p>
-          </div>
-          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
-            <p class="text-[10px] font-semibold text-slate-500">District</p>
-            <p class="text-[11px] font-bold text-slate-900 truncate" id="statCity">Tura</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Menu Options -->
-      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm divide-y divide-slate-100 text-xs">
-        <div onclick="openLocationModal()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer">
-          <div class="flex items-center gap-3 text-slate-800 font-semibold">
-            <i data-lucide="map-pin" class="w-4 h-4 text-green-700"></i>
-            <span>Select All-India State & District</span>
-          </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-        </div>
-
-        <div id="adminMenuOption" onclick="openAdminModal()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer hidden">
-          <div class="flex items-center gap-3 text-slate-800 font-semibold">
-            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
-            <span>Admin Moderation (Block/Unblock)</span>
-          </div>
-          <div class="flex items-center gap-1.5">
-            <span class="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">ADMIN</span>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-          </div>
-        </div>
-
-        <div onclick="toggleCart()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer">
-          <div class="flex items-center gap-3 text-slate-800 font-semibold">
-            <i data-lucide="shopping-bag" class="w-4 h-4 text-blue-600"></i>
-            <span>Shopping Cart & Checkout</span>
-          </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
-        </div>
-
-        <!-- Prominent Logout / Sign Out Button -->
-        <div onclick="signOutUser()" class="flex items-center justify-between p-3.5 hover:bg-red-50 cursor-pointer text-red-600 font-bold">
-          <div class="flex items-center gap-3">
-            <i data-lucide="log-out" class="w-4 h-4"></i>
-            <span>Logout / Sign Out Account</span>
-          </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-red-400"></i>
-        </div>
-      </div>
-
-    </div>
-
-  </main>
-
-  <!-- ======================================================== -->
-  <!-- 5-TAB BOTTOM NAVIGATION (EXACT RED CIRCLE IN SCREENSHOT) -->
-  <!-- ======================================================== -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur border-t border-slate-200 px-3 py-2 flex items-center justify-around w-full shadow-2xl">
-    
-    <!-- 1. Home -->
-    <button onclick="navTo('home')" id="bTabHome" class="flex flex-col items-center gap-0.5 text-green-700 flex-1 py-1">
-      <i data-lucide="home" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Home</span>
-    </button>
-
-    <!-- 2. Categories -->
-    <button onclick="navTo('categories')" id="bTabCategories" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1">
-      <i data-lucide="grid" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Categories</span>
-    </button>
-
-    <!-- 3. Central Sell (+) Floating Button -->
-    <div class="flex-1 flex justify-center -mt-6">
-      <button onclick="openPostModal()" class="w-12 h-12 rounded-full bg-gradient-to-tr from-green-700 to-emerald-500 text-white flex items-center justify-center shadow-xl hover:scale-105 transition border-4 border-white">
-        <i data-lucide="plus" class="w-6 h-6"></i>
-      </button>
-    </div>
-
-    <!-- 4. Chats -->
-    <button onclick="navTo('chat')" id="bTabChat" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1">
-      <i data-lucide="message-square" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Chats</span>
-    </button>
-
-    <!-- 5. Profile -->
-    <button onclick="navTo('profile')" id="bTabProfile" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1">
-      <i data-lucide="user" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Profile</span>
-    </button>
-
-  </nav>
-
-</div>
-
-<!-- ======================================================== -->
-<!-- MODALS & DIALOGS                                         -->
-<!-- ======================================================== -->
-
-<!-- MODAL: Product Detail Dialog -->
-<div id="detailModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[90vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
-    <div class="flex items-center justify-between border-b pb-2.5">
-      <h3 id="detailTitle" class="font-bold text-sm text-slate-900 truncate pr-2">Product Detail</h3>
-      <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-slate-700">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-    </div>
-
-    <div class="space-y-2">
-      <div class="w-full h-48 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-200">
-        <img id="detailMainImg" src="" class="w-full h-full object-cover" />
-      </div>
-      <div id="detailThumbs" class="flex gap-2 overflow-x-auto no-scrollbar py-1"></div>
-    </div>
-
-    <div class="space-y-1">
-      <div class="flex items-center justify-between">
-        <span id="detailPrice" class="text-xl font-black text-green-700">₹0</span>
-        <span id="detailCategory" class="text-[10px] bg-green-100 text-green-800 font-bold px-2.5 py-0.5 rounded-full">Category</span>
-      </div>
-      <p id="detailDesc" class="text-xs text-slate-600 leading-relaxed"></p>
-    </div>
-
-    <div class="bg-slate-50 rounded-2xl p-3 space-y-1.5 border border-slate-100 text-xs text-slate-700">
-      <div class="flex items-center justify-between">
-        <span class="text-slate-500">Seller / Store:</span>
-        <span id="detailSeller" class="font-bold text-slate-900">Seller</span>
-      </div>
-      <div class="flex items-center justify-between">
-        <span class="text-slate-500">Location:</span>
-        <span id="detailLocation" class="font-bold text-slate-900">Location</span>
-      </div>
-      <div class="flex items-center justify-between">
-        <span class="text-slate-500">WhatsApp:</span>
-        <span id="detailPhone" class="font-bold font-mono text-emerald-700">Phone</span>
-      </div>
-    </div>
-
-    <div class="flex gap-2 pt-1">
-      <button id="detailWhatsAppBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-2xl flex items-center justify-center gap-1.5 text-xs shadow transition">
-        <i data-lucide="message-circle" class="w-4 h-4"></i>
-        WhatsApp Seller
-      </button>
-      <button id="detailAddCartBtn" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-2xl flex items-center justify-center gap-1 text-xs transition">
-        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-        Cart
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Post Ad / Upload Photos (2 to 4 Images) -->
-<div id="postModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[90vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
-    <div class="flex items-center justify-between border-b pb-2.5">
-      <div>
-        <h3 class="font-bold text-sm text-slate-900">Post New Ad / Listing</h3>
-        <p class="text-[10px] text-slate-500">Upload 2 to 4 photos & connect on WhatsApp</p>
-      </div>
-      <button onclick="closeModal('postModal')" class="text-slate-400 hover:text-slate-700">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-    </div>
-
-    <form id="postAdForm" onsubmit="handlePostSubmit(event)" class="space-y-3 text-xs">
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Item Title *</label>
-        <input required id="postTitle" type="text" placeholder="e.g. OnePlus 11R 5G, Fresh Organic Honey..." class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
-      </div>
-
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Category *</label>
-          <select id="postCategory" class="w-full px-2.5 py-2 border rounded-xl focus:outline-none focus:border-green-600 bg-white">
-            <option value="Mobile / Laptop">Mobile / Laptop</option>
-            <option value="Grocery">Grocery & Produce</option>
-            <option value="Services">Services (Electrician/AC)</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Bike">Bike / Scooty</option>
-            <option value="Car">Car / Auto</option>
-            <option value="Personal Care">Personal Care</option>
-            <option value="Fashion">Fashion & Wear</option>
-          </select>
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Price (₹) *</label>
-          <input required id="postPrice" type="number" placeholder="₹ Amount" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
-        </div>
-      </div>
-
-      <!-- Photo Picker -->
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Upload Photos (2–4 Images) *</label>
-        <input id="postPhotoInput" type="file" multiple accept="image/*" onchange="handlePhotoUpload(event)" class="hidden" />
-        <div onclick="document.getElementById('postPhotoInput').click()" class="border-2 border-dashed border-slate-300 hover:border-green-600 rounded-2xl p-3.5 text-center cursor-pointer bg-slate-50 transition">
-          <i data-lucide="camera" class="w-5 h-5 mx-auto text-slate-400 mb-1"></i>
-          <span class="font-bold text-green-700 text-xs">Select from Gallery / Storage</span>
-          <p class="text-[9px] text-slate-500">Pick up to 4 real photos</p>
-        </div>
-        <div id="photoPreviewContainer" class="flex gap-2 mt-2 overflow-x-auto py-1"></div>
-      </div>
-
-      <div>
-        <label class="block font-bold text-slate-700 mb-1">Description</label>
-        <textarea id="postDesc" rows="2" placeholder="Condition, warranty, pickup address..." class="w-full px-3 py-1.5 border rounded-xl focus:outline-none focus:border-green-600"></textarea>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2">
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">WhatsApp No. *</label>
-          <input required id="postPhone" type="tel" placeholder="10-digit phone" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
-        </div>
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">Seller Name *</label>
-          <input required id="postSeller" type="text" placeholder="Your Name" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
-        </div>
-      </div>
-
-      <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl shadow transition text-xs">
-        Publish Local Listing
-      </button>
-    </form>
-  </div>
-</div>
-
-<!-- MODAL: COMPLETE ALL-INDIA STATES & DISTRICTS SELECTOR -->
-<div id="locationModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
-    <div class="flex items-center justify-between border-b pb-2.5">
-      <div>
-        <h3 class="font-bold text-sm text-slate-900">Select Location (All India)</h3>
-        <p class="text-[10px] text-slate-500">Choose your State & District</p>
-      </div>
-      <button onclick="closeModal('locationModal')" class="text-slate-400 hover:text-slate-700">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-    </div>
-
-    <button onclick="autoDetectLocation()" class="w-full bg-green-50 border border-green-200 text-green-800 font-bold p-2.5 rounded-2xl flex items-center justify-center gap-2 text-xs hover:bg-green-100 transition">
-      <i data-lucide="crosshair" class="w-4 h-4 text-green-700"></i>
-      Auto-Detect Current GPS
-    </button>
-
-    <div class="space-y-2 text-xs">
-      <label class="block font-bold text-slate-700">Select State / UT (All 36 States & UTs):</label>
-      <select id="stateSelect" onchange="populateDistricts()" class="w-full p-2.5 border rounded-xl bg-white text-xs font-semibold focus:outline-none focus:border-green-600">
-      </select>
-
-      <label class="block font-bold text-slate-700 mt-2">Select District / City:</label>
-      <select id="districtSelect" class="w-full p-2.5 border rounded-xl bg-white text-xs font-semibold focus:outline-none focus:border-green-600">
-      </select>
-    </div>
-
-    <button onclick="applyLocation()" class="w-full bg-green-700 text-white font-bold py-2.5 rounded-2xl hover:bg-green-800 text-xs shadow transition">
-      Apply District
-    </button>
-  </div>
-</div>
-
-<!-- MODAL: Admin Panel (Block/Unblock Users) -->
-<div id="adminModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
-    <div class="flex items-center justify-between border-b pb-2.5">
-      <div>
-        <h3 class="font-bold text-sm text-slate-900">🛡️ Admin Moderation</h3>
-        <p class="text-[10px] text-slate-500">Block or unblock active sellers</p>
-      </div>
-      <button onclick="closeModal('adminModal')" class="text-slate-400 hover:text-slate-700">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-    </div>
-
-    <div id="adminUserList" class="space-y-2 text-xs"></div>
-  </div>
-</div>
-
-<!-- MODAL: Shopping Cart -->
-<div id="cartModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4">
-  <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-sm w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
-    <div class="flex items-center justify-between border-b pb-2.5">
-      <h3 class="font-bold text-sm text-slate-900">🛒 Your Cart</h3>
-      <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-700">
-        <i data-lucide="x" class="w-5 h-5"></i>
-      </button>
-    </div>
-    <div id="cartItemsList" class="space-y-2 text-xs max-h-56 overflow-y-auto"></div>
-    <div class="border-t pt-2.5 space-y-2">
-      <div class="flex items-center justify-between text-xs font-bold">
-        <span>Total:</span>
-        <span id="cartTotal" class="text-green-700 font-black text-sm">₹0</span>
-      </div>
-      <button onclick="checkoutWhatsApp()" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl flex items-center justify-center gap-1.5 text-xs shadow">
-        <i data-lucide="send" class="w-4 h-4"></i>
-        WhatsApp Checkout
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- ======================================================== -->
-<!-- SCRIPT LOGIC (COMPLETE STATE, ALL INDIA LOCATIONS & DATA)-->
-<!-- ======================================================== -->
-<script>
-  // Circular Categories with exact Icons as in Screenshot
-  const CIRCULAR_CATEGORIES = [
-    { id: 'all', name: 'All', icon: 'zap', isEmoji: false },
-    { id: 'Mobile / Laptop', name: 'Mobile / Laptop', icon: 'smartphone', isEmoji: false },
-    { id: 'Grocery', name: 'Grocery', icon: '🥦', isEmoji: true },
-    { id: 'Services', name: 'Services', icon: 'wrench', isEmoji: false },
-    { id: 'Electronics', name: 'Electronics', icon: 'tv', isEmoji: false },
-    { id: 'Bike', name: 'Bike', icon: 'bike', isEmoji: false },
-    { id: 'Car', name: 'Car', icon: 'car', isEmoji: false },
-    { id: 'Personal Care', name: 'Personal Care', icon: 'sparkles', isEmoji: false },
-    { id: 'Fashion', name: 'Fashion & Wear', icon: 'shirt', isEmoji: false }
-  ];
-
-  // Full Database of All-India States and Districts
-  const ALL_INDIA_LOCATIONS = {
-    "Meghalaya": ["West Garo Hills (Tura)", "East Garo Hills (Williamnagar)", "South Garo Hills (Baghmara)", "North Garo Hills (Resubelpara)", "South West Garo Hills (Ampati)", "East Khasi Hills (Shillong)", "West Khasi Hills (Nongstoin)", "Eastern West Khasi Hills (Mairang)", "South West Khasi Hills (Mawkyrwat)", "Ri-Bhoi (Nongpoh)", "West Jaintia Hills (Jowai)", "East Jaintia Hills (Khliehriat)"],
-    "Assam": ["Guwahati (Kamrup Metro)", "Kamrup", "Dhubri", "Goalpara", "Bongaigaon", "Barpeta", "Nalbari", "Kokrajhar", "Baksa", "Chirang", "Udalguri", "Darrang", "Sonitpur", "Nagaon", "Morigaon", "Jorhat", "Golaghat", "Sivasagar", "Dibrugarh", "Tinsukia", "Silchar (Cachar)", "Karimganj", "Hailakandi", "Dima Hasao", "Karbi Anglong"],
-    "Delhi": ["Central Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi", "East Delhi", "Shahdara"],
-    "Maharashtra": ["Mumbai City", "Mumbai Suburban", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad", "Solapur", "Amravati", "Kolhapur", "Navi Mumbai"],
-    "Karnataka": ["Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Mangaluru (Dakshina Kannada)", "Hubballi-Dharwad", "Belagavi", "Kalaburagi", "Ballari", "Udupi"],
-    "West Bengal": ["Kolkata", "North 24 Parganas", "South 24 Parganas", "Howrah", "Hooghly", "Siliguri (Darjeeling)", "Jalpaiguri", "Malda", "Murshidabad", "Purba Medinipur"],
-    "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Noida (Gautam Buddha Nagar)", "Ghaziabad", "Agra", "Prayagraj", "Meerut", "Bareilly", "Aligarh", "Gorakhpur"],
-    "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Darbhanga", "Purnia", "Begusarai", "Arrah (Bhojpur)"],
-    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Erode", "Vellore"],
-    "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Rangareddy", "Medchal-Malkajgiri"],
-    "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Kakinada"],
-    "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar"],
-    "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer", "Alwar"],
-    "Kerala": ["Thiruvananthapuram", "Kochi (Ernakulam)", "Kozhikode", "Thrissur", "Kollam", "Kannur", "Palakkad", "Kottayam"],
-    "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Mohali (SAS Nagar)"],
-    "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Karnal", "Hisar", "Rohtak", "Panchkula"],
-    "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain", "Sagar"],
-    "Odisha": ["Bhubaneswar (Khurda)", "Cuttack", "Rourkela (Sundargarh)", "Berhampur (Ganjam)", "Sambalpur", "Puri"],
-    "Jharkhand": ["Ranchi", "Jamshedpur (East Singhbhum)", "Dhanbad", "Bokaro", "Deoghar", "Hazaribagh"],
-    "Chhattisgarh": ["Raipur", "Bhilai (Durg)", "Bilaspur", "Korba", "Rajnandgaon"],
-    "Uttarakhand": ["Dehradun", "Haridwar", "Nainital", "Rishikesh", "Haldwani", "Roorkee"],
-    "Himachal Pradesh": ["Shimla", "Dharamshala (Kangra)", "Mandi", "Solan", "Kullu", "Manali"],
-    "Tripura": ["West Tripura (Agartala)", "Gomati", "South Tripura", "North Tripura", "Dhalai", "Khowai"],
-    "Manipur": ["Imphal West", "Imphal East", "Thoubal", "Bishnupur", "Churachandpur"],
-    "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha", "Mon"],
-    "Mizoram": ["Aizawl", "Lunglei", "Champhai", "Kolasib", "Serchhip"],
-    "Arunachal Pradesh": ["Itanagar (Papum Pare)", "Changlang", "West Kameng", "Tawang", "East Siang"],
-    "Sikkim": ["East Sikkim (Gangtok)", "West Sikkim (Gyalshing)", "South Sikkim (Namchi)", "North Sikkim (Mangan)"],
-    "Goa": ["North Goa (Panaji)", "South Goa (Margao)"],
-    "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla", "Kathua", "Udhampur"],
-    "Ladakh": ["Leh", "Kargil"],
-    "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"],
-    "Chandigarh": ["Chandigarh"]
-  };
-
-  // Seed Items with Verified Ratings & Badges
-  let items = [
-    {
-      id: 1,
-      title: "Home Electrician & AC Repair Service",
-      category: "Services",
-      isService: true,
-      price: 299,
-      originalPrice: 499,
-      seller: "Sharma Electricals & Cooli...",
-      rating: 5.0,
-      phone: "9876543213",
-      location: "Aramile, West Garo Hills",
-      desc: "Emergency visit in 30 mins. AC gas refill, fan wiring & refrigerator repair.",
-      userId: "USER_04",
-      isLiked: false,
-      images: [
-        "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&auto=format&fit=crop&q=80"
-      ]
-    },
-    {
-      id: 2,
-      title: "Plumbing & Water Tank Cleaning",
-      category: "Services",
-      isService: true,
-      price: 399,
-      originalPrice: 600,
-      seller: "QuickPlumb Pro Tura",
-      rating: 4.9,
-      phone: "9876543218",
-      location: "Ringrey, West Garo Hills",
-      desc: "Leakage repair, motor fitting & high-pressure deep water tank clean.",
-      userId: "USER_09",
-      isLiked: true,
-      images: [
-        "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&auto=format&fit=crop&q=80"
-      ]
-    },
-    {
-      id: 3,
-      title: "OnePlus 11R 5G (16GB/256GB)",
-      category: "Mobile / Laptop",
-      isService: false,
-      price: 27999,
-      originalPrice: 39999,
-      seller: "Rahul Tech Point",
-      rating: 4.8,
-      phone: "9876543210",
-      location: "Market Complex, Tura",
-      desc: "Mint condition, 7 months warranty remaining, with original 100W SuperVOOC charger & box.",
-      userId: "USER_01",
-      isLiked: false,
-      images: [
-        "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=80"
-      ]
-    },
-    {
-      id: 4,
-      title: "Apple MacBook Air M2 (Space Grey)",
-      category: "Mobile / Laptop",
-      isService: false,
-      price: 74500,
-      originalPrice: 99900,
-      seller: "Tech Zone Computers",
-      rating: 5.0,
-      phone: "9876543211",
-      location: "Main Road, Shillong",
-      desc: "Battery health 98%, with bill and original Apple MagSafe charger.",
-      userId: "USER_02",
-      isLiked: false,
-      images: [
-        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop&q=80"
-      ]
-    },
-    {
-      id: 5,
-      title: "Organic Garo Hills Wild Honey (1kg)",
-      category: "Grocery",
-      isService: false,
-      price: 450,
-      originalPrice: 600,
-      seller: "A·chik Natural Farm",
-      rating: 4.9,
-      phone: "9876543212",
-      location: "Rongram, West Garo Hills",
-      desc: "100% pure raw unprocessed forest honey harvested sustainably.",
-      userId: "USER_03",
-      isLiked: false,
-      images: [
-        "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=600&auto=format&fit=crop&q=80"
-      ]
-    },
-    {
-      id: 6,
-      title: "Royal Enfield Classic 350 (2022)",
-      category: "Bike",
-      isService: false,
-      price: 155000,
-      originalPrice: 210000,
-      seller: "Sangma Motors",
-      rating: 4.7,
-      phone: "9876543214",
-      location: "Dobasipara, Tura",
-      desc: "First owner, 12,400 KM driven, dual-channel ABS, pristine condition.",
-      userId: "USER_05",
-      isLiked: false,
-      images: [
-        "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&auto=format&fit=crop&q=80"
-      ]
-    },
-    {
-      id: 7,
-      title: "Maruti Suzuki Swift ZXi (Petrol)",
-      category: "Car",
-      isService: false,
-      price: 520000,
-      originalPrice: 750000,
-      seller: "Garo Hills Wheels",
-      rating: 4.8,
-      phone: "9876543215",
-      location: "New Tura, Meghalaya",
-      desc: "2021 model, single hand drive, complete service record.",
-      userId: "USER_06",
-      isLiked: false,
-      images: [
-        "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=80"
-      ]
-    },
-    {
-      id: 8,
-      title: "Traditional Handloom Dakmanda Shawl",
-      category: "Fashion",
-      isService: false,
-      price: 1850,
-      originalPrice: 2500,
-      seller: "A·chik Weaves & Craft",
-      rating: 5.0,
-      phone: "9876543216",
-      location: "Super Market, Tura",
-      desc: "Handcrafted indigenous Garo motifs on pure cotton fabric.",
-      userId: "USER_07",
-      isLiked: false,
-      images: [
-        "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=600&auto=format&fit=crop&q=80",
-        "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=600&auto=format&fit=crop&q=80"
-      ]
-    }
-  ];
-
-  let chats = [
-    { id: 1, name: "Sharma Electricals & Cooli...", lastMsg: "Technician 30 min me pahunch jayega.", time: "10:45 AM", phone: "9876543213", avatar: "SE" },
-    { id: 2, name: "QuickPlumb Pro Tura", lastMsg: "Water tank cleaner scheduled for 2 PM.", time: "Yesterday", phone: "9876543218", avatar: "QP" },
-    { id: 3, name: "Rahul Tech Point", lastMsg: "Ha bhaiya OnePlus 11R available hai!", time: "Aug 14", phone: "9876543210", avatar: "RT" }
-  ];
-
-  let users = [
-    { id: "USER_04", name: "Sharma Electricals & Cooli...", phone: "9876543213", isBlocked: false },
-    { id: "USER_09", name: "QuickPlumb Pro Tura", phone: "9876543218", isBlocked: false },
-    { id: "USER_01", name: "Rahul Tech Point", phone: "9876543210", isBlocked: false },
-    { id: "USER_02", name: "Tech Zone Computers", phone: "9876543211", isBlocked: false },
-    { id: "USER_03", name: "A·chik Natural Farm", phone: "9876543212", isBlocked: false },
-    { id: "USER_05", name: "Sangma Motors", phone: "9876543214", isBlocked: false },
-    { id: "USER_06", name: "Garo Hills Wheels", phone: "9876543215", isBlocked: false },
-    { id: "USER_07", name: "A·chik Weaves & Craft", phone: "9876543216", isBlocked: false }
-  ];
-
-  let currentUser = null;
-  let selectedCategory = 'all';
-  let activeFilter = 'none'; // 'verified', 'services', 'products', 'none'
-  let searchQuery = '';
-  let uploadedPhotos = [];
-  let cart = [];
-  let currentScreen = 'home';
-
-  function init() {
-    const saved = localStorage.getItem('localbazaar_session');
-    if (saved) {
-      try {
-        currentUser = JSON.parse(saved);
-        document.getElementById('screenAuth').classList.add('hidden');
-      } catch(e) {
-        currentUser = null;
-      }
-    }
-
-    if (!currentUser) {
-      document.getElementById('screenAuth').classList.remove('hidden');
-    }
-
-    renderCircularCategories();
-    renderAllCategoriesScreen();
-    renderHomeListings();
-    renderChatList();
-    renderAdminUsers();
-    populateStateSelect();
-    if (currentUser) {
-      updateProfileStats();
-    }
-    lucide.createIcons();
-  }
-
-  // 1. CIRCULAR CATEGORY SCROLL (EXACT AS SCREENSHOT)
-  function renderCircularCategories() {
-    const container = document.getElementById('circularCategoryRow');
-    container.innerHTML = CIRCULAR_CATEGORIES.map(cat => {
-      const isSelected = selectedCategory === cat.id;
-      return `
-        <div onclick="selectCategory('${cat.id}')" class="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 group">
-          <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg transition duration-200 ${
-            isSelected 
-              ? 'bg-emerald-600 text-white shadow-md scale-105 ring-2 ring-emerald-600 ring-offset-2' 
-              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
-          }">
-            ${cat.isEmoji ? cat.icon : `<i data-lucide="${cat.icon}" class="w-5 h-5 ${isSelected ? 'text-white' : 'text-emerald-700'}"></i>`}
-          </div>
-          <span class="text-[10px] font-bold tracking-tight whitespace-nowrap ${isSelected ? 'text-emerald-700 font-extrabold' : 'text-slate-600'}">
-            ${cat.name}
-          </span>
-        </div>
-      `;
-    }).join('');
-  }
-
-  function selectCategory(catId) {
-    selectedCategory = catId;
-    renderCircularCategories();
-    renderHomeListings();
-    lucide.createIcons();
-  }
-
-  function toggleFilter(filterType) {
-    if (activeFilter === filterType) {
-      activeFilter = 'none';
-    } else {
-      activeFilter = filterType;
-    }
-
-    // Update chip styling
-    const chips = ['verified', 'services', 'products'];
-    chips.forEach(c => {
-      const btn = document.getElementById('chip' + c.charAt(0).toUpperCase() + c.slice(1));
-      if (btn) {
-        if (activeFilter === c) {
-          btn.className = 'flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-green-700 bg-green-700 text-white shadow-sm whitespace-nowrap transition';
-        } else {
-          btn.className = 'flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition';
-        }
-      }
-    });
-
-    renderHomeListings();
-  }
-
-  // 2. PRODUCT CARDS GRID (MATCHING SCREENSHOT)
-  function handleSearch(q) {
-    searchQuery = q.toLowerCase().trim();
-    renderHomeListings();
-  }
-
-  function renderHomeListings() {
-    const grid = document.getElementById('homeListingsGrid');
-    const filtered = items.filter(item => {
-      const sellerUser = users.find(u => u.id === item.userId);
-      if (sellerUser && sellerUser.isBlocked) return false;
-
-      const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
-      const matchSearch = !searchQuery || 
-        item.title.toLowerCase().includes(searchQuery) || 
-        item.category.toLowerCase().includes(searchQuery) ||
-        item.seller.toLowerCase().includes(searchQuery);
-      
-      let matchFilter = true;
-      if (activeFilter === 'services') matchFilter = item.isService === true;
-      if (activeFilter === 'products') matchFilter = item.isService === false;
-
-      return matchCat && matchSearch && matchFilter;
-    });
-
-    document.getElementById('itemCount').textContent = `(${filtered.length} items found)`;
-
-    if (filtered.length === 0) {
-      grid.innerHTML = `
-        <div class="col-span-2 py-10 text-center text-slate-500 space-y-1">
-          <i data-lucide="package-x" class="w-8 h-8 mx-auto text-slate-300"></i>
-          <p class="font-bold text-xs">No items found in this category</p>
-        </div>
-      `;
-      lucide.createIcons();
-      return;
-    }
-
-    grid.innerHTML = filtered.map(item => `
-      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition">
-        
-        <!-- Top Image with SERVICE / PRODUCT badge and Heart -->
-        <div class="h-32 bg-slate-100 relative cursor-pointer overflow-hidden" onclick="openDetail(${item.id})">
-          <img src="${item.images[0]}" alt="${item.title}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&auto=format&fit=crop&q=80'" />
+          <input type="email" id="authEmail" class="input-field" placeholder="Email Address (e.g. silgrakmarak1309@gmail.com)">
+          <input type="password" id="authPassword" class="input-field" placeholder="Password (min 4 characters)">
           
-          <!-- Category Badge -->
-          <span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-md text-white text-[8px] font-black tracking-wider px-2 py-0.5 rounded-full uppercase">
-            ${item.isService ? 'SERVICE' : item.category.split('/')[0].trim()}
-          </span>
+          <button class="submit-btn" id="authSubmitBtn" onclick="handleEmailLogin()">Sign In</button>
 
-          <!-- Heart / Like Button -->
-          <button onclick="event.stopPropagation(); toggleLike(${item.id})" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-sm">
-            <i data-lucide="heart" class="w-4 h-4 ${item.isLiked ? 'text-red-500 fill-red-500' : 'text-slate-600'}"></i>
-          </button>
-        </div>
-
-        <!-- Card Body -->
-        <div class="p-2.5 space-y-1.5 flex-1 flex flex-col justify-between">
-          <div>
-            <div class="flex items-baseline gap-1">
-              <span class="font-black text-green-700 text-sm">₹${item.price.toLocaleString('en-IN')}</span>
-              ${item.originalPrice ? `<span class="text-slate-400 text-[10px] line-through">₹${item.originalPrice.toLocaleString('en-IN')}</span>` : ''}
-            </div>
-            
-            <h4 class="font-bold text-xs text-slate-900 line-clamp-1 cursor-pointer hover:text-green-700 mt-0.5 leading-tight" onclick="openDetail(${item.id})">
-              ${item.title}
-            </h4>
-
-            <p class="text-[9px] text-slate-500 flex items-center gap-1 mt-1 truncate">
-              <i data-lucide="map-pin" class="w-2.5 h-2.5 text-red-500 shrink-0"></i>
-              <span class="truncate">${item.location}</span>
-            </p>
-
-            <div class="flex items-center justify-between text-[9px] text-slate-600 mt-1 pt-1 border-t border-slate-100">
-              <span class="truncate max-w-[90px] font-semibold">${item.seller}</span>
-              <span class="text-amber-500 font-bold flex items-center gap-0.5">★ ${item.rating}</span>
-            </div>
-          </div>
-
-          <!-- Bottom Action Buttons -->
-          <div class="pt-1 flex gap-1">
-            <a href="https://wa.me/91${item.phone}?text=Hello%20${encodeURIComponent(item.seller)},%20I%20saw%20your%20listing:%20${encodeURIComponent(item.title)}%20(₹${item.price})%20on%20Meri%20Local%20Bazaar" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold py-1.5 rounded-xl flex items-center justify-center gap-1 shadow-sm transition">
-              <i data-lucide="message-circle" class="w-3 h-3"></i>
-              WhatsApp
-            </a>
-            <button onclick="addToCart(${item.id})" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl" title="Add to Cart">
-              <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
-            </button>
+          <div class="toggle-auth-text">
+            <span id="authToggleText" onclick="toggleSignUpMode()">Don\'t have an account? <b>Sign Up</b></span>
           </div>
         </div>
 
-      </div>
-    `).join('');
+        <!-- Phone OTP Form -->
+        <div id="phoneFormSection" style="display: none;">
+          <input type="tel" id="authPhone" class="input-field" placeholder="10-digit Indian Mobile Number (e.g. 9876543210)">
+          
+          <div id="otpInputWrapper" style="display: none; margin-top: 8px;">
+            <input type="number" id="authOtp" class="input-field" placeholder="Enter 6-digit OTP (Test: 123456)">
+          </div>
 
-    lucide.createIcons();
-  }
-
-  function toggleLike(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    item.isLiked = !item.isLiked;
-    renderHomeListings();
-  }
-
-  // 3. NAVIGATION CONTROLS
-  function navTo(screen) {
-    currentScreen = screen;
-    const views = ['home', 'categories', 'chat', 'profile'];
-    views.forEach(v => {
-      const el = document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1));
-      if (el) el.classList.add('hidden');
-    });
-
-    const tabMap = {
-      'home': 'bTabHome',
-      'categories': 'bTabCategories',
-      'chat': 'bTabChat',
-      'profile': 'bTabProfile'
-    };
-
-    Object.entries(tabMap).forEach(([k, tabId]) => {
-      const btn = document.getElementById(tabId);
-      if (btn) {
-        if (k === screen) {
-          btn.className = 'flex flex-col items-center gap-0.5 text-green-700 flex-1 py-1 font-bold';
-        } else {
-          btn.className = 'flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1';
-        }
-      }
-    });
-
-    const activeView = document.getElementById('view' + screen.charAt(0).toUpperCase() + screen.slice(1));
-    if (activeView) activeView.classList.remove('hidden');
-    lucide.createIcons();
-  }
-
-  // 4. CATEGORIES SCREEN
-  function renderAllCategoriesScreen() {
-    const grid = document.getElementById('allCategoriesGrid');
-    grid.innerHTML = CIRCULAR_CATEGORIES.filter(c => c.id !== 'all').map(cat => `
-      <div onclick="selectCategory('${cat.id}'); navTo('home');" class="bg-white rounded-3xl p-3.5 border border-slate-200 shadow-sm hover:border-green-600 cursor-pointer transition flex flex-col justify-between space-y-2 group">
-        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold shadow-sm">
-          ${cat.isEmoji ? cat.icon : `<i data-lucide="${cat.icon}" class="w-5 h-5"></i>`}
-        </div>
-        <div>
-          <h4 class="font-bold text-xs text-slate-900 group-hover:text-green-700">${cat.name}</h4>
-          <p class="text-[9px] text-slate-500 leading-tight mt-0.5">Explore local verified items</p>
+          <button class="submit-btn" id="otpSubmitBtn" onclick="handlePhoneOtp()">Send OTP Code</button>
         </div>
       </div>
-    `).join('');
-  }
+    </div>
 
-  // 5. PRODUCT DETAIL MODAL
-  function openDetail(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
+    <!-- MAIN APP SCREEN WRAPPER -->
+    <div id="mainAppSection" style="display: none;">
+      <!-- Top Header -->
+      <header class="app-header">
+        <div class="top-bar-brand">
+          <div class="brand-group" onclick="showLocationPicker()">
+            <img src="/app-icon.jpg" alt="Logo" class="app-logo">
+            <div class="brand-text">
+              <h1>Meri Local Bazaar</h1>
+              <p>Your Local Market, One App</p>
+            </div>
+          </div>
+          <div class="location-badge" onclick="showLocationPicker()">
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="locDisplay">West Garo Hills, Meghalaya</span>
+          </div>
+        </div>
 
-    document.getElementById('detailTitle').textContent = item.title;
-    document.getElementById('detailPrice').textContent = `₹${item.price.toLocaleString('en-IN')}`;
-    document.getElementById('detailCategory').textContent = item.category;
-    document.getElementById('detailDesc').textContent = item.desc;
-    document.getElementById('detailSeller').textContent = item.seller;
-    document.getElementById('detailLocation').textContent = item.location;
-    document.getElementById('detailPhone').textContent = `+91 ${item.phone}`;
+        <!-- Search Input -->
+        <div class="search-box">
+          <i class="fa-solid fa-magnifying-glass" style="color: #94a3b8; font-size: 14px;"></i>
+          <input type="text" id="searchInput" placeholder="Search groceries, mobiles, services, items..." oninput="handleSearch(this.value)">
+        </div>
+      </header>
 
-    document.getElementById('detailMainImg').src = item.images[0];
-    const thumbs = document.getElementById('detailThumbs');
-    thumbs.innerHTML = item.images.map(img => `
-      <img src="${img}" onclick="document.getElementById('detailMainImg').src='${img}'" class="w-11 h-11 object-cover rounded-xl border border-slate-200 cursor-pointer" />
-    `).join('');
+      <!-- SCREEN 1: HOME -->
+      <div class="app-screen active" id="screenHome">
+        <div class="hero-banner">
+          <span class="hero-tag">🌟 LOCAL SUPERSTORE</span>
+          <h2>Buy & Sell Locally</h2>
+          <p>Connect instantly with verified neighborhood sellers & fresh local grocery markets.</p>
+        </div>
 
-    document.getElementById('detailWhatsAppBtn').onclick = () => {
-      window.open(`https://wa.me/91${item.phone}?text=Hello%20${encodeURIComponent(item.seller)},%20I%20am%20interested%20in:%20${encodeURIComponent(item.title)}%20(₹${item.price})`, '_blank');
-    };
+        <!-- Top Categories -->
+        <div class="category-scroll">
+          <div class="cat-chip active" onclick="filterByCategory('all', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-border-all"></i></div>
+            <span>All</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Grocery & Daily Needs', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-basket-shopping"></i></div>
+            <span>Grocery</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Mobiles & Tablets', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <span>Mobiles</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Local Services', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <span>Services</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Electronics', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-tv"></i></div>
+            <span>Electronics</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Bikes & Scooters', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-motorcycle"></i></div>
+            <span>Vehicles</span>
+          </div>
+        </div>
 
-    document.getElementById('detailAddCartBtn').onclick = () => {
-      addToCart(item.id);
-      closeModal('detailModal');
-    };
+        <div class="filter-bar">
+          <div class="filter-pill active" onclick="toggleVerified(this)">
+            <i class="fa-solid fa-circle-check"></i> Verified Sellers
+          </div>
+          <div class="filter-pill" onclick="filterType('service', this)">
+            <i class="fa-solid fa-handshake"></i> Services Only
+          </div>
+          <div class="filter-pill" onclick="filterType('product', this)">
+            <i class="fa-solid fa-bag-shopping"></i> Products
+          </div>
+        </div>
 
-    openModal('detailModal');
-  }
+        <div class="section-title">
+          <h3 id="gridTitle">Popular Near You</h3>
+          <span id="itemsCount" style="font-size: 11px; color: var(--text-muted); font-weight: 600;">6 items</span>
+        </div>
 
-  // 6. PHOTO UPLOAD (2–4 PHOTOS)
-  function handlePhotoUpload(event) {
-    const files = Array.from(event.target.files);
-    if (!files.length) return;
-
-    files.slice(0, 4).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        uploadedPhotos.push(e.target.result);
-        renderPhotoPreviews();
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  function renderPhotoPreviews() {
-    const container = document.getElementById('photoPreviewContainer');
-    container.innerHTML = uploadedPhotos.map((src, index) => `
-      <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-slate-200 shrink-0 shadow-sm">
-        <img src="${src}" class="w-full h-full object-cover" />
-        <button type="button" onclick="removePhoto(${index})" class="absolute top-0.5 right-0.5 bg-red-500 text-white rounded-full p-0.5">
-          <i data-lucide="x" class="w-2.5 h-2.5"></i>
-        </button>
+        <div class="listings-grid" id="listingsGrid"></div>
       </div>
-    `).join('');
-    lucide.createIcons();
-  }
 
-  function removePhoto(idx) {
-    uploadedPhotos.splice(idx, 1);
-    renderPhotoPreviews();
-  }
+      <!-- SCREEN 2: ALL CATEGORIES -->
+      <div class="app-screen" id="screenCategories">
+        <div class="section-title">
+          <h3>All Product Categories</h3>
+        </div>
+        <div class="cat-list-wrap" style="padding: 0 16px;">
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Grocery & Daily Needs')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-basket-shopping"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Grocery & Daily Needs</h4>
+              <p style="font-size: 12px; color: #64748b;">Fresh Veggies, Fruits, Dairy, Ration</p>
+            </div>
+          </div>
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Mobiles & Tablets')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Mobiles & Tablets</h4>
+              <p style="font-size: 12px; color: #64748b;">Smartphones, iPads, Watches, Cases</p>
+            </div>
+          </div>
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Electronics')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-tv"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Electronics & Appliances</h4>
+              <p style="font-size: 12px; color: #64748b;">TVs, Fridges, ACs, Washing Machines</p>
+            </div>
+          </div>
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Bikes & Scooters')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #f3e8ff; color: #7e22ce; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-motorcycle"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Bikes & Scooters</h4>
+              <p style="font-size: 12px; color: #64748b;">Motorcycles, Scooty, EV Bicycles</p>
+            </div>
+          </div>
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Local Services')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Home & Repair Services</h4>
+              <p style="font-size: 12px; color: #64748b;">Plumbers, Electricians, Tutors, Mechanics</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  function handlePostSubmit(e) {
-    e.preventDefault();
-    const title = document.getElementById('postTitle').value;
-    const category = document.getElementById('postCategory').value;
-    const price = parseFloat(document.getElementById('postPrice').value);
-    const desc = document.getElementById('postDesc').value || "Authentic verified local item.";
-    const phone = document.getElementById('postPhone').value;
-    const seller = document.getElementById('postSeller').value;
+      <!-- SCREEN 3: INBOX / CHATS -->
+      <div class="app-screen" id="screenChats">
+        <div class="section-title">
+          <h3>Messages & Inquiries</h3>
+        </div>
+        <div class="chat-item" style="display: flex; gap: 12px; padding: 14px 16px; background: white; border-bottom: 1px solid #f1f5f9; align-items: center; cursor: pointer;" onclick="alert('Chat with Kisan Fresh Organics: Hi, your order basket will be delivered today!')">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #475569;"><i class="fa-solid fa-store"></i></div>
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <h4 style="font-size: 14px; font-weight: 700;">Kisan Fresh Organics</h4>
+              <span style="font-size: 10px; color: #94a3b8;">10:45 AM</span>
+            </div>
+            <p style="font-size: 12px; color: #64748b;">Hi, your vegetable basket is packed and ready.</p>
+          </div>
+        </div>
+        <div class="chat-item" style="display: flex; gap: 12px; padding: 14px 16px; background: white; border-bottom: 1px solid #f1f5f9; align-items: center; cursor: pointer;" onclick="alert('Chat with Sharma Electricals: Technician will arrive at your address.')">
+          <div style="width: 48px; height: 48px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #475569;"><i class="fa-solid fa-bolt"></i></div>
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+              <h4 style="font-size: 14px; font-weight: 700;">Sharma Electricals</h4>
+              <span style="font-size: 10px; color: #94a3b8;">Yesterday</span>
+            </div>
+            <p style="font-size: 12px; color: #64748b;">Technician will arrive at your address at 3:00 PM.</p>
+          </div>
+        </div>
+      </div>
 
-    const newImages = uploadedPhotos.length > 0 ? uploadedPhotos : [
-      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&auto=format&fit=crop&q=80"
+      <!-- SCREEN 4: PROFILE -->
+      <div class="app-screen" id="screenProfile">
+        <div class="profile-header" style="background: white; padding: 24px 16px; text-align: center; border-bottom: 1px solid var(--border-color);">
+          <div style="width: 80px; height: 80px; border-radius: 50%; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 12px auto;"><i class="fa-solid fa-user"></i></div>
+          <h3 id="profileNameDisplay" style="font-size: 18px; font-weight: 800; color: #0f172a;">Silgrak Marak</h3>
+          <p id="profileEmailDisplay" style="font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 2px;">silgrakmarak1309@gmail.com</p>
+          <div id="adminBadgeTag" style="display: inline-block; background: #fee2e2; color: #dc2626; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 12px; margin-top: 6px;">SUPER ADMIN</div>
+        </div>
+        
+        <div style="padding: 16px;">
+          <!-- ADMIN PANEL BUTTON (Visible for silgrakmarak1309@gmail.com) -->
+          <div id="adminPanelMenuRow" style="display: none; background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; cursor: pointer;" onclick="openAdminPanelModal()">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <div>
+                <span style="font-size: 14px; font-weight: 800; color: #dc2626;"><i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> Admin Control & Moderation Panel</span>
+                <p style="font-size: 11px; color: #991b1b; margin-top: 2px;">Block / Unblock Users & Manage All Products</p>
+              </div>
+              <i class="fa-solid fa-chevron-right" style="color: #dc2626;"></i>
+            </div>
+          </div>
+
+          <div style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden;">
+            <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="showLocationPicker()">
+              <span style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-location-dot" style="margin-right: 8px; color: #dc2626;"></i> Change My Location</span>
+              <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+            </div>
+            <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="openSellModal()">
+              <span style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-plus" style="margin-right: 8px; color: #16a34a;"></i> Sell Products & Services</span>
+              <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+            </div>
+            <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="handleSignOut()">
+              <span style="font-size: 13px; font-weight: 600; color: #dc2626;"><i class="fa-solid fa-right-from-bracket" style="margin-right: 8px; color: #dc2626;"></i> Log Out</span>
+              <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fixed Bottom Navigation Bar -->
+      <nav class="bottom-nav">
+        <div class="nav-item active" id="navHome" onclick="switchNav('home')">
+          <i class="fa-solid fa-house"></i>
+          <span>Home</span>
+        </div>
+        <div class="nav-item" id="navCategories" onclick="switchNav('categories')">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Categories</span>
+        </div>
+        <div class="nav-sell-btn" onclick="openSellModal()">
+          <i class="fa-solid fa-plus"></i>
+        </div>
+        <div class="nav-item" id="navChats" onclick="switchNav('chats')">
+          <i class="fa-solid fa-comment-dots"></i>
+          <span>Chats</span>
+        </div>
+        <div class="nav-item" id="navProfile" onclick="switchNav('profile')">
+          <i class="fa-solid fa-user"></i>
+          <span>Profile</span>
+        </div>
+      </nav>
+    </div>
+
+  </div>
+
+  <!-- Google Account Picker Modal Sheet -->
+  <div class="modal-overlay" id="googlePickerModal">
+    <div class="modal-sheet">
+      <button class="modal-close" onclick="closeGooglePicker()"><i class="fa-solid fa-xmark"></i></button>
+      <h3 style="font-size: 17px; font-weight: 800; margin-bottom: 4px; color: #0f172a;">Choose an account</h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 16px;">to continue to Meri Local Bazaar</p>
+
+      <div class="google-account-item" onclick="loginWithGoogleAccount('Silgrak Marak', 'silgrakmarak1309@gmail.com', '#0284c7')">
+        <div class="google-avatar" style="background: #0284c7;">S</div>
+        <div style="flex:1;">
+          <div style="font-size: 14px; font-weight: 700; color: #0f172a;">Silgrak Marak <span style="background: #fee2e2; color: #dc2626; font-size: 10px; padding: 2px 6px; border-radius: 8px; margin-left: 4px;">Admin</span></div>
+          <div style="font-size: 12px; color: #64748b;">silgrakmarak1309@gmail.com</div>
+        </div>
+      </div>
+
+      <div class="google-account-item" onclick="loginWithGoogleAccount('Greja Marak', 'grejamarak@gmail.com', '#16a34a')">
+        <div class="google-avatar" style="background: #16a34a;">G</div>
+        <div style="flex:1;">
+          <div style="font-size: 14px; font-weight: 700; color: #0f172a;">Greja Marak</div>
+          <div style="font-size: 12px; color: #64748b;">grejamarak@gmail.com</div>
+        </div>
+      </div>
+
+      <div class="google-account-item" onclick="loginWithGoogleAccount('Demo Local Seller', 'seller@localbazaar.com', '#9333ea')">
+        <div class="google-avatar" style="background: #9333ea;">D</div>
+        <div style="flex:1;">
+          <div style="font-size: 14px; font-weight: 700; color: #0f172a;">Demo Local Seller</div>
+          <div style="font-size: 12px; color: #64748b;">seller@localbazaar.com</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-sheet">
+      <button class="modal-close" onclick="closeDetailModal()"><i class="fa-solid fa-xmark"></i></button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- Post Ad / Sell Modal (WITH REAL IMAGE UPLOAD) -->
+  <div class="modal-overlay" id="sellModal">
+    <div class="modal-sheet">
+      <button class="modal-close" onclick="closeSellModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #166534;">Post Free Ad / Sell</h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">List your product or local service with photos.</p>
+      
+      <!-- IMAGE UPLOADER -->
+      <div class="form-group">
+        <label><i class="fa-solid fa-camera" style="color: #16a34a; margin-right: 4px;"></i> Product Photo</label>
+        <div class="image-uploader-box" onclick="document.getElementById('productImageInput').click()">
+          <i class="fa-solid fa-cloud-arrow-up" style="font-size: 28px; color: #16a34a; margin-bottom: 6px;"></i>
+          <p style="font-size: 13px; font-weight: 700; color: #1e293b;">Click to upload product image from phone / camera</p>
+          <p style="font-size: 11px; color: #64748b;">Supports JPG, PNG, WEBP (Max 5MB)</p>
+          <input type="file" id="productImageInput" accept="image/*" style="display: none;" onchange="handleProductImageSelected(this)">
+        </div>
+        <div id="imagePreviewContainer" style="display: none;">
+          <div class="preview-image-wrap">
+            <img id="imagePreviewTag" src="" alt="Preview">
+            <button class="preview-remove-btn" onclick="removeProductImage()">✕</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Title</label>
+        <input type="text" id="postTitle" placeholder="e.g. Fresh Organic Veggies / iPhone 13 128GB">
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="postCat">
+          <option>Grocery & Daily Needs</option>
+          <option>Mobiles & Tablets</option>
+          <option>Local Services</option>
+          <option>Electronics</option>
+          <option>Bikes & Scooters</option>
+          <option>Furniture</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Price (₹)</label>
+        <input type="number" id="postPrice" placeholder="e.g. 500">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea id="postDesc" rows="3" placeholder="Condition, location, warranty, etc."></textarea>
+      </div>
+      <button onclick="submitPostAd()" class="btn-call" style="width: 100%; border: none; cursor: pointer; padding: 14px;">Post Listing Instantly</button>
+    </div>
+  </div>
+
+  <!-- Location Modal (ALL INDIA STATES & DISTRICTS) -->
+  <div class="modal-overlay" id="locationModal">
+    <div class="modal-sheet">
+      <button class="modal-close" onclick="closeLocationModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #166534;">Select State & District</h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 16px;">Full India database: All 28 States & 8 Union Territories.</p>
+      
+      <div class="form-group">
+        <label>Select State / Union Territory</label>
+        <select id="stateSelect" onchange="onStateChanged(this.value)">
+          <!-- Loaded dynamically from allIndiaLocations -->
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Select District</label>
+        <select id="distSelect">
+          <!-- Loaded dynamically based on selected state -->
+        </select>
+      </div>
+
+      <button onclick="applyLocation()" class="btn-call" style="width: 100%; border: none; cursor: pointer;">Save Location</button>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL MODAL (BLOCK / UNBLOCK USERS & MODERATION) -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-sheet" style="max-height: 90vh;">
+      <button class="modal-close" onclick="closeAdminModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 4px; color: #dc2626;"><i class="fa-solid fa-shield-halved"></i> Super Admin Panel</h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">Admin: <b>silgrakmarak1309@gmail.com</b></p>
+      
+      <div style="display: flex; gap: 8px; margin-bottom: 14px;">
+        <button id="adminTabUsers" class="admin-btn-action" style="flex:1; background: #dc2626; color: white; padding: 10px;" onclick="switchAdminTab('users')">Manage Users</button>
+        <button id="adminTabItems" class="admin-btn-action" style="flex:1; background: #f1f5f9; color: #334155; padding: 10px;" onclick="switchAdminTab('items')">Manage Listings</button>
+      </div>
+
+      <!-- Admin Tab: Users (Block / Unblock) -->
+      <div id="adminUsersSection">
+        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px;">ALL PLATFORM USERS (<span id="userCountDisplay">0</span>)</div>
+        <div id="adminUsersList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; overflow: hidden;"></div>
+      </div>
+
+      <!-- Admin Tab: Items (Sell / Unsell / Remove) -->
+      <div id="adminItemsSection" style="display: none;">
+        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px;">ALL ACTIVE LISTINGS (<span id="adminItemsCount">0</span>)</div>
+        <div id="adminListingsList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; padding: 10px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // FULL ALL-INDIA 28 STATES & 8 UTs DATA
+    const allIndiaLocations = {
+      "Meghalaya": ["West Garo Hills (Tura)", "East Garo Hills (Williamnagar)", "South Garo Hills (Baghmara)", "North Garo Hills (Resubelpara)", "South West Garo Hills (Ampati)", "East Khasi Hills (Shillong)", "West Khasi Hills (Nongstoin)", "South West Khasi Hills (Mawkyrwat)", "Eastern West Khasi Hills (Mairang)", "Ri-Bhoi (Nongpoh)", "West Jaintia Hills (Jowai)", "East Jaintia Hills (Khliehriat)"],
+      "Assam": ["Kamrup Metropolitan (Guwahati)", "Kamrup (Amingaon)", "Dibrugarh", "Jorhat", "Cachar (Silchar)", "Tinsukia", "Sivasagar", "Sonitpur (Tezpur)", "Nagaon", "Barpeta", "Bongaigaon", "Golaghat", "Dhubri", "Goalpara", "Karimganj", "Kokrajhar", "Baksa", "Chirang", "Udalguri", "Lakhimpur", "Dhemaji", "Morigaon", "Nalbari", "Biswanath", "Hojai", "Majuli", "Karbi Anglong", "Dima Hasao"],
+      "Maharashtra": ["Mumbai Suburban", "Mumbai City", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad (Chhatrapati Sambhajinagar)", "Solapur", "Kolhapur", "Amravati", "Nanded", "Sangli", "Jalgaon", "Akola", "Latur", "Dhule", "Ahmednagar", "Satara"],
+      "Delhi (NCT)": ["New Delhi", "North Delhi", "South Delhi", "West Delhi", "East Delhi", "Central Delhi", "South West Delhi", "North West Delhi", "North East Delhi", "Shahdara", "South East Delhi"],
+      "Uttar Pradesh": ["Lucknow", "Kanpur Nagar", "Varanasi", "Prayagraj (Allahabad)", "Agra", "Noida (Gautam Buddha Nagar)", "Ghaziabad", "Meerut", "Bareilly", "Aligarh", "Moradabad", "Gorakhpur", "Saharanpur", "Jhansi", "Mathura", "Ayodhya (Faizabad)"],
+      "Karnataka": ["Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Hubballi-Dharwad", "Mangaluru (Dakshina Kannada)", "Belagavi", "Kalaburagi", "Ballari", "Vijayapura", "Shivamogga", "Tumakuru", "Davangere", "Udupi"],
+      "West Bengal": ["Kolkata", "North 24 Parganas", "South 24 Parganas", "Howrah", "Hooghly", "Darjeeling", "Siliguri", "Paschim Bardhaman (Asansol/Durgapur)", "Purba Bardhaman", "Nadia", "Murshidabad", "Malda", "Jalpaiguri", "Cooch Behar"],
+      "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Tiruppur", "Vellore", "Erode", "Thoothukudi", "Kanchipuram", "Thanjavur"],
+      "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Junagadh", "Gandhinagar", "Anand", "Navsari", "Morbi", "Bharuch"],
+      "Rajasthan": ["Jaipur", "Jodhpur", "Kota", "Bikaner", "Ajmer", "Udaipur", "Bhilwara", "Alwar", "Bharatpur", "Sikar"],
+      "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Darbhanga", "Purnia", "Begusarai", "Bhojpur (Arrah)", "Vaishali (Hajipur)", "Nalanda", "Samastipur", "Saran (Chhapra)"],
+      "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain", "Sagar", "Dewas", "Satna", "Ratlam", "Rewa"],
+      "Kerala": ["Thiruvananthapuram", "Kochi (Ernakulam)", "Kozhikode", "Thrissur", "Kollam", "Kannur", "Palakkad", "Alappuzha", "Kottayam", "Malappuram"],
+      "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "SAS Nagar (Mohali)", "Hoshiarpur", "Pathankot"],
+      "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Karnal", "Hisar", "Rohtak", "Sonipat", "Panchkula"],
+      "Odisha": ["Khordha (Bhubaneswar)", "Cuttack", "Ganjam (Berhampur)", "Sundargarh (Rourkela)", "Sambalpur", "Puri", "Balasore"],
+      "Telangana": ["Hyderabad", "Medchal-Malkajgiri", "Rangareddy", "Warangal", "Nizamabad", "Khammam", "Karimnagar"],
+      "Andhra Pradesh": ["Visakhapatnam", "NTR (Vijayawada)", "Guntur", "Tirupati", "Kakinada", "Kurnool", "Nellore", "Ananthapuramu", "Kadapa"],
+      "Jharkhand": ["Ranchi", "East Singhbhum (Jamshedpur)", "Dhanbad", "Bokaro", "Hazaribagh", "Deoghar"],
+      "Chhattisgarh": ["Raipur", "Durg (Bhilai)", "Bilaspur", "Korba", "Rajnandgaon", "Jagdalpur"],
+      "Uttarakhand": ["Dehradun", "Haridwar", "Nainital (Haldwani)", "Udham Singh Nagar (Rudrapur)", "Rishikesh"],
+      "Himachal Pradesh": ["Shimla", "Kangra (Dharamshala)", "Mandi", "Solan", "Kullu", "Hamirpur"],
+      "Goa": ["North Goa (Panaji)", "South Goa (Margao)"],
+      "Tripura": ["West Tripura (Agartala)", "Gomati", "South Tripura", "North Tripura"],
+      "Manipur": ["Imphal West", "Imphal East", "Thoubal", "Bishnupur", "Churachandpur"],
+      "Nagaland": ["Dimapur", "Kohima", "Chumoukedima", "Mokokchung"],
+      "Mizoram": ["Aizawl", "Lunglei", "Champhai", "Kolasib"],
+      "Sikkim": ["East Sikkim (Gangtok)", "West Sikkim", "South Sikkim", "North Sikkim"],
+      "Arunachal Pradesh": ["Itanagar Capital Complex", "Tawang", "West Kameng (Bomdila)", "Papum Pare", "East Siang (Pasighat)"],
+      "Jammu & Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla", "Kathua", "Udhampur"],
+      "Ladakh": ["Leh", "Kargil"],
+      "Chandigarh": ["Chandigarh City"],
+      "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"],
+      "Andaman & Nicobar": ["South Andaman (Port Blair)", "North and Middle Andaman", "Nicobar"],
+      "Dadra and Nagar Haveli and Daman and Diu": ["Daman", "Diu", "Silvassa"]
+    };
+
+    // USERS DATABASE (FOR ADMIN MODERATION & BLOCK/UNBLOCK)
+    let usersList = [
+      { id: 'usr_admin_silgrak', name: 'Silgrak Marak (Admin)', email: 'silgrakmarak1309@gmail.com', phone: '+91 98765 43210', isBlocked: false, isAdmin: true, joinDate: 'Aug 2024' },
+      { id: 'usr_g_greja', name: 'Greja Marak', email: 'grejamarak@gmail.com', phone: '+91 98201 45678', isBlocked: false, isAdmin: false, joinDate: 'Aug 2024' },
+      { id: 'usr_seller_01', name: 'Kisan Fresh Organics', email: 'kisan@organics.in', phone: '+91 98765 11223', isBlocked: false, isAdmin: false, joinDate: 'Jul 2024' },
+      { id: 'usr_seller_02', name: 'Sharma Electricals', email: 'sharma@repair.in', phone: '+91 98110 44556', isBlocked: false, isAdmin: false, joinDate: 'Jul 2024' },
+      { id: 'usr_seller_03', name: 'Rohit Sharma (Mobiles)', email: 'rohit@tech.in', phone: '+91 91672 99887', isBlocked: false, isAdmin: false, joinDate: 'Jun 2024' }
     ];
 
-    const newItem = {
-      id: Date.now(),
-      title,
-      category,
-      isService: category === 'Services',
-      price,
-      originalPrice: price * 1.15,
-      seller,
-      rating: 5.0,
-      phone,
-      location: document.getElementById('currentLocationLabel').textContent,
-      desc,
-      userId: "USER_NEW_" + Math.floor(Math.random()*1000),
-      images: newImages,
-      isLiked: false
-    };
+    let currentUser = null;
+    let uploadedPostImageBase64 = null;
 
-    items.unshift(newItem);
-    closeModal('postModal');
-    document.getElementById('postAdForm').reset();
-    uploadedPhotos = [];
-    renderPhotoPreviews();
-    renderHomeListings();
-    alert("✅ Aapka Ad successfully publish ho gaya hai!");
-  }
+    const marketplaceItems = [
+      {
+        id: '1',
+        title: 'Fresh Organic Farm Vegetable & Fruit Basket',
+        category: 'Grocery & Daily Needs',
+        price: 349,
+        isService: false,
+        location: 'Tura Bazaar, West Garo Hills',
+        seller: 'Kisan Fresh Organics',
+        sellerEmail: 'kisan@organics.in',
+        rating: 4.9,
+        reviews: 28,
+        badge: 'Verified Business',
+        image: '/app-icon.jpg',
+        desc: 'Directly sourced fresh vegetables, juicy farm fruits, milk, and daily essentials with same-day local home delivery.'
+      },
+      {
+        id: '2',
+        title: 'OnePlus 11R 5G (16GB/256GB) Mint Condition',
+        category: 'Mobiles & Tablets',
+        price: 24500,
+        isService: false,
+        location: 'Hawakhana, West Garo Hills',
+        seller: 'Rohit Sharma',
+        sellerEmail: 'rohit@tech.in',
+        rating: 4.8,
+        reviews: 14,
+        badge: 'Verified Seller',
+        image: '/app-icon.jpg',
+        desc: '6 months old phone with original box, 100W SuperVOOC charger and bill. Scratchless screen.'
+      },
+      {
+        id: '3',
+        title: 'Home Electrician & AC Repairing Specialist',
+        category: 'Local Services',
+        price: 299,
+        isService: true,
+        location: 'Araimile, West Garo Hills',
+        seller: 'Sharma Electricals & Cooling',
+        sellerEmail: 'sharma@repair.in',
+        rating: 5.0,
+        reviews: 42,
+        badge: 'Certified Pro',
+        image: '/app-icon.jpg',
+        desc: 'Certified technician for AC servicing, home wiring, fan installation, inverter setup and quick doorstep repair.'
+      },
+      {
+        id: '4',
+        title: 'Royal Enfield Classic 350 (2022 Dual Channel ABS)',
+        category: 'Bikes & Scooters',
+        price: 155000,
+        isService: false,
+        location: 'Tura Bazaar, West Garo Hills',
+        seller: 'Vikram Rajput',
+        sellerEmail: 'vikram@auto.in',
+        rating: 4.7,
+        reviews: 9,
+        badge: 'Verified Seller',
+        image: '/app-icon.jpg',
+        desc: 'Single owner, 12,000 KM driven, insurance valid up to 2027. Showroom serviced with complete service history.'
+      },
+      {
+        id: '5',
+        title: 'Solid Sheesham Wood 6-Seater Dining Table',
+        category: 'Furniture',
+        price: 18500,
+        isService: false,
+        location: 'Rongkhon, West Garo Hills',
+        seller: 'Pooja Handicrafts',
+        sellerEmail: 'pooja@crafts.in',
+        rating: 4.9,
+        reviews: 31,
+        badge: 'Verified Business',
+        image: '/app-icon.jpg',
+        desc: 'Pure handcrafted Sheesham wood dining table with 6 cushioned chairs in pristine condition.'
+      },
+      {
+        id: '6',
+        title: 'Professional Plumber & Pipe Leakage Repair',
+        category: 'Local Services',
+        price: 249,
+        isService: true,
+        location: 'Chandmary, West Garo Hills',
+        seller: 'Apex Plumbing Works',
+        sellerEmail: 'apex@plumb.in',
+        rating: 4.8,
+        reviews: 19,
+        badge: 'Certified Pro',
+        image: '/app-icon.jpg',
+        desc: 'Quick 30-minute doorstep service for kitchen sink leaks, bathroom fitting, motor pump repair and water tank cleaning.'
+      }
+    ];
 
-  // 7. CHATS
-  function renderChatList() {
-    const container = document.getElementById('chatList');
-    container.innerHTML = chats.map(c => `
-      <div onclick="openWhatsAppChat('${c.phone}', '${c.name}')" class="p-3 flex items-center justify-between hover:bg-slate-50 cursor-pointer transition">
-        <div class="flex items-center gap-2.5">
-          <div class="w-10 h-10 rounded-2xl bg-emerald-700 text-white font-bold flex items-center justify-center text-xs shadow-sm">
-            ${c.avatar}
-          </div>
-          <div>
-            <h4 class="font-bold text-xs text-slate-900">${c.name}</h4>
-            <p class="text-[10px] text-slate-500 line-clamp-1">${c.lastMsg}</p>
-          </div>
-        </div>
-        <div class="text-right">
-          <span class="text-[9px] text-slate-400">${c.time}</span>
-          <div class="mt-0.5 text-emerald-600">
-            <i data-lucide="message-circle" class="w-3.5 h-3.5 ml-auto"></i>
-          </div>
-        </div>
-      </div>
-    `).join('');
-  }
+    let currentCategory = 'all';
+    let currentSearch = '';
+    let filterOnlyService = null;
+    let isSignUpMode = false;
 
-  function openWhatsAppChat(phone, name) {
-    window.open(`https://wa.me/91${phone}?text=Hello%20${encodeURIComponent(name)},%20chatting%20from%20Meri%20Local%20Bazaar%20App!`, '_blank');
-  }
-
-  // 8. CART
-  function addToCart(id) {
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-    cart.push(item);
-    updateCartUI();
-    alert(`🛒 "${item.title}" cart me add ho gaya!`);
-  }
-
-  function updateCartUI() {
-    document.getElementById('statCart').textContent = cart.length;
-    const list = document.getElementById('cartItemsList');
-    if (cart.length === 0) {
-      list.innerHTML = `<p class="text-center text-slate-400 py-3">Cart is empty.</p>`;
-      document.getElementById('cartTotal').textContent = "₹0";
-      return;
+    // Populate all states in location dropdown
+    function initLocationDropdown() {
+      const stateSelect = document.getElementById('stateSelect');
+      stateSelect.innerHTML = Object.keys(allIndiaLocations).map(st => `<option value="${st}">${st}</option>`).join('');
+      stateSelect.value = "Meghalaya";
+      onStateChanged("Meghalaya");
     }
 
-    let total = 0;
-    list.innerHTML = cart.map((item, idx) => {
-      total += item.price;
-      return `
-        <div class="flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-100">
-          <div class="flex items-center gap-2">
-            <img src="${item.images[0]}" class="w-8 h-8 object-cover rounded-lg" />
-            <div>
-              <p class="font-bold text-slate-800 line-clamp-1">${item.title}</p>
-              <p class="text-green-700 font-bold">₹${item.price.toLocaleString('en-IN')}</p>
-            </div>
-          </div>
-          <button onclick="removeFromCart(${idx})" class="text-red-500 p-1">
-            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-          </button>
-        </div>
-      `;
-    }).join('');
+    function onStateChanged(stateName) {
+      const distSelect = document.getElementById('distSelect');
+      const districts = allIndiaLocations[stateName] || [];
+      distSelect.innerHTML = districts.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
 
-    document.getElementById('cartTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
-    lucide.createIcons();
-  }
+    // AUTH FUNCTIONS
+    function switchAuthTab(tab) {
+      document.getElementById('tabEmailGoogle').classList.toggle('active', tab === 'email');
+      document.getElementById('tabPhoneOtp').classList.toggle('active', tab === 'phone');
+      document.getElementById('emailFormSection').style.display = (tab === 'email') ? 'block' : 'none';
+      document.getElementById('phoneFormSection').style.display = (tab === 'phone') ? 'block' : 'none';
+    }
 
-  function removeFromCart(idx) {
-    cart.splice(idx, 1);
-    updateCartUI();
-  }
+    function toggleSignUpMode() {
+      isSignUpMode = !isSignUpMode;
+      document.getElementById('nameInputWrapper').style.display = isSignUpMode ? 'block' : 'none';
+      document.getElementById('authSubmitBtn').textContent = isSignUpMode ? 'Create Account' : 'Sign In';
+      document.getElementById('authToggleText').innerHTML = isSignUpMode 
+        ? 'Already have an account? <b>Sign In</b>' 
+        : 'Don\'t have an account? <b>Sign Up</b>';
+    }
 
-  function toggleCart() {
-    const m = document.getElementById('cartModal');
-    m.classList.toggle('hidden');
-    m.classList.toggle('flex');
-    updateCartUI();
-    lucide.createIcons();
-  }
+    function openGoogleAccountPicker() {
+      document.getElementById('googlePickerModal').classList.add('active');
+    }
 
-  function checkoutWhatsApp() {
-    if (!cart.length) return;
-    let msg = "Order from Meri Local Bazaar:\n";
-    cart.forEach((i, idx) => {
-      msg += `${idx+1}. ${i.title} - ₹${i.price}\n`;
-    });
-    msg += `Total: ${document.getElementById('cartTotal').textContent}`;
-    window.open(`https://wa.me/919876543210?text=${encodeURIComponent(msg)}`, '_blank');
-  }
+    function closeGooglePicker() {
+      document.getElementById('googlePickerModal').classList.remove('active');
+    }
 
-  // 9. AUTH & LOGOUT FLOW
-  function openGoogleChooser() { openModal('googleChooserModal'); }
-  
-  function saveSessionAndLogin(user) {
-    currentUser = user;
-    localStorage.setItem('localbazaar_session', JSON.stringify(currentUser));
-    document.getElementById('screenAuth').classList.add('hidden');
-    updateProfileStats();
-    lucide.createIcons();
-  }
+    function loginWithGoogleAccount(name, email, color) {
+      const isAdmin = email.trim().toLowerCase() === 'silgrakmarak1309@gmail.com';
+      currentUser = {
+        name: name,
+        email: email,
+        isAdmin: isAdmin
+      };
+      closeGooglePicker();
+      completeLogin();
+    }
 
-  function loginWithGoogleUser(name, email, avatar, isAdmin = false) {
-    const isSuperAdmin = isAdmin || (email.toLowerCase() === 'silgrakmarak1309@gmail.com');
-    const user = { name, email, avatar, isAdmin: isSuperAdmin };
-    closeModal('googleChooserModal');
-    saveSessionAndLogin(user);
-  }
+    function handleEmailLogin() {
+      const email = document.getElementById('authEmail').value.trim();
+      const pwd = document.getElementById('authPassword').value.trim();
+      const name = document.getElementById('authName').value.trim();
 
-  function promptCustomGoogleLogin() {
-    const email = prompt("Enter your Gmail address:");
-    if (!email || !email.includes('@')) return;
-    const name = email.split('@')[0].replace(/[\._]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-    const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase() || 'U';
-    const isSuperAdmin = email.toLowerCase() === 'silgrakmarak1309@gmail.com';
-    const user = { name, email, avatar: initials, isAdmin: isSuperAdmin };
-    closeModal('googleChooserModal');
-    saveSessionAndLogin(user);
-  }
+      if (!email || !email.includes('@')) {
+        alert('Please enter a valid email address.');
+        return;
+      }
+      if (pwd.length < 4) {
+        alert('Please enter your password (at least 4 characters).');
+        return;
+      }
 
-  function sendPhoneOTP() {
-    const phone = document.getElementById('loginPhoneInput').value.trim();
-    if (phone.length < 10) return alert("Enter valid 10 digit number");
-    document.getElementById('displayOtpPhone').textContent = `+91 ${phone}`;
-    document.getElementById('phoneStep1').classList.add('hidden');
-    document.getElementById('phoneStep2').classList.remove('hidden');
-  }
+      const isAdmin = email.toLowerCase() === 'silgrakmarak1309@gmail.com';
+      const displayName = name || (isAdmin ? 'Silgrak Marak (Admin)' : email.split('@')[0]);
 
-  function verifyPhoneOTP() {
-    const phone = document.getElementById('loginPhoneInput').value.trim();
-    if (phone.length < 10) return alert("Enter valid 10 digit phone number");
-    const user = { name: `User ${phone.slice(-4)}`, email: `${phone}@localbazaar.in`, avatar: phone.slice(-2), isAdmin: false };
-    saveSessionAndLogin(user);
-  }
+      // Check if user is blocked
+      const matchedUser = usersList.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (matchedUser && matchedUser.isBlocked) {
+        alert('Account Suspended: This user ID has been blocked by Administrator.');
+        return;
+      }
 
-  function enterAsGuest() {
-    const user = { name: "Guest User", email: "guest@localbazaar.in", avatar: "GU", isAdmin: false };
-    saveSessionAndLogin(user);
-  }
+      currentUser = {
+        name: displayName,
+        email: email,
+        isAdmin: isAdmin
+      };
+      completeLogin();
+    }
 
-  // Clear Sign Out / Logout
-  function signOutUser() {
-    localStorage.removeItem('localbazaar_session');
-    currentUser = null;
-    document.getElementById('screenAuth').classList.remove('hidden');
-    document.getElementById('phoneStep1').classList.remove('hidden');
-    document.getElementById('phoneStep2').classList.add('hidden');
-    document.getElementById('loginPhoneInput').value = '';
-    navTo('home');
-  }
+    function handlePhoneOtp() {
+      const phone = document.getElementById('authPhone').value.trim();
+      const otpWrapper = document.getElementById('otpInputWrapper');
+      const submitBtn = document.getElementById('otpSubmitBtn');
 
-  function updateProfileStats() {
-    if (!currentUser) return;
-    document.getElementById('profileName').textContent = currentUser.name || "User";
-    document.getElementById('profileEmail').textContent = currentUser.email || "";
-    document.getElementById('profileAvatarLarge').textContent = currentUser.avatar || "U";
+      if (!phone || phone.length < 10) {
+        alert('Please enter valid 10-digit mobile number');
+        return;
+      }
 
-    const isAdmin = (currentUser.email && currentUser.email.toLowerCase() === 'silgrakmarak1309@gmail.com') || (currentUser.isAdmin === true);
-    const adminOption = document.getElementById('adminMenuOption');
-    if (adminOption) {
-      if (isAdmin) {
-        adminOption.classList.remove('hidden');
+      if (otpWrapper.style.display === 'none') {
+        otpWrapper.style.display = 'block';
+        submitBtn.textContent = 'Verify OTP & Login';
+        alert('OTP sent to +91 ' + phone + '\n(Use demo OTP: 123456)');
       } else {
-        adminOption.classList.add('hidden');
+        const otp = document.getElementById('authOtp').value.trim();
+        if (otp.length !== 6) {
+          alert('Please enter 6-digit OTP code');
+          return;
+        }
+        currentUser = {
+          name: 'Mobile User (' + phone.slice(-4) + ')',
+          email: phone + '@localbazaar.in',
+          isAdmin: false
+        };
+        completeLogin();
       }
     }
-  }
 
-  // 10. ALL-INDIA STATES & DISTRICTS SELECTOR
-  function populateStateSelect() {
-    const s = document.getElementById('stateSelect');
-    s.innerHTML = Object.keys(ALL_INDIA_LOCATIONS).map(st => `<option value="${st}">${st}</option>`).join('');
-    populateDistricts();
-  }
+    function completeLogin() {
+      document.getElementById('authScreen').style.display = 'none';
+      document.getElementById('mainAppSection').style.display = 'block';
 
-  function populateDistricts() {
-    const st = document.getElementById('stateSelect').value;
-    const d = document.getElementById('districtSelect');
-    const dists = ALL_INDIA_LOCATIONS[st] || [];
-    d.innerHTML = dists.map(dis => `<option value="${dis}">${dis}</option>`).join('');
-  }
+      // Update Profile UI
+      document.getElementById('profileNameDisplay').textContent = currentUser.name;
+      document.getElementById('profileEmailDisplay').textContent = currentUser.email;
 
-  function applyLocation() {
-    const st = document.getElementById('stateSelect').value;
-    const dis = document.getElementById('districtSelect').value;
-    document.getElementById('currentLocationLabel').textContent = `${dis}, ${st}`;
-    document.getElementById('statCity').textContent = dis.split(' ')[0];
-    closeModal('locationModal');
-  }
+      // Show Admin Panel option if admin
+      if (currentUser.isAdmin) {
+        document.getElementById('adminBadgeTag').style.display = 'inline-block';
+        document.getElementById('adminPanelMenuRow').style.display = 'block';
+      } else {
+        document.getElementById('adminBadgeTag').style.display = 'none';
+        document.getElementById('adminPanelMenuRow').style.display = 'none';
+      }
 
-  function autoDetectLocation() {
-    document.getElementById('currentLocationLabel').textContent = "West Garo Hills (Tura), Meghalaya";
-    document.getElementById('statCity').textContent = "Tura";
-    closeModal('locationModal');
-    alert("📍 Location auto-detected: West Garo Hills (Tura), Meghalaya");
-  }
-
-  // 11. ADMIN MODERATION
-  function renderAdminUsers() {
-    const container = document.getElementById('adminUserList');
-    container.innerHTML = users.map(u => `
-      <div class="flex items-center justify-between p-2.5 rounded-2xl border ${u.isBlocked ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-200'}">
-        <div>
-          <p class="font-bold text-slate-800">${u.name}</p>
-          <p class="text-[10px] text-slate-500">📱 ${u.phone} • <b class="${u.isBlocked ? 'text-red-600' : 'text-green-600'}">${u.isBlocked ? 'BLOCKED' : 'ACTIVE'}</b></p>
-        </div>
-        <button onclick="toggleBlock('${u.id}')" class="px-2.5 py-1 text-[11px] font-bold rounded-xl ${u.isBlocked ? 'bg-green-700 text-white' : 'bg-red-600 text-white'}">
-          ${u.isBlocked ? 'Unblock' : 'Block'}
-        </button>
-      </div>
-    `).join('');
-  }
-
-  function toggleBlock(id) {
-    const u = users.find(x => x.id === id);
-    if (!u) return;
-    u.isBlocked = !u.isBlocked;
-    renderAdminUsers();
-    renderHomeListings();
-  }
-
-  // MODAL UTILS
-  function openModal(id) {
-    document.getElementById(id).classList.remove('hidden');
-    document.getElementById(id).classList.add('flex');
-    lucide.createIcons();
-  }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.add('hidden');
-    document.getElementById(id).classList.remove('flex');
-  }
-
-  function openPostModal() { openModal('postModal'); }
-  function openLocationModal() { openModal('locationModal'); }
-  function openAdminModal() { 
-    const isAdmin = (currentUser.email.toLowerCase() === 'silgrakmarak1309@gmail.com') || (currentUser.isAdmin === true);
-    if (!isAdmin) {
-      alert("Access Denied: Only Super Admin (silgrakmarak1309@gmail.com) can access Admin Moderation.");
-      return;
+      renderListings();
     }
-    openModal('adminModal'); 
-    renderAdminUsers();
-  }
 
-  if (document.readyState === 'loading') {
-    window.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-</script>
+    function handleSignOut() {
+      currentUser = null;
+      document.getElementById('mainAppSection').style.display = 'none';
+      document.getElementById('authScreen').style.display = 'flex';
+      switchNav('home');
+    }
+
+    // IMAGE UPLOAD HANDLER FOR SELL SCREEN
+    function handleProductImageSelected(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          uploadedPostImageBase64 = e.target.result;
+          document.getElementById('imagePreviewTag').src = uploadedPostImageBase64;
+          document.getElementById('imagePreviewContainer').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function removeProductImage() {
+      uploadedPostImageBase64 = null;
+      document.getElementById('productImageInput').value = '';
+      document.getElementById('imagePreviewContainer').style.display = 'none';
+    }
+
+    // RENDER LISTINGS
+    function renderListings() {
+      const grid = document.getElementById('listingsGrid');
+      let filtered = marketplaceItems.filter(item => {
+        const matchesCat = currentCategory === 'all' || item.category === currentCategory;
+        const matchesSearch = item.title.toLowerCase().includes(currentSearch.toLowerCase()) || 
+                              item.category.toLowerCase().includes(currentSearch.toLowerCase()) ||
+                              item.location.toLowerCase().includes(currentSearch.toLowerCase());
+        const matchesType = filterOnlyService === null || item.isService === filterOnlyService;
+        return matchesCat && matchesSearch && matchesType;
+      });
+
+      document.getElementById('itemsCount').textContent = `${filtered.length} items found`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px 10px; color: #64748b;">
+          <i class="fa-solid fa-basket-shopping" style="font-size: 36px; margin-bottom: 12px; color: #cbd5e1;"></i>
+          <p style="font-size: 14px; font-weight: 700;">No items found</p>
+          <p style="font-size: 12px;">Try changing categories or location filters</p>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="listing-card" onclick="openDetailModal('${item.id}')">
+          <div class="card-img-wrap">
+            <img src="${item.image}" alt="${item.title}">
+            <span class="card-badge">${item.isService ? 'Service' : 'Item'}</span>
+            <button class="card-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');">
+              <i class="fa-solid fa-heart"></i>
+            </button>
+          </div>
+          <div class="card-body">
+            <div>
+              <div class="card-price">₹${item.price.toLocaleString('en-IN')}</div>
+              <div class="card-title">${item.title}</div>
+            </div>
+            <div>
+              <div class="card-loc">
+                <i class="fa-solid fa-location-dot" style="font-size: 10px; color: #dc2626;"></i>
+                <span>${item.location}</span>
+              </div>
+              <div class="card-footer-seller">
+                <span>${item.seller}</span>
+                <span class="seller-rating"><i class="fa-solid fa-star"></i> ${item.rating}</span>
+              </div>
+              <div style="margin-top: 6px;" onclick="event.stopPropagation();">
+                <a href="https://wa.me/919876543210?text=Hi%2C+I+am+interested+in+your+listing+${encodeURIComponent(item.title)}+on+Meri+Local+Bazaar" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: #25d366; color: white; text-decoration: none; padding: 7px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 800; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);">
+                  <i class="fa-brands fa-whatsapp" style="font-size: 14px;"></i> WhatsApp Seller
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterByCategory(cat, element) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+      if (element) element.classList.add('active');
+      renderListings();
+    }
+
+    function openCategoryFromAll(cat) {
+      switchNav('home');
+      filterByCategory(cat);
+    }
+
+    function handleSearch(val) {
+      currentSearch = val;
+      renderListings();
+    }
+
+    function toggleVerified(element) {
+      element.classList.toggle('active');
+      renderListings();
+    }
+
+    function filterType(type, element) {
+      const isActive = element.classList.contains('active');
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      if (!isActive) {
+        element.classList.add('active');
+        filterOnlyService = (type === 'service');
+      } else {
+        filterOnlyService = null;
+      }
+      renderListings();
+    }
+
+    function openDetailModal(id) {
+      const item = marketplaceItems.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById('modalContent').innerHTML = `
+        <div style="text-align: center; margin-bottom: 16px;">
+          <img src="${item.image}" style="width: 140px; height: 140px; border-radius: 18px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
+        <div style="display: inline-block; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 8px;">
+          ${item.badge}
+        </div>
+        <h2 style="font-size: 19px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">${item.title}</h2>
+        <div style="font-size: 22px; font-weight: 800; color: #15803d; margin-bottom: 12px;">₹${item.price.toLocaleString('en-IN')}</div>
+        
+        <p style="font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 16px;">
+          ${item.desc}
+        </p>
+
+        <div style="background: #f8fafc; padding: 12px; border-radius: 14px; margin-bottom: 16px; border: 1px solid #e2e8f0;">
+          <div style="font-size: 11px; color: #64748b; font-weight: 600;">SELLER PROFILE</div>
+          <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-top: 2px;">${item.seller}</div>
+          <div style="font-size: 12px; color: #d97706; font-weight: 700; margin-top: 2px;">
+            ★ ${item.rating} (${item.reviews} local reviews) • 📍 ${item.location}
+          </div>
+        </div>
+
+        <div class="action-btn-row">
+          <a href="tel:+919876543210" class="btn-call">
+            <i class="fa-solid fa-phone"></i> Call Seller
+          </a>
+          <a href="https://wa.me/919876543210?text=Hi%2C+I+am+interested+in+your+listing+on+Meri+Local+Bazaar" target="_blank" class="btn-wa">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </a>
+        </div>
+      `;
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detailModal').classList.remove('active');
+    }
+
+    function showLocationPicker() {
+      document.getElementById('locationModal').classList.add('active');
+    }
+
+    function closeLocationModal() {
+      document.getElementById('locationModal').classList.remove('active');
+    }
+
+    function applyLocation() {
+      const state = document.getElementById('stateSelect').value;
+      const dist = document.getElementById('distSelect').value;
+      document.getElementById('locDisplay').textContent = `${dist}, ${state}`;
+      closeLocationModal();
+    }
+
+    function switchNav(tab) {
+      document.querySelectorAll('.app-screen').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+      if (tab === 'home') {
+        document.getElementById('screenHome').classList.add('active');
+        document.getElementById('navHome').classList.add('active');
+      } else if (tab === 'categories') {
+        document.getElementById('screenCategories').classList.add('active');
+        document.getElementById('navCategories').classList.add('active');
+      } else if (tab === 'chats') {
+        document.getElementById('screenChats').classList.add('active');
+        document.getElementById('navChats').classList.add('active');
+      } else if (tab === 'profile') {
+        document.getElementById('screenProfile').classList.add('active');
+        document.getElementById('navProfile').classList.add('active');
+      }
+    }
+
+    function openSellModal() {
+      document.getElementById('sellModal').classList.add('active');
+    }
+
+    function closeSellModal() {
+      document.getElementById('sellModal').classList.remove('active');
+    }
+
+    function submitPostAd() {
+      const title = document.getElementById('postTitle').value.trim();
+      const price = document.getElementById('postPrice').value.trim();
+      const cat = document.getElementById('postCat').value;
+      const desc = document.getElementById('postDesc').value.trim();
+
+      if (!title || !price) {
+        alert('Please enter listing title and price');
+        return;
+      }
+
+      const imgToUse = uploadedPostImageBase64 || '/app-icon.jpg';
+
+      marketplaceItems.unshift({
+        id: Date.now().toString(),
+        title: title,
+        category: cat,
+        price: parseInt(price),
+        isService: cat === 'Local Services',
+        location: document.getElementById('locDisplay').textContent,
+        seller: currentUser ? currentUser.name : 'You (Local Seller)',
+        sellerEmail: currentUser ? currentUser.email : 'user@localbazaar.in',
+        rating: 5.0,
+        reviews: 1,
+        badge: 'New Listing',
+        image: imgToUse,
+        desc: desc || 'Newly listed on Meri Local Bazaar.'
+      });
+
+      // Clear form
+      document.getElementById('postTitle').value = '';
+      document.getElementById('postPrice').value = '';
+      document.getElementById('postDesc').value = '';
+      removeProductImage();
+
+      closeSellModal();
+      switchNav('home');
+      renderListings();
+      alert('Congratulations! Your product/service with image is now live in your local feed.');
+    }
+
+    // ADMIN MODERATION PANEL LOGIC
+    function openAdminPanelModal() {
+      if (!currentUser || !currentUser.isAdmin) {
+        alert('Access Denied: Only Administrator (silgrakmarak1309@gmail.com) can access this.');
+        return;
+      }
+      renderAdminUsers();
+      renderAdminItems();
+      document.getElementById('adminModal').classList.add('active');
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.remove('active');
+    }
+
+    function switchAdminTab(tab) {
+      if (tab === 'users') {
+        document.getElementById('adminUsersSection').style.display = 'block';
+        document.getElementById('adminItemsSection').style.display = 'none';
+        document.getElementById('adminTabUsers').style.background = '#dc2626';
+        document.getElementById('adminTabUsers').style.color = 'white';
+        document.getElementById('adminTabItems').style.background = '#f1f5f9';
+        document.getElementById('adminTabItems').style.color = '#334155';
+      } else {
+        document.getElementById('adminUsersSection').style.display = 'none';
+        document.getElementById('adminItemsSection').style.display = 'block';
+        document.getElementById('adminTabItems').style.background = '#dc2626';
+        document.getElementById('adminTabItems').style.color = 'white';
+        document.getElementById('adminTabUsers').style.background = '#f1f5f9';
+        document.getElementById('adminTabUsers').style.color = '#334155';
+      }
+    }
+
+    function renderAdminUsers() {
+      const container = document.getElementById('adminUsersList');
+      document.getElementById('userCountDisplay').textContent = usersList.length;
+
+      container.innerHTML = usersList.map(u => `
+        <div class="admin-user-row">
+          <div>
+            <div style="font-size: 13.5px; font-weight: 700; color: #0f172a;">
+              ${u.name}
+              <span class="admin-badge ${u.isBlocked ? 'admin-badge-blocked' : 'admin-badge-active'}">
+                ${u.isBlocked ? 'Blocked' : 'Active'}
+              </span>
+            </div>
+            <div style="font-size: 11.5px; color: #64748b;">${u.email} • ${u.phone}</div>
+          </div>
+          <div>
+            ${u.isAdmin ? '<span style="font-size: 11px; color: #94a3b8; font-weight: 700;">Admin</span>' : `
+              <button class="admin-btn-action ${u.isBlocked ? 'btn-unblock' : 'btn-block'}" onclick="toggleUserBlock('${u.id}')">
+                ${u.isBlocked ? '<i class=\"fa-solid fa-unlock\"></i> Unblock' : '<i class=\"fa-solid fa-ban\"></i> Block'}
+              </button>
+            `}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function toggleUserBlock(userId) {
+      const user = usersList.find(u => u.id === userId);
+      if (!user) return;
+      user.isBlocked = !user.isBlocked;
+      renderAdminUsers();
+      alert(user.name + (user.isBlocked ? ' has been BLOCKED from LocalBazaar.' : ' has been UNBLOCKED.'));
+    }
+
+    function renderAdminItems() {
+      const container = document.getElementById('adminListingsList');
+      document.getElementById('adminItemsCount').textContent = marketplaceItems.length;
+
+      container.innerHTML = marketplaceItems.map(item => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 10px; margin-bottom: 8px; border: 1px solid #e2e8f0;">
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <img src="${item.image}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;">
+            <div>
+              <div style="font-size: 13px; font-weight: 700; color: #0f172a;">${item.title.substring(0, 32)}...</div>
+              <div style="font-size: 11px; color: #16a34a; font-weight: 800;">₹${item.price} • ${item.seller}</div>
+            </div>
+          </div>
+          <button onclick="adminDeleteListing('${item.id}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">
+            <i class="fa-solid fa-trash"></i> Remove
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function adminDeleteListing(itemId) {
+      if (confirm('Are you sure you want to remove this listing?')) {
+        const index = marketplaceItems.findIndex(i => i.id === itemId);
+        if (index > -1) {
+          marketplaceItems.splice(index, 1);
+          renderAdminItems();
+          renderListings();
+        }
+      }
+    }
+
+    // Initialize locations on load
+    initLocationDropdown();
+  </script>
 </body>
 </html>
