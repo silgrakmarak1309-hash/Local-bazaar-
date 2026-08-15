@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "742758093547",
+    "firebase_url": "https://localbazar-cff07-default-rtdb.firebaseio.com",
+    "project_id": "localbazar-cff07",
+    "storage_bucket": "localbazar-cff07.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742758093547:android:d5fc91d3423a2fb267a4ae",
+        "android_client_info": {
+          "package_name": "com.localbazar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742758093547-skj0npstvj9u26beiifj8e03lj9r8qvu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbav50_F0n1E_ZPs-DYJyiAsTK7dA7sKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742758093547-skj0npstvj9u26beiifj8e03lj9r8qvu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742758093547:android:d5fc91d3423a2fb267a4ae",
+        "android_client_info": {
+          "package_name": "Com.localbazar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742758093547-skj0npstvj9u26beiifj8e03lj9r8qvu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbav50_F0n1E_ZPs-DYJyiAsTK7dA7sKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742758093547-skj0npstvj9u26beiifj8e03lj9r8qvu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
