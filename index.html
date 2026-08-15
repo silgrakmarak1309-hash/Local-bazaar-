@@ -1,26 +1,31 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Local Bazaar - Meri Local Dukaan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Meri Local Bazaar - Your Local Market, One App</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Lucide Icons -->
+  <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
           colors: {
             bazaar: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              800: '#166534',
-              900: '#14532d'
+              green: '#2e7d32',
+              darkGreen: '#1b5e20',
+              lightGreen: '#e8f5e9',
+              accent: '#388e3c',
+              cardBg: '#ffffff',
+              surface: '#f8fafc'
             }
           }
         }
@@ -30,1017 +35,1375 @@
   <style>
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    body {
+      background-color: #f1f5f9;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .app-viewport {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      background: #f8fafc;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 50px rgba(0,0,0,0.06);
+    }
+    @media (min-width: 768px) {
+      .app-viewport {
+        margin: 15px auto;
+        min-height: calc(100vh - 30px);
+        border-radius: 32px;
+        overflow: hidden;
+        border: 6px solid #0f172a;
+      }
+    }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased font-sans pb-20 md:pb-6">
+<body class="font-sans antialiased text-slate-900">
 
-  <!-- Top Navigation Bar -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-slate-200 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-green-700 to-emerald-500 text-white flex items-center justify-center font-bold text-xl shadow-md">
-          🛍️
-        </div>
-        <div>
-          <h1 class="font-extrabold text-lg text-slate-900 leading-tight">Local Bazaar</h1>
-          <button onclick="openLocationModal()" class="flex items-center gap-1 text-xs text-green-700 font-semibold hover:underline">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-            <span id="currentLocationText">Tura, West Garo Hills, Meghalaya</span>
-            <i data-lucide="chevron-down" class="w-3 h-3"></i>
-          </button>
-        </div>
+<div class="app-viewport" id="appRoot">
+
+  <!-- ======================================================== -->
+  <!-- SCREEN: AUTH (Continue with Google / Phone OTP)          -->
+  <!-- ======================================================== -->
+  <div id="screenAuth" class="fixed inset-0 z-50 bg-gradient-to-b from-green-900 via-emerald-800 to-slate-950 text-white flex flex-col justify-between p-6 max-w-[480px] mx-auto overflow-y-auto hidden">
+    
+    <!-- Top Branding -->
+    <div class="pt-6 text-center space-y-2">
+      <div class="w-16 h-16 mx-auto rounded-2xl bg-white shadow-xl flex items-center justify-center text-3xl">
+        🛍️
       </div>
-
-      <!-- Search Input (Desktop) -->
-      <div class="hidden md:flex flex-1 max-w-md items-center relative">
-        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3"></i>
-        <input id="desktopSearch" oninput="handleSearch(this.value)" type="text" placeholder="Search phone, veggies, mechanic, bike, car..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 border border-transparent rounded-full focus:outline-none focus:bg-white focus:border-green-600 transition" />
-      </div>
-
-      <!-- Right Header Actions -->
-      <div class="flex items-center gap-2">
-        <button onclick="openAdminModal()" class="px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg flex items-center gap-1.5 transition">
-          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
-          <span class="hidden sm:inline">Admin Panel</span>
-        </button>
-        <button onclick="openPostModal()" class="px-3 py-1.5 text-xs font-bold bg-green-600 hover:bg-green-700 text-white rounded-lg flex items-center gap-1.5 shadow transition">
-          <i data-lucide="plus-circle" class="w-4 h-4"></i>
-          <span>Post Ad / Sell</span>
-        </button>
-        <button onclick="toggleCart()" class="relative p-2 text-slate-700 hover:bg-slate-100 rounded-lg transition">
-          <i data-lucide="shopping-bag" class="w-5 h-5"></i>
-          <span id="cartBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center hidden">0</span>
-        </button>
+      <h1 class="text-2xl font-black tracking-tight">Meri Local Bazaar</h1>
+      <p class="text-xs text-green-200 font-medium">Your Local Market, One App</p>
+      
+      <div class="inline-flex items-center gap-1.5 bg-white/10 px-3 py-0.5 rounded-full text-[10px] font-medium backdrop-blur border border-white/10">
+        <i data-lucide="shield-check" class="w-3 h-3 text-emerald-400"></i>
+        <span>Direct WhatsApp Connect • Verified Sellers</span>
       </div>
     </div>
 
-    <!-- Mobile Search Bar -->
-    <div class="px-4 pb-2.5 md:hidden">
-      <div class="flex items-center relative">
-        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3"></i>
-        <input id="mobileSearch" oninput="handleSearch(this.value)" type="text" placeholder="Search phone, groceries, electrician, bike..." class="w-full pl-9 pr-4 py-2 text-sm bg-slate-100 border border-transparent rounded-full focus:outline-none focus:bg-white focus:border-green-600 transition" />
+    <!-- Auth Box -->
+    <div class="bg-white text-slate-900 rounded-3xl p-5 shadow-2xl space-y-3.5 my-auto">
+      <div class="text-center space-y-0.5">
+        <h3 class="font-extrabold text-base text-slate-900">Login or Create Account</h3>
+        <p class="text-[11px] text-slate-500">Sign in to buy, sell, chat and manage orders</p>
+      </div>
+
+      <!-- Google Button -->
+      <button onclick="openGoogleChooser()" class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-700 font-bold py-2.5 px-4 rounded-2xl flex items-center justify-center gap-2.5 transition shadow-sm">
+        <svg class="w-4 h-4" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span class="text-xs">Continue with Google</span>
+      </button>
+
+      <div class="flex items-center gap-2">
+        <div class="flex-1 h-[1px] bg-slate-200"></div>
+        <span class="text-[9px] font-bold text-slate-400 uppercase tracking-wider">OR PHONE OTP</span>
+        <div class="flex-1 h-[1px] bg-slate-200"></div>
+      </div>
+
+      <!-- Phone Step 1 -->
+      <div id="phoneStep1" class="space-y-2.5">
+        <div class="flex items-center border border-slate-200 rounded-2xl p-1.5 bg-slate-50 focus-within:border-green-600 focus-within:bg-white transition">
+          <span class="text-xs font-bold text-slate-600 px-2 border-r border-slate-200">+91</span>
+          <input id="loginPhoneInput" type="tel" maxlength="10" placeholder="Enter 10-digit mobile" class="w-full px-2.5 py-1 text-xs font-semibold bg-transparent focus:outline-none" />
+        </div>
+        <button onclick="sendPhoneOTP()" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl shadow transition text-xs flex items-center justify-center gap-1.5">
+          <span>Get Verification OTP</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </button>
+      </div>
+
+      <!-- Phone Step 2 (OTP) -->
+      <div id="phoneStep2" class="space-y-2.5 hidden">
+        <div class="text-center">
+          <p class="text-[11px] text-slate-600">Enter 4-digit OTP sent to <b id="displayOtpPhone" class="text-slate-900 font-mono">+91 9876543210</b></p>
+        </div>
+        <div class="flex justify-center gap-2">
+          <input type="text" maxlength="1" value="5" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
+          <input type="text" maxlength="1" value="2" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
+          <input type="text" maxlength="1" value="8" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
+          <input type="text" maxlength="1" value="4" class="w-10 h-10 text-center text-base font-black border-2 border-green-600 rounded-xl focus:outline-none" />
+        </div>
+        <button onclick="verifyPhoneOTP()" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl shadow transition text-xs">
+          Verify OTP & Sign In
+        </button>
+      </div>
+
+      <!-- Guest Skip -->
+      <button onclick="enterAsGuest()" class="w-full text-center text-xs text-green-700 font-bold hover:underline pt-0.5">
+        Browse as Guest →
+      </button>
+    </div>
+
+    <!-- Bottom Notice -->
+    <div class="text-center text-[10px] text-green-200 pb-1">
+      100% Safe • Local Direct Contact • Zero Commission
+    </div>
+  </div>
+
+  <!-- Google Account Picker Bottom Sheet / Modal -->
+  <div id="googleChooserModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-xs w-full p-5 space-y-3.5 shadow-2xl text-slate-900">
+      <div class="flex items-center justify-between border-b pb-2.5">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span class="font-bold text-xs">Choose Google Account</span>
+        </div>
+        <button onclick="closeModal('googleChooserModal')" class="text-slate-400 hover:text-slate-700">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-2 text-xs">
+        <div onclick="loginWithGoogleUser('Silgrak Marak', 'marakrangsilchi17@gmail.com', 'SM')" class="flex items-center gap-2.5 p-2.5 rounded-2xl border border-slate-200 hover:bg-green-50 hover:border-green-500 cursor-pointer transition">
+          <div class="w-8 h-8 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shadow">
+            SM
+          </div>
+          <div class="flex-1 overflow-hidden">
+            <p class="font-bold text-slate-800 truncate">Silgrak Marak</p>
+            <p class="text-[10px] text-slate-500 truncate">marakrangsilchi17@gmail.com</p>
+          </div>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+        </div>
+
+        <div onclick="loginWithGoogleUser('Sengmi Marak', 'sengmimarak12@gmail.com', 'SE')" class="flex items-center gap-2.5 p-2.5 rounded-2xl border border-slate-200 hover:bg-green-50 hover:border-green-500 cursor-pointer transition">
+          <div class="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shadow">
+            SE
+          </div>
+          <div class="flex-1 overflow-hidden">
+            <p class="font-bold text-slate-800 truncate">Sengmi Marak</p>
+            <p class="text-[10px] text-slate-500 truncate">sengmimarak12@gmail.com</p>
+          </div>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-slate-400"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- TOP APP BAR (EXACT AS SCREENSHOT)                        -->
+  <!-- ======================================================== -->
+  <header class="sticky top-0 z-30 bg-white border-b border-slate-100 shadow-sm px-4 pt-3 pb-2.5">
+    <!-- Top Row: Logo, Title, Location, Actions -->
+    <div class="flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-xl shadow-md font-black">
+          🛍️
+        </div>
+        <div>
+          <h1 class="font-black text-sm text-green-900 leading-tight">Meri Local Bazaar</h1>
+          <p class="text-[10px] text-slate-400 font-medium">Your Local Market, One App</p>
+        </div>
+      </div>
+
+      <!-- Location Selector Pill -->
+      <button onclick="openLocationModal()" class="flex items-center gap-1 text-[11px] text-slate-700 bg-slate-100 hover:bg-slate-200 px-2.5 py-1 rounded-full font-semibold transition max-w-[170px] truncate">
+        <i data-lucide="map-pin" class="w-3 h-3 text-red-500 shrink-0"></i>
+        <span id="currentLocationLabel" class="truncate">West Garo Hills (Tura), Me..</span>
+        <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400 shrink-0"></i>
+      </button>
+    </div>
+
+    <!-- Search Input Bar -->
+    <div class="mt-2.5">
+      <div class="flex items-center bg-slate-100 rounded-2xl px-3 py-2 border border-slate-200/60">
+        <i data-lucide="search" class="w-4 h-4 text-slate-400 mr-2 shrink-0"></i>
+        <input id="appSearchInput" oninput="handleSearch(this.value)" type="text" placeholder="Search groceries, mobiles, services, items..." class="w-full text-xs bg-transparent focus:outline-none font-medium placeholder-slate-400" />
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="flex-1 max-w-7xl mx-auto w-full px-4 py-4 space-y-6">
+  <!-- ======================================================== -->
+  <!-- MAIN SCROLLABLE CONTENT BODY                             -->
+  <!-- ======================================================== -->
+  <main class="flex-1 overflow-y-auto px-4 py-3 pb-24 space-y-4">
 
-    <!-- Hero Banner with Direct Actions -->
-    <div class="rounded-2xl bg-gradient-to-r from-emerald-800 via-green-700 to-teal-700 text-white p-5 sm:p-7 shadow-lg relative overflow-hidden">
-      <div class="max-w-xl space-y-2 relative z-10">
-        <span class="inline-block bg-white/20 text-xs px-2.5 py-0.5 rounded-full font-medium backdrop-blur">🚀 All-India Hyperlocal Marketplace</span>
-        <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Kareedo & Becho Apne Local Shehar Me</h2>
-        <p class="text-xs sm:text-sm text-green-100">Smartphones, Taza Sabziyan, Local Services, Bike & Gaadi, Fashion & Personal Care — Direct WhatsApp Connect ke saath!</p>
-        <div class="pt-2 flex flex-wrap gap-2">
-          <button onclick="openPostModal()" class="bg-white text-green-800 font-bold px-4 py-2 rounded-xl text-xs sm:text-sm hover:bg-green-50 transition shadow">
-            + Naya Ad Post Karein (Photos Included)
-          </button>
-          <button onclick="switchTab('community')" class="bg-black/25 hover:bg-black/40 text-white border border-white/30 font-semibold px-3 py-2 rounded-xl text-xs sm:text-sm transition">
-            📈 Daily Mandi Rates & Requests
-          </button>
+    <!-- ======================================= -->
+    <!-- 1. HOME SCREEN (EXACT AS SCREENSHOT)    -->
+    <!-- ======================================= -->
+    <div id="viewHome" class="space-y-3.5">
+      
+      <!-- Exact Green Hero Banner (Local Superstore - Buy & Sell Locally) -->
+      <div class="rounded-3xl bg-gradient-to-r from-green-700 via-emerald-600 to-teal-700 text-white p-4 shadow-sm relative overflow-hidden flex items-center justify-between">
+        <div class="space-y-1 relative z-10 max-w-[65%]">
+          <span class="inline-flex items-center gap-1 bg-white/20 text-[9px] px-2 py-0.5 rounded-full font-bold backdrop-blur">
+            <i data-lucide="store" class="w-2.5 h-2.5"></i> LOCAL SUPERSTORE
+          </span>
+          <h2 class="text-base font-black tracking-tight leading-tight">Buy & Sell Locally</h2>
+          <p class="text-[10px] text-green-100 leading-snug">Connect instantly with verified neighborhood sellers & fresh local grocery markets.</p>
+        </div>
+        <!-- Right Grocery Basket Illustration -->
+        <div class="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur border border-white/20 flex items-center justify-center text-4xl shadow-inner shrink-0">
+          🧺
         </div>
       </div>
-      <div class="absolute -right-8 -bottom-8 opacity-15 text-9xl select-none pointer-events-none">
-        🛒
+
+      <!-- Exact Circular Categories Horizontal Scroll Row -->
+      <div>
+        <div class="flex items-center gap-3 overflow-x-auto no-scrollbar py-1 text-center" id="circularCategoryRow">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- Exact Filter Chips (Verified Sellers, Services Only, Products) -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+        <button onclick="toggleFilter('verified')" id="chipVerified" class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition">
+          <i data-lucide="check-circle" class="w-3 h-3 text-emerald-600"></i>
+          <span>Verified Sellers</span>
+        </button>
+
+        <button onclick="toggleFilter('services')" id="chipServices" class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition">
+          <span>🤝 Services Only</span>
+        </button>
+
+        <button onclick="toggleFilter('products')" id="chipProducts" class="flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition">
+          <span>🛍️ Products</span>
+        </button>
+      </div>
+
+      <!-- Section Heading: "Popular Near You" -->
+      <div class="space-y-2.5">
+        <div class="flex items-center justify-between">
+          <h3 class="font-extrabold text-xs text-slate-900 flex items-center gap-1.5">
+            <span>Popular Near You</span>
+            <span class="text-[11px] font-normal text-slate-500" id="itemCount">(8 items found)</span>
+          </h3>
+        </div>
+
+        <!-- 2-Column Product Cards Grid (Matching Screenshot) -->
+        <div id="homeListingsGrid" class="grid grid-cols-2 gap-3">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ======================================= -->
+    <!-- 2. CATEGORIES SCREEN                    -->
+    <!-- ======================================= -->
+    <div id="viewCategories" class="hidden space-y-3">
+      <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3.5">
+        <h2 class="text-sm font-extrabold text-emerald-950">All Marketplace Categories</h2>
+        <p class="text-[11px] text-emerald-800">Browse verified listings by category across your district</p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5" id="allCategoriesGrid">
+        <!-- Injected Categories -->
       </div>
     </div>
 
-    <!-- Category Filter Bar (All 8 Categories) -->
-    <div>
-      <div class="flex items-center justify-between mb-2">
-        <h3 class="font-bold text-sm text-slate-800">Categories & Services</h3>
-        <span id="activeCategoryBadge" class="text-xs text-green-700 font-semibold">Showing: All Items</span>
+    <!-- ======================================= -->
+    <!-- 3. CHAT SCREEN (WhatsApp / Inquiries)   -->
+    <!-- ======================================= -->
+    <div id="viewChat" class="hidden space-y-3">
+      <div class="bg-white rounded-2xl p-3.5 border border-slate-200 shadow-sm flex items-center justify-between">
+        <div>
+          <h2 class="text-sm font-extrabold text-slate-900">Seller & Buyer Inquiries</h2>
+          <p class="text-[11px] text-slate-500">1-Tap WhatsApp & Direct Messages</p>
+        </div>
+        <span class="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-full">
+          3 Active Chats
+        </span>
       </div>
-      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1" id="categoryTabs">
-        <!-- Injected via JS -->
+
+      <div class="bg-white rounded-2xl border border-slate-200 shadow-sm divide-y divide-slate-100" id="chatList">
+        <!-- Injected Chats -->
       </div>
     </div>
 
-    <!-- Active Tab Content Area -->
-    <div id="tabContentMarketplace" class="space-y-4">
-      <!-- Listings Grid -->
-      <div class="flex items-center justify-between">
-        <h3 class="font-bold text-base text-slate-900" id="listingsHeading">Nearby Local Listings</h3>
-        <span class="text-xs text-slate-500" id="itemCount">Loading...</span>
-      </div>
-
-      <div id="listingsGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        <!-- Injected Listings -->
-      </div>
-    </div>
-
-    <!-- Community & Mandi Rates Tab Content (Hidden by default) -->
-    <div id="tabContentCommunity" class="hidden space-y-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Mandi Rates -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center justify-between border-b pb-3">
-            <div>
-              <h3 class="font-bold text-slate-900 text-base">📊 Daily Mandi & Local Market Rates</h3>
-              <p class="text-xs text-slate-500">Live verified rates from wholesale vendors</p>
-            </div>
-            <span class="text-[11px] bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded">Updated Today</span>
+    <!-- ======================================= -->
+    <!-- 4. PROFILE SCREEN (WITH LOGOUT BUTTON)  -->
+    <!-- ======================================= -->
+    <div id="viewProfile" class="hidden space-y-3">
+      
+      <!-- User Profile Card -->
+      <div class="bg-white rounded-3xl p-4 border border-slate-200 shadow-sm space-y-3">
+        <div class="flex items-center gap-3.5">
+          <div id="profileAvatarLarge" class="w-14 h-14 rounded-2xl bg-emerald-700 text-white font-black text-lg flex items-center justify-center shadow-md">
+            SM
           </div>
-          <div id="mandiRatesList" class="space-y-2.5">
-            <!-- Injected by JS -->
+          <div class="space-y-0.5">
+            <h2 id="profileName" class="font-black text-base text-slate-900">Silgrak Marak</h2>
+            <p id="profileEmail" class="text-xs text-slate-500 font-medium">marakrangsilchi17@gmail.com</p>
+            <span class="inline-block bg-green-100 text-green-800 text-[9px] font-bold px-2 py-0.5 rounded-full">
+              ✓ Verified Local Member
+            </span>
           </div>
         </div>
 
-        <!-- Community Requests -->
-        <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm space-y-4">
-          <div class="flex items-center justify-between border-b pb-3">
-            <div>
-              <h3 class="font-bold text-slate-900 text-base">📢 Community Board & Buyer Requests</h3>
-              <p class="text-xs text-slate-500">Local neighbors looking for items or help</p>
-            </div>
-            <button onclick="openCommunityRequestModal()" class="text-xs bg-green-600 text-white font-semibold px-2.5 py-1 rounded-lg hover:bg-green-700">
-              + Post Request
-            </button>
+        <div class="grid grid-cols-3 gap-2 pt-2 border-t text-center">
+          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+            <p class="text-[10px] font-semibold text-slate-500">My Listings</p>
+            <p class="text-sm font-black text-slate-900" id="statListings">3</p>
           </div>
-          <div id="communityRequestsList" class="space-y-3">
-            <!-- Injected by JS -->
+          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+            <p class="text-[10px] font-semibold text-slate-500">In Cart</p>
+            <p class="text-sm font-black text-green-700" id="statCart">0</p>
+          </div>
+          <div class="bg-slate-50 p-2 rounded-xl border border-slate-100">
+            <p class="text-[10px] font-semibold text-slate-500">District</p>
+            <p class="text-[11px] font-bold text-slate-900 truncate" id="statCity">Tura</p>
           </div>
         </div>
       </div>
+
+      <!-- Menu Options -->
+      <div class="bg-white rounded-3xl border border-slate-200 shadow-sm divide-y divide-slate-100 text-xs">
+        <div onclick="openLocationModal()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer">
+          <div class="flex items-center gap-3 text-slate-800 font-semibold">
+            <i data-lucide="map-pin" class="w-4 h-4 text-green-700"></i>
+            <span>Select All-India State & District</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </div>
+
+        <div onclick="openAdminModal()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer">
+          <div class="flex items-center gap-3 text-slate-800 font-semibold">
+            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
+            <span>Admin Moderation (Block/Unblock)</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </div>
+
+        <div onclick="toggleCart()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer">
+          <div class="flex items-center gap-3 text-slate-800 font-semibold">
+            <i data-lucide="shopping-bag" class="w-4 h-4 text-blue-600"></i>
+            <span>Shopping Cart & Checkout</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </div>
+
+        <!-- Prominent Logout / Sign Out Button -->
+        <div onclick="signOutUser()" class="flex items-center justify-between p-3.5 hover:bg-red-50 cursor-pointer text-red-600 font-bold">
+          <div class="flex items-center gap-3">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            <span>Logout / Sign Out Account</span>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-red-400"></i>
+        </div>
+      </div>
+
     </div>
 
   </main>
 
-  <!-- Bottom Navigation (Mobile Friendly) -->
-  <div class="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-200 md:hidden flex justify-around items-center py-2 px-1">
-    <button onclick="switchTab('marketplace')" id="bottomNavMarket" class="flex flex-col items-center gap-0.5 text-green-700">
-      <i data-lucide="store" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Market</span>
+  <!-- ======================================================== -->
+  <!-- 5-TAB BOTTOM NAVIGATION (EXACT RED CIRCLE IN SCREENSHOT) -->
+  <!-- ======================================================== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur border-t border-slate-200 px-2 py-1.5 flex items-center justify-around max-w-[480px] mx-auto shadow-2xl">
+    
+    <!-- 1. Home -->
+    <button onclick="navTo('home')" id="bTabHome" class="flex flex-col items-center gap-0.5 text-green-700 flex-1 py-1">
+      <i data-lucide="home" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Home</span>
     </button>
-    <button onclick="switchTab('community')" id="bottomNavCommunity" class="flex flex-col items-center gap-0.5 text-slate-500">
-      <i data-lucide="activity" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Rates & Comm</span>
+
+    <!-- 2. Categories -->
+    <button onclick="navTo('categories')" id="bTabCategories" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1">
+      <i data-lucide="grid" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Categories</span>
     </button>
-    <button onclick="openPostModal()" class="flex flex-col items-center gap-0.5 text-emerald-600">
-      <i data-lucide="plus-circle" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Sell / Ad</span>
-    </button>
-    <button onclick="openAdminModal()" class="flex flex-col items-center gap-0.5 text-slate-500">
-      <i data-lucide="shield" class="w-5 h-5"></i>
-      <span class="text-[10px] font-bold">Admin</span>
-    </button>
-  </div>
 
-  <!-- MODAL: Product Detail Modal -->
-  <div id="detailModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b pb-3">
-        <h3 id="modalTitle" class="font-bold text-lg text-slate-900">Product Detail</h3>
-        <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-6 h-6"></i>
-        </button>
-      </div>
-
-      <!-- Multiple Images Gallery Carousel -->
-      <div id="modalGallery" class="space-y-2">
-        <div class="w-full h-56 bg-slate-100 rounded-xl overflow-hidden flex items-center justify-center">
-          <img id="modalMainImg" src="" class="w-full h-full object-cover" />
-        </div>
-        <div id="modalThumbs" class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-          <!-- Thumbnails -->
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <div class="flex items-center justify-between">
-          <span id="modalPrice" class="text-2xl font-black text-green-700">₹0</span>
-          <span id="modalCategory" class="text-xs bg-green-100 text-green-800 font-bold px-2.5 py-1 rounded-full">Category</span>
-        </div>
-        <p id="modalDesc" class="text-sm text-slate-600 leading-relaxed"></p>
-      </div>
-
-      <div class="bg-slate-50 rounded-xl p-3.5 space-y-2 border border-slate-100 text-xs text-slate-700">
-        <div class="flex items-center justify-between">
-          <span class="text-slate-500">Seller / Store:</span>
-          <span id="modalSeller" class="font-bold">Local Seller</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-slate-500">Location:</span>
-          <span id="modalLocation" class="font-bold">Market Area</span>
-        </div>
-        <div class="flex items-center justify-between">
-          <span class="text-slate-500">WhatsApp Contact:</span>
-          <span id="modalPhone" class="font-bold font-mono">9876543210</span>
-        </div>
-      </div>
-
-      <div class="flex gap-2 pt-2">
-        <button id="modalWhatsAppBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-sm shadow transition">
-          <i data-lucide="message-circle" class="w-4 h-4"></i>
-          Chat on WhatsApp
-        </button>
-        <button id="modalAddCartBtn" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-xl flex items-center justify-center gap-1.5 text-sm transition">
-          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-          Add to Cart
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL: Post Ad / Upload Photos (2 to 4 Photos) -->
-  <div id="postModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b pb-3">
-        <div>
-          <h3 class="font-bold text-lg text-slate-900">Post New Ad / Listing</h3>
-          <p class="text-xs text-slate-500">Upload photos & sell in your local neighborhood</p>
-        </div>
-        <button onclick="closeModal('postModal')" class="text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-6 h-6"></i>
-        </button>
-      </div>
-
-      <form id="postAdForm" onsubmit="handlePostSubmit(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">Title / Item Name *</label>
-          <input required id="postTitle" type="text" placeholder="e.g. OnePlus 11R 5G, Fresh Organic Honey, Bike..." class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-green-600 text-xs" />
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">Category *</label>
-            <select id="postCategory" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-green-600 text-xs bg-white">
-              <option value="Mobile / Laptop">Mobile / Laptop</option>
-              <option value="Grocery">Grocery / Taaza Sabzi</option>
-              <option value="Services">Services (Electrician/Plumber)</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Bike">Bike / Two-Wheeler</option>
-              <option value="Car">Car / Four-Wheeler</option>
-              <option value="Personal Care">Personal Care</option>
-              <option value="Fashion">Fashion & Wear</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">Price (₹) *</label>
-            <input required id="postPrice" type="number" placeholder="₹ Amount" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-green-600 text-xs" />
-          </div>
-        </div>
-
-        <!-- 2 to 4 Photos Upload Section -->
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">
-            Product Photos (Upload 2 to 4 Images from Gallery/Files) *
-          </label>
-          <input id="postPhotoInput" type="file" multiple accept="image/*" onchange="handlePhotoUpload(event)" class="hidden" />
-          <div onclick="document.getElementById('postPhotoInput').click()" class="border-2 border-dashed border-slate-300 hover:border-green-600 rounded-xl p-4 text-center cursor-pointer bg-slate-50 transition">
-            <i data-lucide="camera" class="w-6 h-6 mx-auto text-slate-400 mb-1"></i>
-            <span class="font-bold text-green-700">Click to Select Photos from Device</span>
-            <p class="text-[10px] text-slate-500">Supports JPG, PNG, WEBP (Minimum 2 recommended)</p>
-          </div>
-          <div id="photoPreviewContainer" class="flex gap-2 mt-2 overflow-x-auto py-1">
-            <!-- Injected image previews -->
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">Description</label>
-          <textarea id="postDesc" rows="2" placeholder="Condition, warranty, pickup details..." class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-green-600 text-xs"></textarea>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">WhatsApp Number *</label>
-            <input required id="postPhone" type="tel" placeholder="10-digit Mobile" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-green-600 text-xs" />
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">Your Name / Shop *</label>
-            <input required id="postSeller" type="text" placeholder="Seller Name" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:border-green-600 text-xs" />
-          </div>
-        </div>
-
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl shadow transition text-sm">
-          Publish Local Ad
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL: Location Selector (All India States & Districts) -->
-  <div id="locationModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="font-bold text-slate-900 text-base">Select Your Location</h3>
-        <button onclick="closeModal('locationModal')" class="text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <button onclick="autoDetectLocation()" class="w-full bg-green-50 border border-green-200 text-green-800 font-bold p-3 rounded-xl flex items-center justify-center gap-2 text-xs hover:bg-green-100 transition">
-        <i data-lucide="crosshair" class="w-4 h-4 text-green-700"></i>
-        Auto-Detect Current Location (GPS)
+    <!-- 3. Central Sell (+) Floating Button -->
+    <div class="flex-1 flex justify-center -mt-6">
+      <button onclick="openPostModal()" class="w-12 h-12 rounded-full bg-gradient-to-tr from-green-700 to-emerald-500 text-white flex items-center justify-center shadow-xl hover:scale-105 transition border-4 border-white">
+        <i data-lucide="plus" class="w-6 h-6"></i>
       </button>
+    </div>
 
-      <div class="space-y-2 text-xs">
-        <label class="block font-bold text-slate-700">Select State / UT:</label>
-        <select id="stateSelect" onchange="populateDistricts()" class="w-full p-2.5 border rounded-xl bg-white text-xs">
-          <!-- Populated by JS -->
-        </select>
+    <!-- 4. Chats -->
+    <button onclick="navTo('chat')" id="bTabChat" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1">
+      <i data-lucide="message-square" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Chats</span>
+    </button>
 
-        <label class="block font-bold text-slate-700 mt-2">Select District / City:</label>
-        <select id="districtSelect" class="w-full p-2.5 border rounded-xl bg-white text-xs">
-          <!-- Populated by JS -->
-        </select>
+    <!-- 5. Profile -->
+    <button onclick="navTo('profile')" id="bTabProfile" class="flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1">
+      <i data-lucide="user" class="w-5 h-5"></i>
+      <span class="text-[10px] font-bold">Profile</span>
+    </button>
+
+  </nav>
+
+</div>
+
+<!-- ======================================================== -->
+<!-- MODALS & DIALOGS                                         -->
+<!-- ======================================================== -->
+
+<!-- MODAL: Product Detail Dialog -->
+<div id="detailModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[90vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
+    <div class="flex items-center justify-between border-b pb-2.5">
+      <h3 id="detailTitle" class="font-bold text-sm text-slate-900 truncate pr-2">Product Detail</h3>
+      <button onclick="closeModal('detailModal')" class="text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <div class="space-y-2">
+      <div class="w-full h-48 bg-slate-100 rounded-2xl overflow-hidden flex items-center justify-center border border-slate-200">
+        <img id="detailMainImg" src="" class="w-full h-full object-cover" />
       </div>
+      <div id="detailThumbs" class="flex gap-2 overflow-x-auto no-scrollbar py-1"></div>
+    </div>
 
-      <button onclick="applyLocation()" class="w-full bg-green-700 text-white font-bold py-2.5 rounded-xl hover:bg-green-800 text-xs">
-        Apply Location
+    <div class="space-y-1">
+      <div class="flex items-center justify-between">
+        <span id="detailPrice" class="text-xl font-black text-green-700">₹0</span>
+        <span id="detailCategory" class="text-[10px] bg-green-100 text-green-800 font-bold px-2.5 py-0.5 rounded-full">Category</span>
+      </div>
+      <p id="detailDesc" class="text-xs text-slate-600 leading-relaxed"></p>
+    </div>
+
+    <div class="bg-slate-50 rounded-2xl p-3 space-y-1.5 border border-slate-100 text-xs text-slate-700">
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">Seller / Store:</span>
+        <span id="detailSeller" class="font-bold text-slate-900">Seller</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">Location:</span>
+        <span id="detailLocation" class="font-bold text-slate-900">Location</span>
+      </div>
+      <div class="flex items-center justify-between">
+        <span class="text-slate-500">WhatsApp:</span>
+        <span id="detailPhone" class="font-bold font-mono text-emerald-700">Phone</span>
+      </div>
+    </div>
+
+    <div class="flex gap-2 pt-1">
+      <button id="detailWhatsAppBtn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-2xl flex items-center justify-center gap-1.5 text-xs shadow transition">
+        <i data-lucide="message-circle" class="w-4 h-4"></i>
+        WhatsApp Seller
+      </button>
+      <button id="detailAddCartBtn" class="bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 py-2.5 rounded-2xl flex items-center justify-center gap-1 text-xs transition">
+        <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+        Cart
       </button>
     </div>
   </div>
+</div>
 
-  <!-- MODAL: Admin Moderation Panel -->
-  <div id="adminModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b pb-3">
-        <div>
-          <h3 class="font-bold text-slate-900 text-base">🛡️ Admin & User Moderation Panel</h3>
-          <p class="text-xs text-slate-500">Block or unblock users and manage listings</p>
-        </div>
-        <button onclick="closeModal('adminModal')" class="text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+<!-- MODAL: Post Ad / Upload Photos (2 to 4 Images) -->
+<div id="postModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[90vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
+    <div class="flex items-center justify-between border-b pb-2.5">
+      <div>
+        <h3 class="font-bold text-sm text-slate-900">Post New Ad / Listing</h3>
+        <p class="text-[10px] text-slate-500">Upload 2 to 4 photos & connect on WhatsApp</p>
       </div>
-
-      <div class="space-y-3">
-        <h4 class="font-bold text-xs text-slate-700 uppercase">Registered Sellers & Users:</h4>
-        <div id="adminUserList" class="space-y-2 text-xs">
-          <!-- Injected users -->
-        </div>
-      </div>
+      <button onclick="closeModal('postModal')" class="text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
     </div>
-  </div>
 
-  <!-- MODAL: Post Community Request -->
-  <div id="communityModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="font-bold text-slate-900 text-base">Post Community Request / Need</h3>
-        <button onclick="closeModal('communityModal')" class="text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
+    <form id="postAdForm" onsubmit="handlePostSubmit(event)" class="space-y-3 text-xs">
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Item Title *</label>
+        <input required id="postTitle" type="text" placeholder="e.g. OnePlus 11R 5G, Fresh Organic Honey..." class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
       </div>
-      <form onsubmit="handleCommunitySubmit(event)" class="space-y-3 text-xs">
+
+      <div class="grid grid-cols-2 gap-2">
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">What are you looking for? *</label>
-          <input required id="commTitle" type="text" placeholder="e.g. Urgent electrician needed in Ring Road" class="w-full p-2.5 border rounded-xl" />
+          <label class="block font-bold text-slate-700 mb-1">Category *</label>
+          <select id="postCategory" class="w-full px-2.5 py-2 border rounded-xl focus:outline-none focus:border-green-600 bg-white">
+            <option value="Mobile / Laptop">Mobile / Laptop</option>
+            <option value="Grocery">Grocery & Produce</option>
+            <option value="Services">Services (Electrician/AC)</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Bike">Bike / Scooty</option>
+            <option value="Car">Car / Auto</option>
+            <option value="Personal Care">Personal Care</option>
+            <option value="Fashion">Fashion & Wear</option>
+          </select>
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">Your Name & Phone *</label>
-          <input required id="commContact" type="text" placeholder="Name - 9876543210" class="w-full p-2.5 border rounded-xl" />
+          <label class="block font-bold text-slate-700 mb-1">Price (₹) *</label>
+          <input required id="postPrice" type="number" placeholder="₹ Amount" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
         </div>
-        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl">
-          Post to Community Board
-        </button>
-      </form>
+      </div>
+
+      <!-- Photo Picker -->
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Upload Photos (2–4 Images) *</label>
+        <input id="postPhotoInput" type="file" multiple accept="image/*" onchange="handlePhotoUpload(event)" class="hidden" />
+        <div onclick="document.getElementById('postPhotoInput').click()" class="border-2 border-dashed border-slate-300 hover:border-green-600 rounded-2xl p-3.5 text-center cursor-pointer bg-slate-50 transition">
+          <i data-lucide="camera" class="w-5 h-5 mx-auto text-slate-400 mb-1"></i>
+          <span class="font-bold text-green-700 text-xs">Select from Gallery / Storage</span>
+          <p class="text-[9px] text-slate-500">Pick up to 4 real photos</p>
+        </div>
+        <div id="photoPreviewContainer" class="flex gap-2 mt-2 overflow-x-auto py-1"></div>
+      </div>
+
+      <div>
+        <label class="block font-bold text-slate-700 mb-1">Description</label>
+        <textarea id="postDesc" rows="2" placeholder="Condition, warranty, pickup address..." class="w-full px-3 py-1.5 border rounded-xl focus:outline-none focus:border-green-600"></textarea>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">WhatsApp No. *</label>
+          <input required id="postPhone" type="tel" placeholder="10-digit phone" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Seller Name *</label>
+          <input required id="postSeller" type="text" placeholder="Your Name" class="w-full px-3 py-2 border rounded-xl focus:outline-none focus:border-green-600" />
+        </div>
+      </div>
+
+      <button type="submit" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl shadow transition text-xs">
+        Publish Local Listing
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: COMPLETE ALL-INDIA STATES & DISTRICTS SELECTOR -->
+<div id="locationModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
+    <div class="flex items-center justify-between border-b pb-2.5">
+      <div>
+        <h3 class="font-bold text-sm text-slate-900">Select Location (All India)</h3>
+        <p class="text-[10px] text-slate-500">Choose your State & District</p>
+      </div>
+      <button onclick="closeModal('locationModal')" class="text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <button onclick="autoDetectLocation()" class="w-full bg-green-50 border border-green-200 text-green-800 font-bold p-2.5 rounded-2xl flex items-center justify-center gap-2 text-xs hover:bg-green-100 transition">
+      <i data-lucide="crosshair" class="w-4 h-4 text-green-700"></i>
+      Auto-Detect Current GPS
+    </button>
+
+    <div class="space-y-2 text-xs">
+      <label class="block font-bold text-slate-700">Select State / UT (All 36 States & UTs):</label>
+      <select id="stateSelect" onchange="populateDistricts()" class="w-full p-2.5 border rounded-xl bg-white text-xs font-semibold focus:outline-none focus:border-green-600">
+      </select>
+
+      <label class="block font-bold text-slate-700 mt-2">Select District / City:</label>
+      <select id="districtSelect" class="w-full p-2.5 border rounded-xl bg-white text-xs font-semibold focus:outline-none focus:border-green-600">
+      </select>
+    </div>
+
+    <button onclick="applyLocation()" class="w-full bg-green-700 text-white font-bold py-2.5 rounded-2xl hover:bg-green-800 text-xs shadow transition">
+      Apply District
+    </button>
+  </div>
+</div>
+
+<!-- MODAL: Admin Panel (Block/Unblock Users) -->
+<div id="adminModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-center justify-center p-4">
+  <div class="bg-white rounded-3xl max-w-sm w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
+    <div class="flex items-center justify-between border-b pb-2.5">
+      <div>
+        <h3 class="font-bold text-sm text-slate-900">🛡️ Admin Moderation</h3>
+        <p class="text-[10px] text-slate-500">Block or unblock active sellers</p>
+      </div>
+      <button onclick="closeModal('adminModal')" class="text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+
+    <div id="adminUserList" class="space-y-2 text-xs"></div>
+  </div>
+</div>
+
+<!-- MODAL: Shopping Cart -->
+<div id="cartModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4">
+  <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-sm w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-3.5 text-slate-900">
+    <div class="flex items-center justify-between border-b pb-2.5">
+      <h3 class="font-bold text-sm text-slate-900">🛒 Your Cart</h3>
+      <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-700">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+    </div>
+    <div id="cartItemsList" class="space-y-2 text-xs max-h-56 overflow-y-auto"></div>
+    <div class="border-t pt-2.5 space-y-2">
+      <div class="flex items-center justify-between text-xs font-bold">
+        <span>Total:</span>
+        <span id="cartTotal" class="text-green-700 font-black text-sm">₹0</span>
+      </div>
+      <button onclick="checkoutWhatsApp()" class="w-full bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 rounded-2xl flex items-center justify-center gap-1.5 text-xs shadow">
+        <i data-lucide="send" class="w-4 h-4"></i>
+        WhatsApp Checkout
+      </button>
     </div>
   </div>
+</div>
 
-  <!-- Cart Drawer / Modal -->
-  <div id="cartModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4">
-    <div class="bg-white rounded-t-2xl sm:rounded-2xl max-w-md w-full max-h-[85vh] overflow-y-auto shadow-2xl p-5 space-y-4">
-      <div class="flex items-center justify-between border-b pb-3">
-        <h3 class="font-bold text-slate-900 text-base">🛒 Your Shopping Cart</h3>
-        <button onclick="toggleCart()" class="text-slate-400 hover:text-slate-700">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-      <div id="cartItemsList" class="space-y-2 text-xs max-h-60 overflow-y-auto">
-        <!-- Cart Items -->
-      </div>
-      <div class="border-t pt-3 space-y-2">
-        <div class="flex items-center justify-between text-sm font-bold">
-          <span>Total Amount:</span>
-          <span id="cartTotal" class="text-green-700 font-extrabold text-base">₹0</span>
+<!-- ======================================================== -->
+<!-- SCRIPT LOGIC (COMPLETE STATE, ALL INDIA LOCATIONS & DATA)-->
+<!-- ======================================================== -->
+<script>
+  // Circular Categories with exact Icons as in Screenshot
+  const CIRCULAR_CATEGORIES = [
+    { id: 'all', name: 'All', icon: 'zap', isEmoji: false },
+    { id: 'Mobile / Laptop', name: 'Mobile / Laptop', icon: 'smartphone', isEmoji: false },
+    { id: 'Grocery', name: 'Grocery', icon: '🥦', isEmoji: true },
+    { id: 'Services', name: 'Services', icon: 'wrench', isEmoji: false },
+    { id: 'Electronics', name: 'Electronics', icon: 'tv', isEmoji: false },
+    { id: 'Bike', name: 'Bike', icon: 'bike', isEmoji: false },
+    { id: 'Car', name: 'Car', icon: 'car', isEmoji: false },
+    { id: 'Personal Care', name: 'Personal Care', icon: 'sparkles', isEmoji: false },
+    { id: 'Fashion', name: 'Fashion & Wear', icon: 'shirt', isEmoji: false }
+  ];
+
+  // Full Database of All-India States and Districts
+  const ALL_INDIA_LOCATIONS = {
+    "Meghalaya": ["West Garo Hills (Tura)", "East Garo Hills (Williamnagar)", "South Garo Hills (Baghmara)", "North Garo Hills (Resubelpara)", "South West Garo Hills (Ampati)", "East Khasi Hills (Shillong)", "West Khasi Hills (Nongstoin)", "Eastern West Khasi Hills (Mairang)", "South West Khasi Hills (Mawkyrwat)", "Ri-Bhoi (Nongpoh)", "West Jaintia Hills (Jowai)", "East Jaintia Hills (Khliehriat)"],
+    "Assam": ["Guwahati (Kamrup Metro)", "Kamrup", "Dhubri", "Goalpara", "Bongaigaon", "Barpeta", "Nalbari", "Kokrajhar", "Baksa", "Chirang", "Udalguri", "Darrang", "Sonitpur", "Nagaon", "Morigaon", "Jorhat", "Golaghat", "Sivasagar", "Dibrugarh", "Tinsukia", "Silchar (Cachar)", "Karimganj", "Hailakandi", "Dima Hasao", "Karbi Anglong"],
+    "Delhi": ["Central Delhi", "New Delhi", "North Delhi", "North East Delhi", "North West Delhi", "South Delhi", "South East Delhi", "South West Delhi", "West Delhi", "East Delhi", "Shahdara"],
+    "Maharashtra": ["Mumbai City", "Mumbai Suburban", "Pune", "Nagpur", "Thane", "Nashik", "Aurangabad", "Solapur", "Amravati", "Kolhapur", "Navi Mumbai"],
+    "Karnataka": ["Bengaluru Urban", "Bengaluru Rural", "Mysuru", "Mangaluru (Dakshina Kannada)", "Hubballi-Dharwad", "Belagavi", "Kalaburagi", "Ballari", "Udupi"],
+    "West Bengal": ["Kolkata", "North 24 Parganas", "South 24 Parganas", "Howrah", "Hooghly", "Siliguri (Darjeeling)", "Jalpaiguri", "Malda", "Murshidabad", "Purba Medinipur"],
+    "Uttar Pradesh": ["Lucknow", "Kanpur", "Varanasi", "Noida (Gautam Buddha Nagar)", "Ghaziabad", "Agra", "Prayagraj", "Meerut", "Bareilly", "Aligarh", "Gorakhpur"],
+    "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur", "Darbhanga", "Purnia", "Begusarai", "Arrah (Bhojpur)"],
+    "Tamil Nadu": ["Chennai", "Coimbatore", "Madurai", "Tiruchirappalli", "Salem", "Tirunelveli", "Erode", "Vellore"],
+    "Telangana": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar", "Khammam", "Rangareddy", "Medchal-Malkajgiri"],
+    "Andhra Pradesh": ["Visakhapatnam", "Vijayawada", "Guntur", "Nellore", "Kurnool", "Tirupati", "Kakinada"],
+    "Gujarat": ["Ahmedabad", "Surat", "Vadodara", "Rajkot", "Bhavnagar", "Jamnagar", "Gandhinagar"],
+    "Rajasthan": ["Jaipur", "Jodhpur", "Udaipur", "Kota", "Bikaner", "Ajmer", "Alwar"],
+    "Kerala": ["Thiruvananthapuram", "Kochi (Ernakulam)", "Kozhikode", "Thrissur", "Kollam", "Kannur", "Palakkad", "Kottayam"],
+    "Punjab": ["Ludhiana", "Amritsar", "Jalandhar", "Patiala", "Bathinda", "Mohali (SAS Nagar)"],
+    "Haryana": ["Gurugram", "Faridabad", "Panipat", "Ambala", "Karnal", "Hisar", "Rohtak", "Panchkula"],
+    "Madhya Pradesh": ["Indore", "Bhopal", "Jabalpur", "Gwalior", "Ujjain", "Sagar"],
+    "Odisha": ["Bhubaneswar (Khurda)", "Cuttack", "Rourkela (Sundargarh)", "Berhampur (Ganjam)", "Sambalpur", "Puri"],
+    "Jharkhand": ["Ranchi", "Jamshedpur (East Singhbhum)", "Dhanbad", "Bokaro", "Deoghar", "Hazaribagh"],
+    "Chhattisgarh": ["Raipur", "Bhilai (Durg)", "Bilaspur", "Korba", "Rajnandgaon"],
+    "Uttarakhand": ["Dehradun", "Haridwar", "Nainital", "Rishikesh", "Haldwani", "Roorkee"],
+    "Himachal Pradesh": ["Shimla", "Dharamshala (Kangra)", "Mandi", "Solan", "Kullu", "Manali"],
+    "Tripura": ["West Tripura (Agartala)", "Gomati", "South Tripura", "North Tripura", "Dhalai", "Khowai"],
+    "Manipur": ["Imphal West", "Imphal East", "Thoubal", "Bishnupur", "Churachandpur"],
+    "Nagaland": ["Kohima", "Dimapur", "Mokokchung", "Tuensang", "Wokha", "Mon"],
+    "Mizoram": ["Aizawl", "Lunglei", "Champhai", "Kolasib", "Serchhip"],
+    "Arunachal Pradesh": ["Itanagar (Papum Pare)", "Changlang", "West Kameng", "Tawang", "East Siang"],
+    "Sikkim": ["East Sikkim (Gangtok)", "West Sikkim (Gyalshing)", "South Sikkim (Namchi)", "North Sikkim (Mangan)"],
+    "Goa": ["North Goa (Panaji)", "South Goa (Margao)"],
+    "Jammu and Kashmir": ["Srinagar", "Jammu", "Anantnag", "Baramulla", "Kathua", "Udhampur"],
+    "Ladakh": ["Leh", "Kargil"],
+    "Puducherry": ["Puducherry", "Karaikal", "Mahe", "Yanam"],
+    "Chandigarh": ["Chandigarh"]
+  };
+
+  // Seed Items with Verified Ratings & Badges
+  let items = [
+    {
+      id: 1,
+      title: "Home Electrician & AC Repair Service",
+      category: "Services",
+      isService: true,
+      price: 299,
+      originalPrice: 499,
+      seller: "Sharma Electricals & Cooli...",
+      rating: 5.0,
+      phone: "9876543213",
+      location: "Aramile, West Garo Hills",
+      desc: "Emergency visit in 30 mins. AC gas refill, fan wiring & refrigerator repair.",
+      userId: "USER_04",
+      isLiked: false,
+      images: [
+        "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&auto=format&fit=crop&q=80"
+      ]
+    },
+    {
+      id: 2,
+      title: "Plumbing & Water Tank Cleaning",
+      category: "Services",
+      isService: true,
+      price: 399,
+      originalPrice: 600,
+      seller: "QuickPlumb Pro Tura",
+      rating: 4.9,
+      phone: "9876543218",
+      location: "Ringrey, West Garo Hills",
+      desc: "Leakage repair, motor fitting & high-pressure deep water tank clean.",
+      userId: "USER_09",
+      isLiked: true,
+      images: [
+        "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=600&auto=format&fit=crop&q=80"
+      ]
+    },
+    {
+      id: 3,
+      title: "OnePlus 11R 5G (16GB/256GB)",
+      category: "Mobile / Laptop",
+      isService: false,
+      price: 27999,
+      originalPrice: 39999,
+      seller: "Rahul Tech Point",
+      rating: 4.8,
+      phone: "9876543210",
+      location: "Market Complex, Tura",
+      desc: "Mint condition, 7 months warranty remaining, with original 100W SuperVOOC charger & box.",
+      userId: "USER_01",
+      isLiked: false,
+      images: [
+        "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop&q=80"
+      ]
+    },
+    {
+      id: 4,
+      title: "Apple MacBook Air M2 (Space Grey)",
+      category: "Mobile / Laptop",
+      isService: false,
+      price: 74500,
+      originalPrice: 99900,
+      seller: "Tech Zone Computers",
+      rating: 5.0,
+      phone: "9876543211",
+      location: "Main Road, Shillong",
+      desc: "Battery health 98%, with bill and original Apple MagSafe charger.",
+      userId: "USER_02",
+      isLiked: false,
+      images: [
+        "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&auto=format&fit=crop&q=80"
+      ]
+    },
+    {
+      id: 5,
+      title: "Organic Garo Hills Wild Honey (1kg)",
+      category: "Grocery",
+      isService: false,
+      price: 450,
+      originalPrice: 600,
+      seller: "A·chik Natural Farm",
+      rating: 4.9,
+      phone: "9876543212",
+      location: "Rongram, West Garo Hills",
+      desc: "100% pure raw unprocessed forest honey harvested sustainably.",
+      userId: "USER_03",
+      isLiked: false,
+      images: [
+        "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=600&auto=format&fit=crop&q=80"
+      ]
+    },
+    {
+      id: 6,
+      title: "Royal Enfield Classic 350 (2022)",
+      category: "Bike",
+      isService: false,
+      price: 155000,
+      originalPrice: 210000,
+      seller: "Sangma Motors",
+      rating: 4.7,
+      phone: "9876543214",
+      location: "Dobasipara, Tura",
+      desc: "First owner, 12,400 KM driven, dual-channel ABS, pristine condition.",
+      userId: "USER_05",
+      isLiked: false,
+      images: [
+        "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&auto=format&fit=crop&q=80"
+      ]
+    },
+    {
+      id: 7,
+      title: "Maruti Suzuki Swift ZXi (Petrol)",
+      category: "Car",
+      isService: false,
+      price: 520000,
+      originalPrice: 750000,
+      seller: "Garo Hills Wheels",
+      rating: 4.8,
+      phone: "9876543215",
+      location: "New Tura, Meghalaya",
+      desc: "2021 model, single hand drive, complete service record.",
+      userId: "USER_06",
+      isLiked: false,
+      images: [
+        "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&auto=format&fit=crop&q=80"
+      ]
+    },
+    {
+      id: 8,
+      title: "Traditional Handloom Dakmanda Shawl",
+      category: "Fashion",
+      isService: false,
+      price: 1850,
+      originalPrice: 2500,
+      seller: "A·chik Weaves & Craft",
+      rating: 5.0,
+      phone: "9876543216",
+      location: "Super Market, Tura",
+      desc: "Handcrafted indigenous Garo motifs on pure cotton fabric.",
+      userId: "USER_07",
+      isLiked: false,
+      images: [
+        "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=600&auto=format&fit=crop&q=80",
+        "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=600&auto=format&fit=crop&q=80"
+      ]
+    }
+  ];
+
+  let chats = [
+    { id: 1, name: "Sharma Electricals & Cooli...", lastMsg: "Technician 30 min me pahunch jayega.", time: "10:45 AM", phone: "9876543213", avatar: "SE" },
+    { id: 2, name: "QuickPlumb Pro Tura", lastMsg: "Water tank cleaner scheduled for 2 PM.", time: "Yesterday", phone: "9876543218", avatar: "QP" },
+    { id: 3, name: "Rahul Tech Point", lastMsg: "Ha bhaiya OnePlus 11R available hai!", time: "Aug 14", phone: "9876543210", avatar: "RT" }
+  ];
+
+  let users = [
+    { id: "USER_04", name: "Sharma Electricals & Cooli...", phone: "9876543213", isBlocked: false },
+    { id: "USER_09", name: "QuickPlumb Pro Tura", phone: "9876543218", isBlocked: false },
+    { id: "USER_01", name: "Rahul Tech Point", phone: "9876543210", isBlocked: false },
+    { id: "USER_02", name: "Tech Zone Computers", phone: "9876543211", isBlocked: false },
+    { id: "USER_03", name: "A·chik Natural Farm", phone: "9876543212", isBlocked: false },
+    { id: "USER_05", name: "Sangma Motors", phone: "9876543214", isBlocked: false },
+    { id: "USER_06", name: "Garo Hills Wheels", phone: "9876543215", isBlocked: false },
+    { id: "USER_07", name: "A·chik Weaves & Craft", phone: "9876543216", isBlocked: false }
+  ];
+
+  let currentUser = { name: "Silgrak Marak", email: "marakrangsilchi17@gmail.com", avatar: "SM" };
+  let selectedCategory = 'all';
+  let activeFilter = 'none'; // 'verified', 'services', 'products', 'none'
+  let searchQuery = '';
+  let uploadedPhotos = [];
+  let cart = [];
+  let currentScreen = 'home';
+
+  function init() {
+    renderCircularCategories();
+    renderAllCategoriesScreen();
+    renderHomeListings();
+    renderChatList();
+    renderAdminUsers();
+    populateStateSelect();
+    updateProfileStats();
+    lucide.createIcons();
+  }
+
+  // 1. CIRCULAR CATEGORY SCROLL (EXACT AS SCREENSHOT)
+  function renderCircularCategories() {
+    const container = document.getElementById('circularCategoryRow');
+    container.innerHTML = CIRCULAR_CATEGORIES.map(cat => {
+      const isSelected = selectedCategory === cat.id;
+      return `
+        <div onclick="selectCategory('${cat.id}')" class="flex flex-col items-center gap-1.5 cursor-pointer shrink-0 group">
+          <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg transition duration-200 ${
+            isSelected 
+              ? 'bg-emerald-600 text-white shadow-md scale-105 ring-2 ring-emerald-600 ring-offset-2' 
+              : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+          }">
+            ${cat.isEmoji ? cat.icon : `<i data-lucide="${cat.icon}" class="w-5 h-5 ${isSelected ? 'text-white' : 'text-emerald-700'}"></i>`}
+          </div>
+          <span class="text-[10px] font-bold tracking-tight whitespace-nowrap ${isSelected ? 'text-emerald-700 font-extrabold' : 'text-slate-600'}">
+            ${cat.name}
+          </span>
         </div>
-        <button onclick="checkoutWhatsApp()" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs shadow">
-          <i data-lucide="send" class="w-4 h-4"></i>
-          Direct WhatsApp Order Checkout
-        </button>
-      </div>
-    </div>
-  </div>
+      `;
+    }).join('');
+  }
 
-  <!-- App Data & Scripts -->
-  <script>
-    // 8 Complete Categories
-    const CATEGORIES = [
-      { id: 'all', name: 'All Items', icon: 'store' },
-      { id: 'Mobile / Laptop', name: 'Mobile / Laptop', icon: 'smartphone' },
-      { id: 'Grocery', name: 'Grocery & Farm', icon: 'apple' },
-      { id: 'Services', name: 'Services', icon: 'wrench' },
-      { id: 'Electronics', name: 'Electronics', icon: 'tv' },
-      { id: 'Bike', name: 'Bike / Scooty', icon: 'bike' },
-      { id: 'Car', name: 'Car / Auto', icon: 'car' },
-      { id: 'Personal Care', name: 'Personal Care', icon: 'sparkles' },
-      { id: 'Fashion', name: 'Fashion & Wear', icon: 'shirt' }
-    ];
+  function selectCategory(catId) {
+    selectedCategory = catId;
+    renderCircularCategories();
+    renderHomeListings();
+    lucide.createIcons();
+  }
 
-    // Initial Marketplace Items
-    let items = [
-      {
-        id: 1,
-        title: "OnePlus 11R 5G (16GB/256GB)",
-        category: "Mobile / Laptop",
-        price: 27999,
-        originalPrice: 39999,
-        seller: "Rahul Tech Point",
-        phone: "9876543210",
-        location: "Market Complex, Tura",
-        desc: "Mint condition, 7 months warranty remaining, with original 100W SuperVOOC charger & box.",
-        userId: "USER_01",
-        images: [
-          "https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=600&q=80",
-          "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80"
-        ]
-      },
-      {
-        id: 2,
-        title: "Apple MacBook Air M2 (Space Grey)",
-        category: "Mobile / Laptop",
-        price: 74500,
-        originalPrice: 99900,
-        seller: "Tech Zone Computers",
-        phone: "9876543211",
-        location: "Main Road, Shillong",
-        desc: "Battery health 98%, with bill and original Apple MagSafe charger.",
-        userId: "USER_02",
-        images: [
-          "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=600&q=80",
-          "https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=600&q=80"
-        ]
-      },
-      {
-        id: 3,
-        title: "Organic Garo Hills Wild Honey (1kg)",
-        category: "Grocery",
-        price: 450,
-        originalPrice: 600,
-        seller: "A·chik Natural Farm",
-        phone: "9876543212",
-        location: "Rongram, West Garo Hills",
-        desc: "100% pure raw unprocessed forest honey harvested sustainably.",
-        userId: "USER_03",
-        images: [
-          "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=600&q=80",
-          "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=600&q=80"
-        ]
-      },
-      {
-        id: 4,
-        title: "Certified AC & Refrigerator Repair",
-        category: "Services",
-        price: 349,
-        originalPrice: 500,
-        seller: "Sharma Electricals",
-        phone: "9876543213",
-        location: "Hawakhana, Tura",
-        desc: "Home visit in 30 minutes. Gas refill, compressor repair & general servicing.",
-        userId: "USER_04",
-        images: [
-          "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&q=80",
-          "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&q=80"
-        ]
-      },
-      {
-        id: 5,
-        title: "Royal Enfield Classic 350 (2022)",
-        category: "Bike",
-        price: 155000,
-        originalPrice: 210000,
-        seller: "Sangma Motors",
-        phone: "9876543214",
-        location: "Dobasipara, Tura",
-        desc: "First owner, 12,400 KM driven, dual-channel ABS, pristine condition.",
-        userId: "USER_05",
-        images: [
-          "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=80",
-          "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=600&q=80"
-        ]
-      },
-      {
-        id: 6,
-        title: "Maruti Suzuki Swift ZXi (Petrol)",
-        category: "Car",
-        price: 520000,
-        originalPrice: 750000,
-        seller: "Garo Hills Wheels",
-        phone: "9876543215",
-        location: "New Tura, Meghalaya",
-        desc: "2021 model, single hand drive, complete service record at authorized center.",
-        userId: "USER_06",
-        images: [
-          "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&q=80",
-          "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80"
-        ]
-      },
-      {
-        id: 7,
-        title: "Traditional Handloom Dakmanda Shawl",
-        category: "Fashion",
-        price: 1850,
-        originalPrice: 2500,
-        seller: "A·chik Weaves & Craft",
-        phone: "9876543216",
-        location: "Super Market, Tura",
-        desc: "Handcrafted indigenous Garo motifs on pure cotton fabric.",
-        userId: "USER_07",
-        images: [
-          "https://images.unsplash.com/photo-1607344645866-009c320c5ab8?w=600&q=80",
-          "https://images.unsplash.com/photo-1528459801416-a9e53bbf4e17?w=600&q=80"
-        ]
-      },
-      {
-        id: 8,
-        title: "Ayurvedic Hair & Skin Healing Oil Kit",
-        category: "Personal Care",
-        price: 599,
-        originalPrice: 899,
-        seller: "Meghalaya Herbal Care",
-        phone: "9876543217",
-        location: "Chandmari, Tura",
-        desc: "Brahmi, Amla and Neem infused oil combo for hair fall and skin glow.",
-        userId: "USER_08",
-        images: [
-          "https://images.unsplash.com/photo-1608248597359-269c84917537?w=600&q=80",
-          "https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&q=80"
-        ]
+  function toggleFilter(filterType) {
+    if (activeFilter === filterType) {
+      activeFilter = 'none';
+    } else {
+      activeFilter = filterType;
+    }
+
+    // Update chip styling
+    const chips = ['verified', 'services', 'products'];
+    chips.forEach(c => {
+      const btn = document.getElementById('chip' + c.charAt(0).toUpperCase() + c.slice(1));
+      if (btn) {
+        if (activeFilter === c) {
+          btn.className = 'flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-green-700 bg-green-700 text-white shadow-sm whitespace-nowrap transition';
+        } else {
+          btn.className = 'flex items-center gap-1 px-3 py-1.5 rounded-full text-[11px] font-bold border border-slate-200 bg-white text-slate-700 shadow-sm whitespace-nowrap hover:bg-slate-50 transition';
+        }
       }
-    ];
+    });
 
-    // Registered Users & Block Status
-    let users = [
-      { id: "USER_01", name: "Rahul Tech Point", phone: "9876543210", isBlocked: false },
-      { id: "USER_02", name: "Tech Zone Computers", phone: "9876543211", isBlocked: false },
-      { id: "USER_03", name: "A·chik Natural Farm", phone: "9876543212", isBlocked: false },
-      { id: "USER_04", name: "Sharma Electricals", phone: "9876543213", isBlocked: false },
-      { id: "USER_05", name: "Sangma Motors", phone: "9876543214", isBlocked: false },
-      { id: "USER_06", name: "Garo Hills Wheels", phone: "9876543215", isBlocked: false },
-      { id: "USER_07", name: "A·chik Weaves & Craft", phone: "9876543216", isBlocked: false },
-      { id: "USER_08", name: "Meghalaya Herbal Care", phone: "9876543217", isBlocked: false }
-    ];
+    renderHomeListings();
+  }
 
-    let mandiRates = [
-      { item: "Tomato (Local Hybrid)", price: "₹35 / kg", trend: "up", mandi: "Tura Super Market" },
-      { item: "Ginger (Meghalaya Organic)", price: "₹120 / kg", trend: "down", mandi: "Rongram Wholesale" },
-      { item: "Potato (Nainital)", price: "₹28 / kg", trend: "flat", mandi: "Shillong Main" },
-      { item: "Local Chicken (Broiler)", price: "₹180 / kg", trend: "up", mandi: "Hawakhana Market" },
-      { item: "Mustard Oil (Cold Pressed)", price: "₹145 / L", trend: "flat", mandi: "Local Wholesale" }
-    ];
+  // 2. PRODUCT CARDS GRID (MATCHING SCREENSHOT)
+  function handleSearch(q) {
+    searchQuery = q.toLowerCase().trim();
+    renderHomeListings();
+  }
 
-    let communityRequests = [
-      { title: "Need second-hand scooty (Activa/Jupiter) in good condition", author: "Marak - 9876543210", time: "1 hr ago" },
-      { title: "Looking for plumber near Hawakhana for pipe leakage", author: "Sangma - 9876543218", time: "3 hrs ago" },
-      { title: "Want 10kg organic wild honey for festival delivery", author: "Momin - 9876543219", time: "Yesterday" }
-    ];
+  function renderHomeListings() {
+    const grid = document.getElementById('homeListingsGrid');
+    const filtered = items.filter(item => {
+      const sellerUser = users.find(u => u.id === item.userId);
+      if (sellerUser && sellerUser.isBlocked) return false;
 
-    // State
-    let selectedCategory = 'all';
-    let searchQuery = '';
-    let uploadedPhotoPreviews = [];
-    let cart = [];
+      const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
+      const matchSearch = !searchQuery || 
+        item.title.toLowerCase().includes(searchQuery) || 
+        item.category.toLowerCase().includes(searchQuery) ||
+        item.seller.toLowerCase().includes(searchQuery);
+      
+      let matchFilter = true;
+      if (activeFilter === 'services') matchFilter = item.isService === true;
+      if (activeFilter === 'products') matchFilter = item.isService === false;
 
-    // All India States & Districts
-    const INDIA_LOCATIONS = {
-      "Meghalaya": ["West Garo Hills (Tura)", "East Garo Hills (Williamnagar)", "South Garo Hills (Baghmara)", "East Khasi Hills (Shillong)", "West Khasi Hills", "Ri-Bhoi"],
-      "Assam": ["Guwahati (Kamrup)", "Dhubri", "Goalpara", "Silchar", "Dibrugarh", "Jorhat"],
-      "Delhi": ["Central Delhi", "New Delhi", "North Delhi", "South Delhi", "West Delhi"],
-      "Maharashtra": ["Mumbai", "Pune", "Nagpur", "Thane", "Nashik"],
-      "Karnataka": ["Bengaluru Urban", "Mysuru", "Mangaluru", "Hubballi"],
-      "West Bengal": ["Kolkata", "Siliguri", "Howrah", "Darjeeling"],
-      "Uttar Pradesh": ["Lucknow", "Kanpur", "Noida", "Varanasi", "Agra"],
-      "Bihar": ["Patna", "Gaya", "Muzaffarpur", "Bhagalpur"]
-    };
+      return matchCat && matchSearch && matchFilter;
+    });
 
-    function init() {
-      renderCategoryTabs();
-      renderListings();
-      renderMandiRates();
-      renderCommunityRequests();
-      renderAdminUsers();
-      populateStateSelect();
-      lucide.createIcons();
-    }
+    document.getElementById('itemCount').textContent = `(${filtered.length} items found)`;
 
-    function renderCategoryTabs() {
-      const container = document.getElementById('categoryTabs');
-      container.innerHTML = CATEGORIES.map(cat => `
-        <button onclick="selectCategory('${cat.id}')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition ${
-          selectedCategory === cat.id 
-            ? 'bg-green-700 text-white shadow' 
-            : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
-        }">
-          <i data-lucide="${cat.icon}" class="w-3.5 h-3.5"></i>
-          <span>${cat.name}</span>
-        </button>
-      `).join('');
-    }
-
-    function selectCategory(catId) {
-      selectedCategory = catId;
-      document.getElementById('activeCategoryBadge').textContent = `Showing: ${catId === 'all' ? 'All Items' : catId}`;
-      renderCategoryTabs();
-      renderListings();
-      lucide.createIcons();
-    }
-
-    function handleSearch(q) {
-      searchQuery = q.toLowerCase().trim();
-      renderListings();
-    }
-
-    function renderListings() {
-      const grid = document.getElementById('listingsGrid');
-      const filtered = items.filter(item => {
-        // Check if user is blocked
-        const sellerUser = users.find(u => u.id === item.userId);
-        if (sellerUser && sellerUser.isBlocked) return false;
-
-        const matchCat = selectedCategory === 'all' || item.category === selectedCategory;
-        const matchSearch = !searchQuery || 
-          item.title.toLowerCase().includes(searchQuery) || 
-          item.category.toLowerCase().includes(searchQuery) ||
-          item.seller.toLowerCase().includes(searchQuery);
-        return matchCat && matchSearch;
-      });
-
-      document.getElementById('itemCount').textContent = `${filtered.length} products available`;
-
-      if (filtered.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full py-12 text-center text-slate-500 space-y-2">
-            <i data-lucide="package-x" class="w-12 h-12 mx-auto text-slate-300"></i>
-            <p class="font-bold text-sm">Koi item nahi mila!</p>
-            <p class="text-xs">Category ya search query change karein ya naya item post karein.</p>
-          </div>
-        `;
-        lucide.createIcons();
-        return;
-      }
-
-      grid.innerHTML = filtered.map(item => `
-        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm hover:shadow-md transition overflow-hidden flex flex-col group">
-          <!-- Thumbnail -->
-          <div class="h-44 bg-slate-100 relative cursor-pointer overflow-hidden" onclick="openDetail(${item.id})">
-            <img src="${item.images[0]}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
-            <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded-md">
-              ${item.category}
-            </span>
-            ${item.images.length > 1 ? `
-              <span class="absolute bottom-2 right-2 bg-black/70 text-white text-[10px] px-1.5 py-0.5 rounded flex items-center gap-1">
-                <i data-lucide="image" class="w-3 h-3"></i> ${item.images.length}
-              </span>
-            ` : ''}
-          </div>
-
-          <!-- Body -->
-          <div class="p-3.5 flex-1 flex flex-col justify-between space-y-2">
-            <div>
-              <h4 class="font-bold text-sm text-slate-900 line-clamp-1 hover:text-green-700 cursor-pointer" onclick="openDetail(${item.id})">
-                ${item.title}
-              </h4>
-              <div class="flex items-center gap-2 mt-1">
-                <span class="font-black text-green-700 text-base">₹${item.price.toLocaleString('en-IN')}</span>
-                ${item.originalPrice ? `<span class="text-slate-400 text-xs line-through">₹${item.originalPrice.toLocaleString('en-IN')}</span>` : ''}
-              </div>
-              <p class="text-[11px] text-slate-500 flex items-center gap-1 mt-1">
-                <i data-lucide="map-pin" class="w-3 h-3 text-slate-400"></i> ${item.location}
-              </p>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="pt-2 flex gap-1.5 border-t border-slate-100">
-              <a href="https://wa.me/91${item.phone}?text=Hello%20${encodeURIComponent(item.seller)},%20I%20am%20interested%20in%20your%20listing:%20${encodeURIComponent(item.title)}%20(₹${item.price})" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 rounded-xl flex items-center justify-center gap-1 transition shadow-sm">
-                <i data-lucide="message-circle" class="w-3.5 h-3.5"></i>
-                WhatsApp
-              </a>
-              <button onclick="addToCart(${item.id})" class="p-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl transition" title="Add to Cart">
-                <i data-lucide="shopping-bag" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div class="col-span-2 py-10 text-center text-slate-500 space-y-1">
+          <i data-lucide="package-x" class="w-8 h-8 mx-auto text-slate-300"></i>
+          <p class="font-bold text-xs">No items found in this category</p>
         </div>
-      `).join('');
-
+      `;
       lucide.createIcons();
+      return;
     }
 
-    function openDetail(id) {
-      const item = items.find(i => i.id === id);
-      if (!item) return;
+    grid.innerHTML = filtered.map(item => `
+      <div class="bg-white rounded-3xl border border-slate-200/90 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition">
+        
+        <!-- Top Image with SERVICE / PRODUCT badge and Heart -->
+        <div class="h-32 bg-slate-100 relative cursor-pointer overflow-hidden" onclick="openDetail(${item.id})">
+          <img src="${item.images[0]}" alt="${item.title}" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&auto=format&fit=crop&q=80'" />
+          
+          <!-- Category Badge -->
+          <span class="absolute top-2 left-2 bg-slate-900/80 backdrop-blur-md text-white text-[8px] font-black tracking-wider px-2 py-0.5 rounded-full uppercase">
+            ${item.isService ? 'SERVICE' : item.category.split('/')[0].trim()}
+          </span>
 
-      document.getElementById('modalTitle').textContent = item.title;
-      document.getElementById('modalPrice').textContent = `₹${item.price.toLocaleString('en-IN')}`;
-      document.getElementById('modalCategory').textContent = item.category;
-      document.getElementById('modalDesc').textContent = item.desc;
-      document.getElementById('modalSeller').textContent = item.seller;
-      document.getElementById('modalLocation').textContent = item.location;
-      document.getElementById('modalPhone').textContent = item.phone;
-
-      // Gallery
-      const mainImg = document.getElementById('modalMainImg');
-      mainImg.src = item.images[0];
-
-      const thumbs = document.getElementById('modalThumbs');
-      thumbs.innerHTML = item.images.map((img, idx) => `
-        <img src="${img}" onclick="document.getElementById('modalMainImg').src='${img}'" class="w-12 h-12 object-cover rounded-lg border-2 border-transparent hover:border-green-600 cursor-pointer" />
-      `).join('');
-
-      document.getElementById('modalWhatsAppBtn').onclick = () => {
-        window.open(`https://wa.me/91${item.phone}?text=Hello%20${encodeURIComponent(item.seller)},%20I%20am%20interested%20in:%20${encodeURIComponent(item.title)}%20(₹${item.price})`, '_blank');
-      };
-
-      document.getElementById('modalAddCartBtn').onclick = () => {
-        addToCart(item.id);
-        closeModal('detailModal');
-      };
-
-      document.getElementById('detailModal').classList.remove('hidden');
-      document.getElementById('detailModal').classList.add('flex');
-      lucide.createIcons();
-    }
-
-    function handlePhotoUpload(event) {
-      const files = Array.from(event.target.files);
-      if (!files.length) return;
-
-      files.slice(0, 4).forEach(file => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          uploadedPhotoPreviews.push(e.target.result);
-          renderPhotoPreviews();
-        };
-        reader.readAsDataURL(file);
-      });
-    }
-
-    function renderPhotoPreviews() {
-      const container = document.getElementById('photoPreviewContainer');
-      container.innerHTML = uploadedPhotoPreviews.map((src, index) => `
-        <div class="relative w-16 h-16 rounded-lg overflow-hidden border border-slate-200 shrink-0">
-          <img src="${src}" class="w-full h-full object-cover" />
-          <button type="button" onclick="removePhoto(${index})" class="absolute top-0.5 right-0.5 bg-red-500 text-white rounded-full p-0.5">
-            <i data-lucide="x" class="w-3 h-3"></i>
+          <!-- Heart / Like Button -->
+          <button onclick="event.stopPropagation(); toggleLike(${item.id})" class="absolute top-2 right-2 w-7 h-7 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-sm">
+            <i data-lucide="heart" class="w-4 h-4 ${item.isLiked ? 'text-red-500 fill-red-500' : 'text-slate-600'}"></i>
           </button>
         </div>
-      `).join('');
-      lucide.createIcons();
-    }
 
-    function removePhoto(index) {
-      uploadedPhotoPreviews.splice(index, 1);
-      renderPhotoPreviews();
-    }
-
-    function handlePostSubmit(e) {
-      e.preventDefault();
-      const title = document.getElementById('postTitle').value;
-      const category = document.getElementById('postCategory').value;
-      const price = parseFloat(document.getElementById('postPrice').value);
-      const desc = document.getElementById('postDesc').value || "Authentic local listing.";
-      const phone = document.getElementById('postPhone').value;
-      const seller = document.getElementById('postSeller').value;
-
-      const newImages = uploadedPhotoPreviews.length > 0 ? uploadedPhotoPreviews : [
-        "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&q=80"
-      ];
-
-      const newItem = {
-        id: Date.now(),
-        title,
-        category,
-        price,
-        originalPrice: price * 1.15,
-        seller,
-        phone,
-        location: document.getElementById('currentLocationText').textContent,
-        desc,
-        userId: "USER_NEW_" + Math.floor(Math.random()*1000),
-        images: newImages
-      };
-
-      items.unshift(newItem);
-      closeModal('postModal');
-      document.getElementById('postAdForm').reset();
-      uploadedPhotoPreviews = [];
-      renderPhotoPreviews();
-      renderListings();
-      alert("✅ Aapka Ad successfully publish ho gaya hai!");
-    }
-
-    function addToCart(id) {
-      const item = items.find(i => i.id === id);
-      if (!item) return;
-      cart.push(item);
-      updateCartUI();
-      alert(`🛒 "${item.title}" cart me add ho gaya!`);
-    }
-
-    function updateCartUI() {
-      const badge = document.getElementById('cartBadge');
-      if (cart.length > 0) {
-        badge.textContent = cart.length;
-        badge.classList.remove('hidden');
-      } else {
-        badge.classList.add('hidden');
-      }
-
-      const list = document.getElementById('cartItemsList');
-      if (cart.length === 0) {
-        list.innerHTML = `<p class="text-center text-slate-400 py-4">Cart abhi khali hai.</p>`;
-        document.getElementById('cartTotal').textContent = "₹0";
-        return;
-      }
-
-      let total = 0;
-      list.innerHTML = cart.map((item, idx) => {
-        total += item.price;
-        return `
-          <div class="flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-100">
-            <div class="flex items-center gap-2">
-              <img src="${item.images[0]}" class="w-10 h-10 object-cover rounded-lg" />
-              <div>
-                <p class="font-bold text-slate-800 line-clamp-1">${item.title}</p>
-                <p class="text-green-700 font-extrabold">₹${item.price.toLocaleString('en-IN')}</p>
-              </div>
+        <!-- Card Body -->
+        <div class="p-2.5 space-y-1.5 flex-1 flex flex-col justify-between">
+          <div>
+            <div class="flex items-baseline gap-1">
+              <span class="font-black text-green-700 text-sm">₹${item.price.toLocaleString('en-IN')}</span>
+              ${item.originalPrice ? `<span class="text-slate-400 text-[10px] line-through">₹${item.originalPrice.toLocaleString('en-IN')}</span>` : ''}
             </div>
-            <button onclick="removeFromCart(${idx})" class="text-red-500 hover:text-red-700 p-1">
-              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            
+            <h4 class="font-bold text-xs text-slate-900 line-clamp-1 cursor-pointer hover:text-green-700 mt-0.5 leading-tight" onclick="openDetail(${item.id})">
+              ${item.title}
+            </h4>
+
+            <p class="text-[9px] text-slate-500 flex items-center gap-1 mt-1 truncate">
+              <i data-lucide="map-pin" class="w-2.5 h-2.5 text-red-500 shrink-0"></i>
+              <span class="truncate">${item.location}</span>
+            </p>
+
+            <div class="flex items-center justify-between text-[9px] text-slate-600 mt-1 pt-1 border-t border-slate-100">
+              <span class="truncate max-w-[90px] font-semibold">${item.seller}</span>
+              <span class="text-amber-500 font-bold flex items-center gap-0.5">★ ${item.rating}</span>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons -->
+          <div class="pt-1 flex gap-1">
+            <a href="https://wa.me/91${item.phone}?text=Hello%20${encodeURIComponent(item.seller)},%20I%20saw%20your%20listing:%20${encodeURIComponent(item.title)}%20(₹${item.price})%20on%20Meri%20Local%20Bazaar" target="_blank" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-[10px] font-bold py-1.5 rounded-xl flex items-center justify-center gap-1 shadow-sm transition">
+              <i data-lucide="message-circle" class="w-3 h-3"></i>
+              WhatsApp
+            </a>
+            <button onclick="addToCart(${item.id})" class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl" title="Add to Cart">
+              <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
             </button>
           </div>
-        `;
-      }).join('');
+        </div>
 
-      document.getElementById('cartTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
-      lucide.createIcons();
-    }
+      </div>
+    `).join('');
 
-    function removeFromCart(idx) {
-      cart.splice(idx, 1);
-      updateCartUI();
-    }
+    lucide.createIcons();
+  }
 
-    function toggleCart() {
-      const m = document.getElementById('cartModal');
-      m.classList.toggle('hidden');
-      m.classList.toggle('flex');
-      updateCartUI();
-      lucide.createIcons();
-    }
+  function toggleLike(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    item.isLiked = !item.isLiked;
+    renderHomeListings();
+  }
 
-    function checkoutWhatsApp() {
-      if (cart.length === 0) {
-        alert("Cart me koi item nahi hai!");
-        return;
+  // 3. NAVIGATION CONTROLS
+  function navTo(screen) {
+    currentScreen = screen;
+    const views = ['home', 'categories', 'chat', 'profile'];
+    views.forEach(v => {
+      const el = document.getElementById('view' + v.charAt(0).toUpperCase() + v.slice(1));
+      if (el) el.classList.add('hidden');
+    });
+
+    const tabMap = {
+      'home': 'bTabHome',
+      'categories': 'bTabCategories',
+      'chat': 'bTabChat',
+      'profile': 'bTabProfile'
+    };
+
+    Object.entries(tabMap).forEach(([k, tabId]) => {
+      const btn = document.getElementById(tabId);
+      if (btn) {
+        if (k === screen) {
+          btn.className = 'flex flex-col items-center gap-0.5 text-green-700 flex-1 py-1 font-bold';
+        } else {
+          btn.className = 'flex flex-col items-center gap-0.5 text-slate-400 hover:text-slate-700 flex-1 py-1';
+        }
       }
-      let msg = "Hello, I want to order these items from Local Bazaar:\n";
-      cart.forEach((i, idx) => {
-        msg += `${idx+1}. ${i.title} - ₹${i.price} (Seller: ${i.seller})\n`;
-      });
-      msg += `\nTotal: ${document.getElementById('cartTotal').textContent}`;
-      window.open(`https://wa.me/919876543210?text=${encodeURIComponent(msg)}`, '_blank');
-    }
+    });
 
-    function switchTab(tab) {
-      const market = document.getElementById('tabContentMarketplace');
-      const comm = document.getElementById('tabContentCommunity');
-      const bNavMarket = document.getElementById('bottomNavMarket');
-      const bNavComm = document.getElementById('bottomNavCommunity');
+    const activeView = document.getElementById('view' + screen.charAt(0).toUpperCase() + screen.slice(1));
+    if (activeView) activeView.classList.remove('hidden');
+    lucide.createIcons();
+  }
 
-      if (tab === 'community') {
-        market.classList.add('hidden');
-        comm.classList.remove('hidden');
-        bNavMarket.className = 'flex flex-col items-center gap-0.5 text-slate-500';
-        bNavComm.className = 'flex flex-col items-center gap-0.5 text-green-700';
-      } else {
-        market.classList.remove('hidden');
-        comm.classList.add('hidden');
-        bNavMarket.className = 'flex flex-col items-center gap-0.5 text-green-700';
-        bNavComm.className = 'flex flex-col items-center gap-0.5 text-slate-500';
-      }
-      lucide.createIcons();
-    }
+  // 4. CATEGORIES SCREEN
+  function renderAllCategoriesScreen() {
+    const grid = document.getElementById('allCategoriesGrid');
+    grid.innerHTML = CIRCULAR_CATEGORIES.filter(c => c.id !== 'all').map(cat => `
+      <div onclick="selectCategory('${cat.id}'); navTo('home');" class="bg-white rounded-3xl p-3.5 border border-slate-200 shadow-sm hover:border-green-600 cursor-pointer transition flex flex-col justify-between space-y-2 group">
+        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-emerald-800 flex items-center justify-center text-lg font-bold shadow-sm">
+          ${cat.isEmoji ? cat.icon : `<i data-lucide="${cat.icon}" class="w-5 h-5"></i>`}
+        </div>
+        <div>
+          <h4 class="font-bold text-xs text-slate-900 group-hover:text-green-700">${cat.name}</h4>
+          <p class="text-[9px] text-slate-500 leading-tight mt-0.5">Explore local verified items</p>
+        </div>
+      </div>
+    `).join('');
+  }
 
-    function renderMandiRates() {
-      const container = document.getElementById('mandiRatesList');
-      container.innerHTML = mandiRates.map(r => `
-        <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-100">
-          <div>
-            <p class="font-bold text-slate-800">${r.item}</p>
-            <p class="text-[11px] text-slate-500">${r.mandi}</p>
+  // 5. PRODUCT DETAIL MODAL
+  function openDetail(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+
+    document.getElementById('detailTitle').textContent = item.title;
+    document.getElementById('detailPrice').textContent = `₹${item.price.toLocaleString('en-IN')}`;
+    document.getElementById('detailCategory').textContent = item.category;
+    document.getElementById('detailDesc').textContent = item.desc;
+    document.getElementById('detailSeller').textContent = item.seller;
+    document.getElementById('detailLocation').textContent = item.location;
+    document.getElementById('detailPhone').textContent = `+91 ${item.phone}`;
+
+    document.getElementById('detailMainImg').src = item.images[0];
+    const thumbs = document.getElementById('detailThumbs');
+    thumbs.innerHTML = item.images.map(img => `
+      <img src="${img}" onclick="document.getElementById('detailMainImg').src='${img}'" class="w-11 h-11 object-cover rounded-xl border border-slate-200 cursor-pointer" />
+    `).join('');
+
+    document.getElementById('detailWhatsAppBtn').onclick = () => {
+      window.open(`https://wa.me/91${item.phone}?text=Hello%20${encodeURIComponent(item.seller)},%20I%20am%20interested%20in:%20${encodeURIComponent(item.title)}%20(₹${item.price})`, '_blank');
+    };
+
+    document.getElementById('detailAddCartBtn').onclick = () => {
+      addToCart(item.id);
+      closeModal('detailModal');
+    };
+
+    openModal('detailModal');
+  }
+
+  // 6. PHOTO UPLOAD (2–4 PHOTOS)
+  function handlePhotoUpload(event) {
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
+
+    files.slice(0, 4).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        uploadedPhotos.push(e.target.result);
+        renderPhotoPreviews();
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function renderPhotoPreviews() {
+    const container = document.getElementById('photoPreviewContainer');
+    container.innerHTML = uploadedPhotos.map((src, index) => `
+      <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-slate-200 shrink-0 shadow-sm">
+        <img src="${src}" class="w-full h-full object-cover" />
+        <button type="button" onclick="removePhoto(${index})" class="absolute top-0.5 right-0.5 bg-red-500 text-white rounded-full p-0.5">
+          <i data-lucide="x" class="w-2.5 h-2.5"></i>
+        </button>
+      </div>
+    `).join('');
+    lucide.createIcons();
+  }
+
+  function removePhoto(idx) {
+    uploadedPhotos.splice(idx, 1);
+    renderPhotoPreviews();
+  }
+
+  function handlePostSubmit(e) {
+    e.preventDefault();
+    const title = document.getElementById('postTitle').value;
+    const category = document.getElementById('postCategory').value;
+    const price = parseFloat(document.getElementById('postPrice').value);
+    const desc = document.getElementById('postDesc').value || "Authentic verified local item.";
+    const phone = document.getElementById('postPhone').value;
+    const seller = document.getElementById('postSeller').value;
+
+    const newImages = uploadedPhotos.length > 0 ? uploadedPhotos : [
+      "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=600&auto=format&fit=crop&q=80"
+    ];
+
+    const newItem = {
+      id: Date.now(),
+      title,
+      category,
+      isService: category === 'Services',
+      price,
+      originalPrice: price * 1.15,
+      seller,
+      rating: 5.0,
+      phone,
+      location: document.getElementById('currentLocationLabel').textContent,
+      desc,
+      userId: "USER_NEW_" + Math.floor(Math.random()*1000),
+      images: newImages,
+      isLiked: false
+    };
+
+    items.unshift(newItem);
+    closeModal('postModal');
+    document.getElementById('postAdForm').reset();
+    uploadedPhotos = [];
+    renderPhotoPreviews();
+    renderHomeListings();
+    alert("✅ Aapka Ad successfully publish ho gaya hai!");
+  }
+
+  // 7. CHATS
+  function renderChatList() {
+    const container = document.getElementById('chatList');
+    container.innerHTML = chats.map(c => `
+      <div onclick="openWhatsAppChat('${c.phone}', '${c.name}')" class="p-3 flex items-center justify-between hover:bg-slate-50 cursor-pointer transition">
+        <div class="flex items-center gap-2.5">
+          <div class="w-10 h-10 rounded-2xl bg-emerald-700 text-white font-bold flex items-center justify-center text-xs shadow-sm">
+            ${c.avatar}
           </div>
-          <div class="text-right">
-            <p class="font-black text-green-700">${r.price}</p>
-            <span class="text-[10px] font-semibold ${r.trend === 'up' ? 'text-amber-600' : r.trend === 'down' ? 'text-emerald-600' : 'text-slate-500'}">
-              ${r.trend === 'up' ? '▲ High' : r.trend === 'down' ? '▼ Low' : '● Stable'}
-            </span>
+          <div>
+            <h4 class="font-bold text-xs text-slate-900">${c.name}</h4>
+            <p class="text-[10px] text-slate-500 line-clamp-1">${c.lastMsg}</p>
           </div>
         </div>
-      `).join('');
-    }
-
-    function renderCommunityRequests() {
-      const container = document.getElementById('communityRequestsList');
-      container.innerHTML = communityRequests.map(r => `
-        <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 space-y-1">
-          <p class="font-semibold text-slate-800 text-xs">${r.title}</p>
-          <div class="flex items-center justify-between text-[11px] text-slate-500">
-            <span>By: <b>${r.author}</b></span>
-            <span>${r.time}</span>
+        <div class="text-right">
+          <span class="text-[9px] text-slate-400">${c.time}</span>
+          <div class="mt-0.5 text-emerald-600">
+            <i data-lucide="message-circle" class="w-3.5 h-3.5 ml-auto"></i>
           </div>
         </div>
-      `).join('');
+      </div>
+    `).join('');
+  }
+
+  function openWhatsAppChat(phone, name) {
+    window.open(`https://wa.me/91${phone}?text=Hello%20${encodeURIComponent(name)},%20chatting%20from%20Meri%20Local%20Bazaar%20App!`, '_blank');
+  }
+
+  // 8. CART
+  function addToCart(id) {
+    const item = items.find(i => i.id === id);
+    if (!item) return;
+    cart.push(item);
+    updateCartUI();
+    alert(`🛒 "${item.title}" cart me add ho gaya!`);
+  }
+
+  function updateCartUI() {
+    document.getElementById('statCart').textContent = cart.length;
+    const list = document.getElementById('cartItemsList');
+    if (cart.length === 0) {
+      list.innerHTML = `<p class="text-center text-slate-400 py-3">Cart is empty.</p>`;
+      document.getElementById('cartTotal').textContent = "₹0";
+      return;
     }
 
-    function handleCommunitySubmit(e) {
-      e.preventDefault();
-      const title = document.getElementById('commTitle').value;
-      const contact = document.getElementById('commContact').value;
-      communityRequests.unshift({
-        title,
-        author: contact,
-        time: 'Just now'
-      });
-      closeModal('communityModal');
-      renderCommunityRequests();
-      alert("✅ Request board par post ho gayi!");
-    }
-
-    function renderAdminUsers() {
-      const container = document.getElementById('adminUserList');
-      container.innerHTML = users.map(u => `
-        <div class="flex items-center justify-between p-2.5 rounded-xl border ${u.isBlocked ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-200'}">
-          <div>
-            <p class="font-bold text-slate-800">${u.name} <span class="font-mono text-[10px] text-slate-500">(${u.id})</span></p>
-            <p class="text-[11px] text-slate-500">📱 ${u.phone} • Status: <b class="${u.isBlocked ? 'text-red-600' : 'text-green-600'}">${u.isBlocked ? 'BLOCKED' : 'ACTIVE'}</b></p>
+    let total = 0;
+    list.innerHTML = cart.map((item, idx) => {
+      total += item.price;
+      return `
+        <div class="flex items-center justify-between p-2 bg-slate-50 rounded-xl border border-slate-100">
+          <div class="flex items-center gap-2">
+            <img src="${item.images[0]}" class="w-8 h-8 object-cover rounded-lg" />
+            <div>
+              <p class="font-bold text-slate-800 line-clamp-1">${item.title}</p>
+              <p class="text-green-700 font-bold">₹${item.price.toLocaleString('en-IN')}</p>
+            </div>
           </div>
-          <button onclick="toggleBlockUser('${u.id}')" class="px-3 py-1.5 text-xs font-bold rounded-lg transition ${
-            u.isBlocked ? 'bg-green-600 text-white hover:bg-green-700' : 'bg-red-600 text-white hover:bg-red-700'
-          }">
-            ${u.isBlocked ? 'Unblock' : 'Block User'}
+          <button onclick="removeFromCart(${idx})" class="text-red-500 p-1">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
           </button>
         </div>
-      `).join('');
-    }
+      `;
+    }).join('');
 
-    function toggleBlockUser(userId) {
-      const user = users.find(u => u.id === userId);
-      if (!user) return;
-      user.isBlocked = !user.isBlocked;
-      renderAdminUsers();
-      renderListings();
-      alert(`User ${user.name} is now ${user.isBlocked ? 'BLOCKED' : 'ACTIVE'}.`);
-    }
+    document.getElementById('cartTotal').textContent = `₹${total.toLocaleString('en-IN')}`;
+    lucide.createIcons();
+  }
 
-    function populateStateSelect() {
-      const s = document.getElementById('stateSelect');
-      s.innerHTML = Object.keys(INDIA_LOCATIONS).map(st => `<option value="${st}">${st}</option>`).join('');
-      populateDistricts();
-    }
+  function removeFromCart(idx) {
+    cart.splice(idx, 1);
+    updateCartUI();
+  }
 
-    function populateDistricts() {
-      const st = document.getElementById('stateSelect').value;
-      const d = document.getElementById('districtSelect');
-      const dists = INDIA_LOCATIONS[st] || [];
-      d.innerHTML = dists.map(dis => `<option value="${dis}">${dis}</option>`).join('');
-    }
+  function toggleCart() {
+    const m = document.getElementById('cartModal');
+    m.classList.toggle('hidden');
+    m.classList.toggle('flex');
+    updateCartUI();
+    lucide.createIcons();
+  }
 
-    function applyLocation() {
-      const st = document.getElementById('stateSelect').value;
-      const dis = document.getElementById('districtSelect').value;
-      document.getElementById('currentLocationText').textContent = `${dis}, ${st}`;
-      closeModal('locationModal');
-    }
+  function checkoutWhatsApp() {
+    if (!cart.length) return;
+    let msg = "Order from Meri Local Bazaar:\n";
+    cart.forEach((i, idx) => {
+      msg += `${idx+1}. ${i.title} - ₹${i.price}\n`;
+    });
+    msg += `Total: ${document.getElementById('cartTotal').textContent}`;
+    window.open(`https://wa.me/919876543210?text=${encodeURIComponent(msg)}`, '_blank');
+  }
 
-    function autoDetectLocation() {
-      document.getElementById('currentLocationText').textContent = `Tura, West Garo Hills, Meghalaya (GPS Detected)`;
-      closeModal('locationModal');
-      alert("📍 Location auto-detected: Tura, West Garo Hills, Meghalaya");
-    }
+  // 9. AUTH & LOGOUT FLOW
+  function openGoogleChooser() { openModal('googleChooserModal'); }
+  
+  function loginWithGoogleUser(name, email, avatar) {
+    currentUser = { name, email, avatar };
+    closeModal('googleChooserModal');
+    document.getElementById('screenAuth').classList.add('hidden');
+    updateProfileStats();
+  }
 
-    function openModal(id) {
-      document.getElementById(id).classList.remove('hidden');
-      document.getElementById(id).classList.add('flex');
-      lucide.createIcons();
-    }
+  function sendPhoneOTP() {
+    const phone = document.getElementById('loginPhoneInput').value.trim();
+    if (phone.length < 10) return alert("Enter valid 10 digit number");
+    document.getElementById('displayOtpPhone').textContent = `+91 ${phone}`;
+    document.getElementById('phoneStep1').classList.add('hidden');
+    document.getElementById('phoneStep2').classList.remove('hidden');
+  }
 
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-      document.getElementById(id).classList.remove('flex');
-    }
+  function verifyPhoneOTP() {
+    const phone = document.getElementById('loginPhoneInput').value.trim();
+    currentUser = { name: `User ${phone.slice(-4)}`, email: `${phone}@localbazaar.in`, avatar: phone.slice(-2) };
+    document.getElementById('screenAuth').classList.add('hidden');
+    updateProfileStats();
+  }
 
-    function openPostModal() { openModal('postModal'); }
-    function openLocationModal() { openModal('locationModal'); }
-    function openAdminModal() { openModal('adminModal'); }
-    function openCommunityRequestModal() { openModal('communityModal'); }
+  function enterAsGuest() {
+    currentUser = { name: "Guest User", email: "guest@localbazaar.in", avatar: "GU" };
+    document.getElementById('screenAuth').classList.add('hidden');
+    updateProfileStats();
+  }
 
-    // Init on load
-    window.addEventListener('DOMContentLoaded', init);
-  </script>
+  // Clear Sign Out / Logout
+  function signOutUser() {
+    document.getElementById('screenAuth').classList.remove('hidden');
+    document.getElementById('phoneStep1').classList.remove('hidden');
+    document.getElementById('phoneStep2').classList.add('hidden');
+    navTo('home');
+  }
+
+  function updateProfileStats() {
+    document.getElementById('profileName').textContent = currentUser.name;
+    document.getElementById('profileEmail').textContent = currentUser.email;
+    document.getElementById('profileAvatarLarge').textContent = currentUser.avatar;
+  }
+
+  // 10. ALL-INDIA STATES & DISTRICTS SELECTOR
+  function populateStateSelect() {
+    const s = document.getElementById('stateSelect');
+    s.innerHTML = Object.keys(ALL_INDIA_LOCATIONS).map(st => `<option value="${st}">${st}</option>`).join('');
+    populateDistricts();
+  }
+
+  function populateDistricts() {
+    const st = document.getElementById('stateSelect').value;
+    const d = document.getElementById('districtSelect');
+    const dists = ALL_INDIA_LOCATIONS[st] || [];
+    d.innerHTML = dists.map(dis => `<option value="${dis}">${dis}</option>`).join('');
+  }
+
+  function applyLocation() {
+    const st = document.getElementById('stateSelect').value;
+    const dis = document.getElementById('districtSelect').value;
+    document.getElementById('currentLocationLabel').textContent = `${dis}, ${st}`;
+    document.getElementById('statCity').textContent = dis.split(' ')[0];
+    closeModal('locationModal');
+  }
+
+  function autoDetectLocation() {
+    document.getElementById('currentLocationLabel').textContent = "West Garo Hills (Tura), Meghalaya";
+    document.getElementById('statCity').textContent = "Tura";
+    closeModal('locationModal');
+    alert("📍 Location auto-detected: West Garo Hills (Tura), Meghalaya");
+  }
+
+  // 11. ADMIN MODERATION
+  function renderAdminUsers() {
+    const container = document.getElementById('adminUserList');
+    container.innerHTML = users.map(u => `
+      <div class="flex items-center justify-between p-2.5 rounded-2xl border ${u.isBlocked ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-200'}">
+        <div>
+          <p class="font-bold text-slate-800">${u.name}</p>
+          <p class="text-[10px] text-slate-500">📱 ${u.phone} • <b class="${u.isBlocked ? 'text-red-600' : 'text-green-600'}">${u.isBlocked ? 'BLOCKED' : 'ACTIVE'}</b></p>
+        </div>
+        <button onclick="toggleBlock('${u.id}')" class="px-2.5 py-1 text-[11px] font-bold rounded-xl ${u.isBlocked ? 'bg-green-700 text-white' : 'bg-red-600 text-white'}">
+          ${u.isBlocked ? 'Unblock' : 'Block'}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function toggleBlock(id) {
+    const u = users.find(x => x.id === id);
+    if (!u) return;
+    u.isBlocked = !u.isBlocked;
+    renderAdminUsers();
+    renderHomeListings();
+  }
+
+  // MODAL UTILS
+  function openModal(id) {
+    document.getElementById(id).classList.remove('hidden');
+    document.getElementById(id).classList.add('flex');
+    lucide.createIcons();
+  }
+
+  function closeModal(id) {
+    document.getElementById(id).classList.add('hidden');
+    document.getElementById(id).classList.remove('flex');
+  }
+
+  function openPostModal() { openModal('postModal'); }
+  function openLocationModal() { openModal('locationModal'); }
+  function openAdminModal() { openModal('adminModal'); }
+
+  window.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>

@@ -16,12 +16,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -69,6 +70,7 @@ fun SelectLocationDialog(
     ),
     "Assam" to listOf(
       "Kamrup Metropolitan (Guwahati)",
+      "Kamrup Rural",
       "Cachar (Silchar)",
       "Dibrugarh",
       "Jorhat",
@@ -77,15 +79,52 @@ fun SelectLocationDialog(
       "Dhubri",
       "Kokrajhar",
       "Tinsukia",
-      "Sonitpur (Tezpur)"
+      "Sonitpur (Tezpur)",
+      "Barpeta",
+      "Bongaigaon",
+      "Nalbari",
+      "Sivasagar",
+      "Karimganj",
+      "Hailakandi",
+      "Dima Hasao",
+      "Karbi Anglong"
     ),
     "Delhi" to listOf(
       "New Delhi",
       "Central Delhi",
       "South Delhi",
+      "South East Delhi",
+      "South West Delhi",
       "North Delhi",
+      "North East Delhi",
+      "North West Delhi",
       "East Delhi",
-      "West Delhi"
+      "West Delhi",
+      "Shahdara"
+    ),
+    "Maharashtra" to listOf(
+      "Mumbai City",
+      "Mumbai Suburban",
+      "Pune",
+      "Nagpur",
+      "Thane",
+      "Nashik",
+      "Aurangabad (Chhatrapati Sambhaji Nagar)",
+      "Solapur",
+      "Amravati",
+      "Kolhapur",
+      "Navi Mumbai"
+    ),
+    "Karnataka" to listOf(
+      "Bengaluru Urban",
+      "Bengaluru Rural",
+      "Mysuru",
+      "Hubballi-Dharwad",
+      "Mangaluru (Dakshina Kannada)",
+      "Belagavi",
+      "Kalaburagi",
+      "Ballari",
+      "Udupi"
     ),
     "West Bengal" to listOf(
       "Kolkata",
@@ -94,127 +133,197 @@ fun SelectLocationDialog(
       "Howrah",
       "Darjeeling",
       "Siliguri",
-      "Hooghly"
+      "Hooghly",
+      "Jalpaiguri",
+      "Malda",
+      "Murshidabad",
+      "Purba Medinipur"
     ),
-    "Maharashtra" to listOf(
-      "Mumbai City",
-      "Mumbai Suburban",
-      "Pune",
-      "Nagpur",
-      "Thane",
-      "Nashik"
+    "Uttar Pradesh" to listOf(
+      "Lucknow",
+      "Noida (Gautam Buddha Nagar)",
+      "Ghaziabad",
+      "Kanpur",
+      "Varanasi",
+      "Agra",
+      "Prayagraj",
+      "Meerut",
+      "Bareilly",
+      "Aligarh",
+      "Gorakhpur"
     ),
-    "Karnataka" to listOf(
-      "Bengaluru Urban",
-      "Mysuru",
-      "Hubballi-Dharwad",
-      "Mangaluru",
-      "Belagavi"
+    "Bihar" to listOf(
+      "Patna",
+      "Gaya",
+      "Muzaffarpur",
+      "Bhagalpur",
+      "Darbhanga",
+      "Purnia",
+      "Begusarai",
+      "Bhojpur (Arrah)"
     ),
     "Tamil Nadu" to listOf(
       "Chennai",
       "Coimbatore",
       "Madurai",
       "Tiruchirappalli",
-      "Salem"
-    ),
-    "Uttar Pradesh" to listOf(
-      "Lucknow",
-      "Noida (Gautam Buddha Nagar)",
-      "Kanpur",
-      "Varanasi",
-      "Agra",
-      "Prayagraj"
-    ),
-    "Bihar" to listOf(
-      "Patna",
-      "Gaya",
-      "Muzaffarpur",
-      "Bhagalpur"
-    ),
-    "Rajasthan" to listOf(
-      "Jaipur",
-      "Jodhpur",
-      "Udaipur",
-      "Kota"
-    ),
-    "Gujarat" to listOf(
-      "Ahmedabad",
-      "Surat",
-      "Vadodara",
-      "Rajkot"
-    ),
-    "Punjab" to listOf(
-      "Ludhiana",
-      "Amritsar",
-      "Jalandhar",
-      "Patiala"
-    ),
-    "Haryana" to listOf(
-      "Gurugram",
-      "Faridabad",
-      "Panchkula",
-      "Ambala"
-    ),
-    "Kerala" to listOf(
-      "Thiruvananthapuram",
-      "Ernakulam (Kochi)",
-      "Kozhikode",
-      "Thrissur"
+      "Salem",
+      "Tirunelveli",
+      "Erode",
+      "Vellore"
     ),
     "Telangana" to listOf(
       "Hyderabad",
       "Warangal",
       "Rangareddy",
-      "Medchal"
+      "Medchal-Malkajgiri",
+      "Nizamabad",
+      "Karimnagar",
+      "Khammam"
     ),
-    "Odisha" to listOf(
-      "Khordha (Bhubaneswar)",
-      "Cuttack",
-      "Puri",
-      "Rourkela"
+    "Andhra Pradesh" to listOf(
+      "Visakhapatnam",
+      "Vijayawada",
+      "Guntur",
+      "Nellore",
+      "Kurnool",
+      "Tirupati",
+      "Kakinada"
+    ),
+    "Gujarat" to listOf(
+      "Ahmedabad",
+      "Surat",
+      "Vadodara",
+      "Rajkot",
+      "Bhavnagar",
+      "Jamnagar",
+      "Gandhinagar"
+    ),
+    "Rajasthan" to listOf(
+      "Jaipur",
+      "Jodhpur",
+      "Udaipur",
+      "Kota",
+      "Bikaner",
+      "Ajmer",
+      "Alwar"
+    ),
+    "Kerala" to listOf(
+      "Thiruvananthapuram",
+      "Ernakulam (Kochi)",
+      "Kozhikode",
+      "Thrissur",
+      "Kollam",
+      "Kannur",
+      "Palakkad",
+      "Kottayam"
+    ),
+    "Punjab" to listOf(
+      "Ludhiana",
+      "Amritsar",
+      "Jalandhar",
+      "Patiala",
+      "Bathinda",
+      "Mohali (SAS Nagar)"
+    ),
+    "Haryana" to listOf(
+      "Gurugram",
+      "Faridabad",
+      "Panipat",
+      "Ambala",
+      "Karnal",
+      "Hisar",
+      "Rohtak",
+      "Panchkula"
     ),
     "Madhya Pradesh" to listOf(
       "Indore",
       "Bhopal",
       "Jabalpur",
-      "Gwalior"
+      "Gwalior",
+      "Ujjain",
+      "Sagar"
+    ),
+    "Odisha" to listOf(
+      "Khordha (Bhubaneswar)",
+      "Cuttack",
+      "Sundargarh (Rourkela)",
+      "Ganjam (Berhampur)",
+      "Sambalpur",
+      "Puri"
     ),
     "Jharkhand" to listOf(
       "Ranchi",
-      "Jamshedpur",
+      "East Singhbhum (Jamshedpur)",
       "Dhanbad",
-      "Bokaro"
+      "Bokaro",
+      "Deoghar",
+      "Hazaribagh"
+    ),
+    "Chhattisgarh" to listOf(
+      "Raipur",
+      "Durg (Bhilai)",
+      "Bilaspur",
+      "Korba",
+      "Rajnandgaon"
+    ),
+    "Uttarakhand" to listOf(
+      "Dehradun",
+      "Haridwar",
+      "Nainital",
+      "Rishikesh",
+      "Haldwani",
+      "Roorkee"
+    ),
+    "Himachal Pradesh" to listOf(
+      "Shimla",
+      "Kangra (Dharamshala)",
+      "Mandi",
+      "Solan",
+      "Kullu & Manali"
     ),
     "Tripura" to listOf(
       "West Tripura (Agartala)",
       "Gomati",
-      "South Tripura"
+      "South Tripura",
+      "North Tripura",
+      "Dhalai",
+      "Khowai"
     ),
     "Manipur" to listOf(
       "Imphal West",
       "Imphal East",
+      "Thoubal",
+      "Bishnupur",
       "Churachandpur"
     ),
     "Nagaland" to listOf(
       "Kohima",
       "Dimapur",
-      "Mokokchung"
+      "Mokokchung",
+      "Tuensang",
+      "Wokha",
+      "Mon"
     ),
     "Mizoram" to listOf(
       "Aizawl",
       "Lunglei",
-      "Champhai"
+      "Champhai",
+      "Kolasib",
+      "Serchhip"
     ),
     "Arunachal Pradesh" to listOf(
       "Papum Pare (Itanagar)",
       "Changlang",
-      "Tawang"
+      "West Kameng",
+      "Tawang",
+      "East Siang"
     ),
     "Sikkim" to listOf(
-      "Gangtok",
-      "Namchi",
-      "Gyalshing"
+      "East Sikkim (Gangtok)",
+      "West Sikkim (Gyalshing)",
+      "South Sikkim (Namchi)",
+      "North Sikkim (Mangan)"
     ),
     "Goa" to listOf(
       "North Goa (Panaji)",
@@ -223,7 +332,10 @@ fun SelectLocationDialog(
     "Jammu & Kashmir" to listOf(
       "Srinagar",
       "Jammu",
-      "Anantnag"
+      "Anantnag",
+      "Baramulla",
+      "Kathua",
+      "Udhampur"
     ),
     "Ladakh" to listOf(
       "Leh",
@@ -234,10 +346,14 @@ fun SelectLocationDialog(
     ),
     "Puducherry" to listOf(
       "Puducherry",
-      "Karaikal"
+      "Karaikal",
+      "Mahe",
+      "Yanam"
     ),
     "Andaman & Nicobar" to listOf(
-      "South Andaman (Port Blair)"
+      "South Andaman (Port Blair)",
+      "North and Middle Andaman",
+      "Nicobar"
     )
   )
 
@@ -264,13 +380,13 @@ fun SelectLocationDialog(
         ) {
           Column {
             Text(
-              text = "Select State & District",
+              text = "Select Location",
               fontSize = 18.sp,
               fontWeight = FontWeight.Bold,
               color = Color(0xFF15803D)
             )
             Text(
-              text = "Full India database: All 28 States & 8 Union Territories.",
+              text = "All 28 States & 8 Union Territories across India",
               fontSize = 12.sp,
               color = Color(0xFF64748B)
             )
@@ -293,7 +409,38 @@ fun SelectLocationDialog(
           }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(14.dp))
+
+        // GPS Auto-detect button
+        OutlinedButton(
+          onClick = {
+            selectedState = "Meghalaya"
+            selectedDistrict = "West Garo Hills (Tura)"
+            onSaveLocation("Meghalaya", "West Garo Hills (Tura)")
+          },
+          modifier = Modifier
+            .fillMaxWidth()
+            .height(44.dp),
+          shape = RoundedCornerShape(12.dp),
+          colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = Color(0xFF15803D)
+          )
+        ) {
+          Icon(
+            imageVector = Icons.Default.MyLocation,
+            contentDescription = null,
+            tint = Color(0xFF15803D),
+            modifier = Modifier.size(16.dp)
+          )
+          Spacer(modifier = Modifier.size(6.dp))
+          Text(
+            text = "Auto-Detect Current GPS (Tura)",
+            fontWeight = FontWeight.Bold,
+            fontSize = 13.sp
+          )
+        }
+
+        Spacer(modifier = Modifier.height(14.dp))
 
         // State Dropdown
         Text(
