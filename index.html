@@ -371,12 +371,15 @@
           <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
         </div>
 
-        <div onclick="openAdminModal()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer">
+        <div id="adminMenuOption" onclick="openAdminModal()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer hidden">
           <div class="flex items-center gap-3 text-slate-800 font-semibold">
             <i data-lucide="shield-check" class="w-4 h-4 text-emerald-600"></i>
             <span>Admin Moderation (Block/Unblock)</span>
           </div>
-          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          <div class="flex items-center gap-1.5">
+            <span class="bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">ADMIN</span>
+            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+          </div>
         </div>
 
         <div onclick="toggleCart()" class="flex items-center justify-between p-3.5 hover:bg-slate-50 cursor-pointer">
@@ -1295,7 +1298,8 @@
   function openGoogleChooser() { openModal('googleChooserModal'); }
   
   function loginWithGoogleUser(name, email, avatar, isAdmin = false) {
-    currentUser = { name, email, avatar, isAdmin };
+    const isSuperAdmin = isAdmin || (email.toLowerCase() === 'silgrakmarak1309@gmail.com');
+    currentUser = { name, email, avatar, isAdmin: isSuperAdmin };
     closeModal('googleChooserModal');
     document.getElementById('screenAuth').classList.add('hidden');
     updateProfileStats();
@@ -1311,13 +1315,13 @@
 
   function verifyPhoneOTP() {
     const phone = document.getElementById('loginPhoneInput').value.trim();
-    currentUser = { name: `User ${phone.slice(-4)}`, email: `${phone}@localbazaar.in`, avatar: phone.slice(-2) };
+    currentUser = { name: `User ${phone.slice(-4)}`, email: `${phone}@localbazaar.in`, avatar: phone.slice(-2), isAdmin: false };
     document.getElementById('screenAuth').classList.add('hidden');
     updateProfileStats();
   }
 
   function enterAsGuest() {
-    currentUser = { name: "Guest User", email: "guest@localbazaar.in", avatar: "GU" };
+    currentUser = { name: "Guest User", email: "guest@localbazaar.in", avatar: "GU", isAdmin: false };
     document.getElementById('screenAuth').classList.add('hidden');
     updateProfileStats();
   }
@@ -1334,6 +1338,16 @@
     document.getElementById('profileName').textContent = currentUser.name;
     document.getElementById('profileEmail').textContent = currentUser.email;
     document.getElementById('profileAvatarLarge').textContent = currentUser.avatar;
+
+    const isAdmin = (currentUser.email.toLowerCase() === 'silgrakmarak1309@gmail.com') || (currentUser.isAdmin === true);
+    const adminOption = document.getElementById('adminMenuOption');
+    if (adminOption) {
+      if (isAdmin) {
+        adminOption.classList.remove('hidden');
+      } else {
+        adminOption.classList.add('hidden');
+      }
+    }
   }
 
   // 10. ALL-INDIA STATES & DISTRICTS SELECTOR
@@ -1403,7 +1417,15 @@
 
   function openPostModal() { openModal('postModal'); }
   function openLocationModal() { openModal('locationModal'); }
-  function openAdminModal() { openModal('adminModal'); }
+  function openAdminModal() { 
+    const isAdmin = (currentUser.email.toLowerCase() === 'silgrakmarak1309@gmail.com') || (currentUser.isAdmin === true);
+    if (!isAdmin) {
+      alert("Access Denied: Only Super Admin (silgrakmarak1309@gmail.com) can access Admin Moderation.");
+      return;
+    }
+    openModal('adminModal'); 
+    renderAdminUsers();
+  }
 
   window.addEventListener('DOMContentLoaded', init);
 </script>
