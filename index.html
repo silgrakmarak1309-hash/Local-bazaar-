@@ -73,14 +73,14 @@
       flex-direction: column;
       align-items: center;
     }
-    .auth-logo-badge {
+    .auth-logo {
       width: 80px;
       height: 80px;
       border-radius: 22px;
+      object-fit: cover;
+      box-shadow: 0 10px 25px rgba(14, 116, 144, 0.25);
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border: 3px solid white;
     }
     .auth-hero h1 {
       font-size: 26px;
@@ -816,21 +816,7 @@
     <!-- AUTH SCREEN (Sky Blue theme) -->
     <div id="authScreen" class="auth-container">
       <div class="auth-hero">
-        <div class="auth-logo-badge">
-          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 22px; box-shadow: 0 10px 25px rgba(14, 116, 144, 0.25); border: 3px solid white;">
-            <rect width="80" height="80" rx="22" fill="url(#authGrad)"/>
-            <path d="M25 26H30L34 48H55L59 32H32" stroke="white" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <circle cx="36" cy="56" r="3.5" fill="#fef08a"/>
-            <circle cx="53" cy="56" r="3.5" fill="#fef08a"/>
-            <path d="M42 22L45 18M45 18L48 22M45 18V28" stroke="#fef08a" stroke-width="3" stroke-linecap="round"/>
-            <defs>
-              <linearGradient id="authGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-                <stop stop-color="#0284c7"/>
-                <stop offset="1" stop-color="#0369a1"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
+        <img src="app-icon.jpg" onerror="this.src='/app-icon.jpg'" alt="Logo" class="auth-logo">
         <h1>LocalBazaar</h1>
         <p>India's Hyper-Local Marketplace & Classifieds</p>
       </div>
@@ -883,21 +869,7 @@
       <header class="app-header">
         <div class="top-bar-brand">
           <div class="brand-group" onclick="showLocationPicker()">
-            <div style="width: 44px; height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-              <svg width="44" height="44" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" style="border-radius: 12px; box-shadow: 0 3px 10px rgba(21, 128, 61, 0.25);">
-                <rect width="48" height="48" rx="12" fill="url(#headerGrad)"/>
-                <path d="M14 16H18L21 32H35L38 20H19" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="23" cy="37" r="2.5" fill="#fef08a"/>
-                <circle cx="33" cy="37" r="2.5" fill="#fef08a"/>
-                <path d="M26 13L28 10M28 10L30 13M28 10V16" stroke="#fef08a" stroke-width="2" stroke-linecap="round"/>
-                <defs>
-                  <linearGradient id="headerGrad" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-                    <stop stop-color="#16a34a"/>
-                    <stop offset="1" stop-color="#15803d"/>
-                  </linearGradient>
-                </defs>
-              </svg>
-            </div>
+            <img src="app-icon.jpg" onerror="this.src='/app-icon.jpg'" alt="Logo" class="app-logo">
             <div class="brand-text">
               <h1>Meri Local Bazaar</h1>
               <p>Your Local Market, One App</p>
