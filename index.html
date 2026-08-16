@@ -2140,6 +2140,29 @@
     }
 
     function completeLogin() {
+      if (!currentUser) return;
+
+      try {
+        localStorage.setItem('localbazaar_current_user', JSON.stringify(currentUser));
+        
+        // Sync user with usersList for moderation/admin
+        const userExists = usersList.find(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+        if (!userExists) {
+          usersList.push({
+            id: 'usr_' + Date.now(),
+            name: currentUser.name,
+            email: currentUser.email,
+            phone: currentUser.phone ? '+91 ' + currentUser.phone.replace(/[^0-9]/g, '') : '+91 98765 43210',
+            isBlocked: false,
+            isAdmin: !!currentUser.isAdmin,
+            joinDate: 'Today'
+          });
+        }
+        localStorage.setItem('localbazaar_users_list', JSON.stringify(usersList));
+      } catch (e) {
+        console.warn('Could not save login session', e);
+      }
+
       document.getElementById('authScreen').style.display = 'none';
       document.getElementById('mainAppSection').style.display = 'block';
 
@@ -2201,6 +2224,13 @@
         usersList[idx].phone = '+91 ' + newPhone;
       }
 
+      try {
+        localStorage.setItem('localbazaar_current_user', JSON.stringify(currentUser));
+        localStorage.setItem('localbazaar_users_list', JSON.stringify(usersList));
+      } catch (e) {
+        console.warn('Could not save updated profile session', e);
+      }
+
       document.getElementById('profileNameDisplay').textContent = currentUser.name;
       const phoneDisplay = document.getElementById('profilePhoneDisplay');
       if (phoneDisplay) phoneDisplay.textContent = '+91 ' + newPhone;
@@ -2212,6 +2242,11 @@
     }
 
     function handleSignOut() {
+      try {
+        localStorage.removeItem('localbazaar_current_user');
+      } catch (e) {
+        console.warn('Sign out cleanup error', e);
+      }
       currentUser = null;
       document.getElementById('mainAppSection').style.display = 'none';
       document.getElementById('authScreen').style.display = 'flex';
@@ -2847,9 +2882,35 @@
       }
     }
 
-    // Initialize items and locations on load
+    // Session restore helper
+    function initAuthSession() {
+      try {
+        const savedUsers = localStorage.getItem('localbazaar_users_list');
+        if (savedUsers) {
+          const parsed = JSON.parse(savedUsers);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            usersList = parsed;
+          }
+        }
+
+        const savedUser = localStorage.getItem('localbazaar_current_user');
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          if (parsedUser && parsedUser.email) {
+            currentUser = parsedUser;
+            completeLogin();
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('Could not restore auth session', e);
+      }
+    }
+
+    // Initialize items, locations and saved login session on load
     loadMarketplaceItems();
     initLocationDropdown();
+    initAuthSession();
 
     // Auto-rotate bottom ad banner every 6 seconds
     (function initAdCarousel() {
