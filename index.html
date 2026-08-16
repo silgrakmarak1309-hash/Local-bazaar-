@@ -748,81 +748,84 @@
     .multi-preview-container {
       margin-top: 10px;
       margin-bottom: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 12px;
     }
     .multi-preview-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 12px;
       font-weight: 700;
       color: #334155;
     }
     .multi-preview-grid {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       overflow-x: auto;
       padding-bottom: 6px;
+      padding-top: 2px;
       scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      scroll-behavior: smooth;
     }
-    .preview-image-wrap {
+    .multi-preview-item {
       position: relative;
       flex-shrink: 0;
-      width: 96px;
-      height: 96px;
+      width: 105px;
+      height: 105px;
       border-radius: 14px;
       overflow: hidden;
       border: 2px solid #e2e8f0;
       background: #f1f5f9;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
     }
-    .preview-image-wrap img {
+    .multi-preview-item img {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      display: block;
     }
-    .preview-cover-badge {
+    .multi-preview-badge {
       position: absolute;
-      bottom: 4px;
-      left: 4px;
-      background: rgba(21, 128, 61, 0.9);
+      bottom: 6px;
+      left: 6px;
+      background: rgba(15, 23, 42, 0.85);
       color: white;
-      font-size: 9px;
+      font-size: 9.5px;
       font-weight: 800;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 6px;
+      backdrop-filter: blur(4px);
     }
-    .preview-num-badge {
-      position: absolute;
-      bottom: 4px;
-      left: 4px;
-      background: rgba(15, 23, 42, 0.75);
-      color: white;
-      font-size: 9px;
-      font-weight: 700;
-      padding: 2px 5px;
-      border-radius: 6px;
+    .multi-preview-badge.cover {
+      background: rgba(21, 128, 61, 0.95);
     }
-    .preview-remove-btn {
+    .multi-preview-remove {
       position: absolute;
-      top: 4px;
-      right: 4px;
+      top: 5px;
+      right: 5px;
       background: #ef4444;
       color: white;
-      border: 1.5px solid white;
+      border: 2px solid white;
       border-radius: 50%;
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       font-size: 11px;
       font-weight: 800;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      z-index: 2;
     }
-    .add-more-photo-card {
-      width: 96px;
-      height: 96px;
+    .multi-preview-add-more {
+      width: 105px;
+      height: 105px;
       border-radius: 14px;
       border: 2px dashed #16a34a;
       background: #f0fdf4;
@@ -834,9 +837,25 @@
       cursor: pointer;
       flex-shrink: 0;
       transition: all 0.2s;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      padding: 6px;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.1);
     }
-    .add-more-photo-card:hover {
+    .multi-preview-add-more:hover {
       background: #dcfce7;
+      transform: scale(1.02);
+    }
+    .slide-scroll-hint {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      color: #16a34a;
+      font-weight: 700;
+      margin-top: 6px;
     }
 
     /* Detail Modal Gallery */
@@ -1331,11 +1350,15 @@
 
         <div id="multiPreviewSection" class="multi-preview-container" style="display: none;">
           <div class="multi-preview-header">
-            <span id="photoCountLabel" style="color: #15803d;">0 / 5 Photos Added</span>
+            <span id="photoCountLabel" style="color: #15803d; font-weight: 800;">0 / 5 Photos Added</span>
             <span style="font-size: 11px; color: #64748b; font-weight: 600;">First photo is Cover</span>
           </div>
           <div class="multi-preview-grid" id="multiPreviewGrid">
             <!-- Dynamic Preview items and + Add More Card -->
+          </div>
+          <div class="slide-scroll-hint" id="slideScrollHint">
+            <i class="fa-solid fa-arrows-left-right"></i>
+            <span>👉 Swipe / slide horizontally to see all photos &amp; tap <b>+ Add</b></span>
           </div>
         </div>
       </div>
@@ -1879,7 +1902,7 @@
       let html = uploadedPostImages.map((imgSrc, idx) => `
         <div class="multi-preview-item">
           <img src="${imgSrc}" alt="Photo ${idx + 1}">
-          <span class="multi-preview-badge">${idx === 0 ? 'Cover Photo' : 'Photo ' + (idx + 1)}</span>
+          <span class="multi-preview-badge ${idx === 0 ? 'cover' : ''}">${idx === 0 ? '★ Cover Photo' : 'Photo ' + (idx + 1)}</span>
           <button type="button" class="multi-preview-remove" onclick="event.stopPropagation(); removeSelectedPhoto(${idx})" title="Remove this photo">✕</button>
         </div>
       `).join('');
@@ -1887,8 +1910,9 @@
       if (uploadedPostImages.length < 5) {
         html += `
           <div class="multi-preview-add-more" onclick="triggerPhotoUpload()">
-            <i class="fa-solid fa-plus"></i>
-            <span>Add More (${uploadedPostImages.length}/5)</span>
+            <i class="fa-solid fa-circle-plus" style="font-size: 24px;"></i>
+            <span>+ Add More</span>
+            <span style="font-size: 9.5px; opacity: 0.85;">(${uploadedPostImages.length}/5)</span>
           </div>
         `;
         if (mainBox) mainBox.style.display = 'none';
