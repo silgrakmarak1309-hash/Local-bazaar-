@@ -939,6 +939,68 @@
     }
     .btn-block { background: #fee2e2; color: #dc2626; }
     .btn-unblock { background: #dcfce7; color: #16a34a; }
+
+    /* Fullscreen Photo Lightbox Modal */
+    .fullscreen-lightbox {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.94);
+      z-index: 99999;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .fullscreen-lightbox.active {
+      display: flex;
+    }
+    .fullscreen-lightbox-img {
+      max-width: 100%;
+      max-height: 84vh;
+      object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: zoomIn 0.25s ease-out;
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .fullscreen-lightbox-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      background: rgba(255, 255, 255, 0.25);
+      color: white;
+      border: 2px solid white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .fullscreen-lightbox-close:hover {
+      background: rgba(255, 255, 255, 0.45);
+    }
+    .fullscreen-lightbox-hint {
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
   </style>
 </head>
 <body>
@@ -1468,6 +1530,15 @@
         </div>
         <div id="adminListingsList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; padding: 10px; max-height: 400px; overflow-y: auto;"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN PHOTO LIGHTBOX VIEWER -->
+  <div id="fullscreenImageViewer" class="fullscreen-lightbox" onclick="closeFullscreenViewer()">
+    <button class="fullscreen-lightbox-close" onclick="closeFullscreenViewer()" title="Close Fullscreen">✕</button>
+    <img id="fullscreenViewerImg" class="fullscreen-lightbox-img" src="" onclick="event.stopPropagation();" alt="Full Image View">
+    <div class="fullscreen-lightbox-hint">
+      <i class="fa-solid fa-circle-info"></i> Tap anywhere outside or ✕ to close
     </div>
   </div>
 
@@ -2061,8 +2132,11 @@
       const sellerPhone = (item.phone || '9876543210').replace(/[^0-9]/g, '');
 
       document.getElementById('modalContent').innerHTML = `
-        <div style="position: relative; text-align: center; margin-bottom: 12px;">
-          <img id="detailMainImage" src="${initialMainImg}" style="width: 100%; max-height: 230px; border-radius: 18px; object-fit: cover; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
+        <div style="position: relative; text-align: center; margin-bottom: 12px; background: #0f172a; border-radius: 18px; overflow: hidden; display: flex; align-items: center; justify-content: center; min-height: 240px; max-height: 380px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); cursor: pointer;" onclick="openFullscreenViewer(document.getElementById('detailMainImage').src)">
+          <img id="detailMainImage" src="${initialMainImg}" style="width: 100%; height: auto; max-height: 380px; object-fit: contain; display: block; margin: 0 auto;">
+          <div style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.65); color: white; padding: 5px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 5px; backdrop-filter: blur(4px); box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+            <i class="fa-solid fa-expand"></i> Tap for Fullscreen
+          </div>
           ${itemImages.length > 1 ? `
             <span style="position: absolute; bottom: 10px; right: 12px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 700;">
               <i class="fa-solid fa-camera"></i> ${itemImages.length} Photos
@@ -2114,6 +2188,23 @@
       if (mainImg) mainImg.src = src;
       document.querySelectorAll('.detail-thumb').forEach(t => t.classList.remove('active'));
       if (thumbEl) thumbEl.classList.add('active');
+    }
+
+    function openFullscreenViewer(src) {
+      if (!src) return;
+      const img = document.getElementById('fullscreenViewerImg');
+      const viewer = document.getElementById('fullscreenImageViewer');
+      if (img && viewer) {
+        img.src = src;
+        viewer.classList.add('active');
+      }
+    }
+
+    function closeFullscreenViewer() {
+      const viewer = document.getElementById('fullscreenImageViewer');
+      if (viewer) {
+        viewer.classList.remove('active');
+      }
     }
 
     function closeDetailModal() {
