@@ -1095,9 +1095,15 @@
               <p>Your Local Market, One App</p>
             </div>
           </div>
-          <div class="location-badge" onclick="showLocationPicker()">
-            <i class="fa-solid fa-location-dot"></i>
-            <span id="locDisplay">West Garo Hills, Meghalaya</span>
+          <div style="display: flex; gap: 6px; align-items: center;">
+            <div class="location-badge" onclick="showLocationPicker()">
+              <i class="fa-solid fa-location-dot"></i>
+              <span id="locDisplay">West Garo Hills, Meghalaya</span>
+            </div>
+            <div class="location-badge" onclick="switchNav('profile')" style="background: #f0fdf4; border-color: #86efac; color: #166534; cursor: pointer; display: flex; align-items: center; gap: 4px; font-weight: 800;">
+              <i class="fa-solid fa-circle-user" style="font-size: 13px;"></i>
+              <span>My Account</span>
+            </div>
           </div>
         </div>
 
@@ -1313,49 +1319,74 @@
         </div>
       </div>
 
-      <!-- SCREEN 4: PROFILE -->
+      <!-- SCREEN 4: MY ACCOUNT (MERA ACCOUNT) -->
       <div class="app-screen" id="screenProfile">
-        <div class="profile-header" style="background: white; padding: 24px 16px; text-align: center; border-bottom: 1px solid var(--border-color);">
-          <div style="width: 80px; height: 80px; border-radius: 50%; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 34px; margin: 0 auto 12px auto;"><i class="fa-solid fa-user"></i></div>
-          <h3 id="profileNameDisplay" style="font-size: 18px; font-weight: 800; color: #0f172a;">Silgrak Marak</h3>
-          <p id="profileEmailDisplay" style="font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 2px;">silgrakmarak1309@gmail.com</p>
-          <div id="adminBadgeTag" style="display: inline-block; background: #fee2e2; color: #dc2626; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 12px; margin-top: 6px;">SUPER ADMIN</div>
+        <div class="profile-header" style="background: white; padding: 22px 16px 18px 16px; text-align: center; border-bottom: 1px solid var(--border-color);">
+          <div style="width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #166534; display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 10px auto; border: 3px solid #86efac; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.15);">
+            <i class="fa-solid fa-circle-user"></i>
+          </div>
+          <h3 id="profileNameDisplay" style="font-size: 18px; font-weight: 800; color: #0f172a;">User Name</h3>
+          <p id="profileEmailDisplay" style="font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 2px;">user@localbazaar.in</p>
+          <div id="profilePhoneRow" style="font-size: 11.5px; color: #15803d; font-weight: 700; margin-top: 4px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            <i class="fa-brands fa-whatsapp"></i> <span id="profilePhoneDisplay">+91 9876543210</span>
+          </div>
+          <div id="adminBadgeTag" style="display: none; background: #fee2e2; color: #dc2626; font-size: 10.5px; font-weight: 800; padding: 3px 10px; border-radius: 12px; margin-top: 6px;">
+            <i class="fa-solid fa-shield-halved"></i> SUPER ADMIN
+          </div>
+
+          <div style="margin-top: 12px;">
+            <button onclick="openEditProfileModal()" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 11.5px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-pen-to-square"></i> Edit Profile & WhatsApp No.
+            </button>
+          </div>
         </div>
         
         <div style="padding: 16px;">
-          <!-- ADMIN PANEL BUTTON (Visible for silgrakmarak1309@gmail.com) -->
+          <!-- PRIVACY & ISOLATION NOTICE -->
+          <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 14px; padding: 10px 14px; margin-bottom: 14px; display: flex; gap: 10px; align-items: flex-start;">
+            <i class="fa-solid fa-shield-halved" style="color: #16a34a; font-size: 16px; margin-top: 2px;"></i>
+            <div style="font-size: 11.5px; color: #166534; line-height: 1.4;">
+              <b>Personal Account Space:</b> Aap sirf apne dale huye ads ko maintain aur delete kar sakte hain. Dusre users aapke ads ko delete nahi kar sakte.
+            </div>
+          </div>
+
+          <!-- ADMIN PANEL BUTTON (Visible only for silgrakmarak1309@gmail.com) -->
           <div id="adminPanelMenuRow" style="display: none; background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; cursor: pointer;" onclick="openAdminPanelModal()">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <div>
                 <span style="font-size: 14px; font-weight: 800; color: #dc2626;"><i class="fa-solid fa-shield-halved" style="margin-right: 8px;"></i> Admin Control & Moderation Panel</span>
-                <p style="font-size: 11px; color: #991b1b; margin-top: 2px;">Block / Unblock Users & Manage All Products</p>
+                <p style="font-size: 11px; color: #991b1b; margin-top: 2px;">Block / Unblock Users & Platform Wide Deletion</p>
               </div>
               <i class="fa-solid fa-chevron-right" style="color: #dc2626;"></i>
             </div>
           </div>
 
           <!-- USER'S OWN POSTED ADS SECTION (WITH EASY DELETE) -->
-          <div style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; padding: 14px 16px; margin-bottom: 14px;">
+          <div style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; padding: 14px 16px; margin-bottom: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-              <span style="font-size: 13.5px; font-weight: 800; color: #0f172a;"><i class="fa-solid fa-rectangle-list" style="color: #16a34a; margin-right: 6px;"></i> My Posted Listings / Ads</span>
-              <span id="profileMyAdsCount" style="background: #dcfce7; color: #166534; font-size: 11px; font-weight: 800; padding: 2px 8px; border-radius: 12px;">0 Ads</span>
+              <div>
+                <span style="font-size: 13.5px; font-weight: 800; color: #0f172a;"><i class="fa-solid fa-boxes-packing" style="color: #16a34a; margin-right: 6px;"></i> My Posted Listings / Ads</span>
+                <p style="font-size: 10.5px; color: #64748b; margin-top: 1px;">Ads posted by your account</p>
+              </div>
+              <span id="profileMyAdsCount" style="background: #dcfce7; color: #166534; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 12px;">0 Ads</span>
             </div>
             <div id="profileMyAdsList" style="display: flex; flex-direction: column; gap: 8px;">
-              <!-- Dynamically populated with delete buttons -->
+              <!-- Dynamically populated with user's own items and delete button -->
             </div>
           </div>
 
-          <div style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden;">
+          <!-- QUICK ACCOUNT SETTINGS -->
+          <div style="background: white; border-radius: 16px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.03);">
             <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="showLocationPicker()">
-              <span style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-location-dot" style="margin-right: 8px; color: #dc2626;"></i> Change My Location</span>
+              <span style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-location-dot" style="margin-right: 8px; color: #dc2626;"></i> Change My Default Location</span>
               <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
             </div>
             <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="openSellModal()">
-              <span style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-plus" style="margin-right: 8px; color: #16a34a;"></i> Sell Products & Services</span>
+              <span style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-plus" style="margin-right: 8px; color: #16a34a;"></i> Post New Product / Service</span>
               <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
             </div>
-            <div style="padding: 14px 16px; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="handleSignOut()">
-              <span style="font-size: 13px; font-weight: 600; color: #dc2626;"><i class="fa-solid fa-right-from-bracket" style="margin-right: 8px; color: #dc2626;"></i> Log Out</span>
+            <div style="padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="handleSignOut()">
+              <span style="font-size: 13px; font-weight: 600; color: #dc2626;"><i class="fa-solid fa-right-from-bracket" style="margin-right: 8px; color: #dc2626;"></i> Log Out from Account</span>
               <i class="fa-solid fa-chevron-right" style="color: #cbd5e1; font-size: 12px;"></i>
             </div>
           </div>
@@ -1380,8 +1411,8 @@
           <span>Chats</span>
         </div>
         <div class="nav-item" id="navProfile" onclick="switchNav('profile')">
-          <i class="fa-solid fa-user"></i>
-          <span>Profile</span>
+          <i class="fa-solid fa-circle-user"></i>
+          <span>My Account</span>
         </div>
       </nav>
     </div>
@@ -1567,6 +1598,33 @@
         </div>
         <div id="adminListingsList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; padding: 10px; max-height: 400px; overflow-y: auto;"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- EDIT PROFILE / MY ACCOUNT MODAL -->
+  <div class="modal-overlay" id="editProfileModal">
+    <div class="modal-sheet">
+      <button class="modal-close" onclick="closeEditProfileModal()"><i class="fa-solid fa-xmark"></i></button>
+      <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 4px; color: #0f172a;"><i class="fa-solid fa-user-pen" style="color: #16a34a; margin-right: 6px;"></i> Edit My Account Profile</h3>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 16px;">Update your display name and contact WhatsApp number.</p>
+
+      <div class="form-group">
+        <label>Your Display Name</label>
+        <input type="text" id="editProfileNameInput" placeholder="Enter your full name">
+      </div>
+
+      <div class="form-group">
+        <label>WhatsApp Contact Number (10 Digits)</label>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <span style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 12px 14px; border-radius: 12px; font-weight: 700; font-size: 13px; color: #334155;">+91</span>
+          <input type="tel" id="editProfilePhoneInput" placeholder="9876543210" maxlength="10" style="flex: 1;">
+        </div>
+        <p style="font-size: 10.5px; color: #64748b; margin-top: 4px;">Buyers will contact you on this number via WhatsApp.</p>
+      </div>
+
+      <button onclick="saveProfileChanges()" class="submit-btn" style="background: #16a34a; color: white; width: 100%; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);">
+        Save Profile Changes
+      </button>
     </div>
   </div>
 
@@ -1801,12 +1859,30 @@
         location: 'Chandmary, West Garo Hills',
         seller: 'Champion Sports Tura',
         sellerEmail: 'sports@tura.in',
+        phone: '9876512345',
         rating: 4.7,
         reviews: 12,
         badge: 'Verified Seller',
         image: '/app-icon.jpg',
         images: ['/app-icon.jpg'],
         desc: 'Pair of lightweight carbon-fiber badminton racquets, 6 nylon shuttlecocks and a durable padded shoulder kit bag.'
+      },
+      {
+        id: '12',
+        title: 'Apple MacBook Air M2 (16GB / 256GB Midnight) with Box',
+        category: 'Laptops & Computers',
+        price: 78900,
+        isService: false,
+        location: 'Tura Bazaar, West Garo Hills',
+        seller: 'Silgrak Marak',
+        sellerEmail: 'silgrakmarak1309@gmail.com',
+        phone: '9876543210',
+        rating: 5.0,
+        reviews: 8,
+        badge: 'Super Admin Listing',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'Official Apple MacBook Air M2 in Midnight color, 16GB unified RAM, 256GB SSD, original MagSafe charger, cable and warranty box.'
       }
     ];
 
@@ -1814,6 +1890,26 @@
     let currentSearch = '';
     let filterOnlyService = null;
     let isSignUpMode = false;
+
+    // ACCOUNT ISOLATION & PERMISSION CHECK
+    function isOwnerOfItem(item) {
+      if (!currentUser || !item) return false;
+      if (currentUser.isAdmin) return true; // Super Administrator has global moderation rights
+
+      const userEmail = (currentUser.email || '').toLowerCase().trim();
+      const userName = (currentUser.name || '').toLowerCase().trim();
+      const userPhone = (currentUser.phone || '').replace(/[^0-9]/g, '');
+
+      const itemEmail = (item.sellerEmail || '').toLowerCase().trim();
+      const itemSeller = (item.seller || '').toLowerCase().trim();
+      const itemPhone = (item.phone || '').replace(/[^0-9]/g, '');
+
+      if (itemEmail && userEmail && itemEmail === userEmail) return true;
+      if (itemPhone && userPhone && userPhone.length >= 10 && itemPhone === userPhone) return true;
+      if (itemSeller && userName && (itemSeller === userName || itemSeller.startsWith(userName) || itemSeller.includes(userName))) return true;
+
+      return false;
+    }
 
     // Populate all states in location dropdown
     function initLocationDropdown() {
@@ -1856,9 +1952,13 @@
 
     function loginWithGoogleAccount(name, email, color) {
       const isAdmin = email.trim().toLowerCase() === 'silgrakmarak1309@gmail.com';
+      let phone = '9876543210';
+      if (email.toLowerCase().includes('greja')) phone = '9820145678';
+
       currentUser = {
         name: name,
         email: email,
+        phone: phone,
         isAdmin: isAdmin
       };
       closeGooglePicker();
@@ -1881,6 +1981,8 @@
 
       const isAdmin = email.toLowerCase() === 'silgrakmarak1309@gmail.com';
       const displayName = name || (isAdmin ? 'Silgrak Marak (Admin)' : email.split('@')[0]);
+      let phone = '9876543210';
+      if (email.toLowerCase().includes('greja')) phone = '9820145678';
 
       // Check if user is blocked
       const matchedUser = usersList.find(u => u.email.toLowerCase() === email.toLowerCase());
@@ -1892,6 +1994,7 @@
       currentUser = {
         name: displayName,
         email: email,
+        phone: phone,
         isAdmin: isAdmin
       };
       completeLogin();
@@ -1920,6 +2023,7 @@
         currentUser = {
           name: 'Mobile User (' + phone.slice(-4) + ')',
           email: phone + '@localbazaar.in',
+          phone: phone,
           isAdmin: false
         };
         completeLogin();
@@ -1933,6 +2037,11 @@
       // Update Profile UI
       document.getElementById('profileNameDisplay').textContent = currentUser.name;
       document.getElementById('profileEmailDisplay').textContent = currentUser.email;
+      const phoneDisplay = document.getElementById('profilePhoneDisplay');
+      if (phoneDisplay) {
+        const cleanPhone = (currentUser.phone || '9876543210').replace(/[^0-9]/g, '').slice(-10);
+        phoneDisplay.textContent = '+91 ' + cleanPhone;
+      }
 
       // Show Admin Panel option if admin
       if (currentUser.isAdmin) {
@@ -1945,6 +2054,52 @@
 
       renderListings();
       renderProfileMyAds();
+    }
+
+    function openEditProfileModal() {
+      if (!currentUser) return;
+      document.getElementById('editProfileNameInput').value = currentUser.name || '';
+      const cleanPhone = (currentUser.phone || '9876543210').replace(/[^0-9]/g, '').slice(-10);
+      document.getElementById('editProfilePhoneInput').value = cleanPhone;
+      document.getElementById('editProfileModal').classList.add('active');
+    }
+
+    function closeEditProfileModal() {
+      document.getElementById('editProfileModal').classList.remove('active');
+    }
+
+    function saveProfileChanges() {
+      if (!currentUser) return;
+      const newName = document.getElementById('editProfileNameInput').value.trim();
+      const newPhone = document.getElementById('editProfilePhoneInput').value.trim().replace(/[^0-9]/g, '');
+
+      if (!newName) {
+        alert('Please enter your name');
+        return;
+      }
+      if (newPhone.length !== 10) {
+        alert('Please enter a valid 10-digit WhatsApp number');
+        return;
+      }
+
+      currentUser.name = newName;
+      currentUser.phone = newPhone;
+
+      // Update in usersList if exists
+      const idx = usersList.findIndex(u => u.email.toLowerCase() === currentUser.email.toLowerCase());
+      if (idx > -1) {
+        usersList[idx].name = newName;
+        usersList[idx].phone = '+91 ' + newPhone;
+      }
+
+      document.getElementById('profileNameDisplay').textContent = currentUser.name;
+      const phoneDisplay = document.getElementById('profilePhoneDisplay');
+      if (phoneDisplay) phoneDisplay.textContent = '+91 ' + newPhone;
+
+      closeEditProfileModal();
+      renderListings();
+      renderProfileMyAds();
+      alert('Your My Account profile details and WhatsApp number have been updated successfully!');
     }
 
     function handleSignOut() {
@@ -2070,14 +2225,17 @@
       grid.innerHTML = filtered.map(item => {
         const photoCount = (item.images && item.images.length > 1) ? item.images.length : null;
         const sellerPhone = (item.phone || '9876543210').replace(/[^0-9]/g, '');
+        const isOwner = isOwnerOfItem(item);
         return `
           <div class="listing-card" onclick="openDetailModal('${item.id}')">
             <div class="card-img-wrap">
               <img src="${item.image}" alt="${item.title}">
               <span class="card-badge">${item.isService ? 'Service' : 'Item'}</span>
-              <button class="card-delete-badge-btn" onclick="event.stopPropagation(); deleteListing('${item.id}');" title="Delete / Remove this listing">
-                <i class="fa-solid fa-trash-can"></i> Remove
-              </button>
+              ${isOwner ? `
+                <button class="card-delete-badge-btn" onclick="event.stopPropagation(); deleteListing('${item.id}');" title="Delete / Remove your listing">
+                  <i class="fa-solid fa-trash-can"></i> Delete
+                </button>
+              ` : ''}
               ${photoCount ? `<span style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 8px; font-size: 10px; font-weight: 700;"><i class="fa-solid fa-camera"></i> ${photoCount}</span>` : ''}
               <button class="card-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');">
                 <i class="fa-solid fa-heart"></i>
@@ -2220,11 +2378,16 @@
           </a>
         </div>
 
-        <div style="margin-top: 10px;">
-          <button type="button" onclick="deleteListing('${item.id}')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #fee2e2; color: #dc2626; border: 1.5px solid #fca5a5; padding: 11px 14px; border-radius: 14px; font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 6px rgba(220, 38, 38, 0.08);">
-            <i class="fa-solid fa-trash-can"></i> Delete This Ad / Remove Listing
-          </button>
-        </div>
+        ${isOwnerOfItem(item) ? `
+          <div style="margin-top: 12px; background: #fff1f2; border: 1.5px solid #fecdd3; border-radius: 14px; padding: 12px;">
+            <div style="font-size: 11px; font-weight: 800; color: #9f1239; margin-bottom: 6px; display: flex; align-items: center; gap: 5px;">
+              <i class="fa-solid fa-user-shield"></i> YOUR LISTING MANAGEMENT (Aapka Ad)
+            </div>
+            <button type="button" onclick="deleteListing('${item.id}')" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; background: #dc2626; color: white; border: none; padding: 11px 14px; border-radius: 12px; font-weight: 800; font-size: 13px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);">
+              <i class="fa-solid fa-trash-can"></i> Delete My Listing / Remove Ad
+            </button>
+          </div>
+        ` : ''}
       `;
 
       document.getElementById('detailModal').classList.add('active');
@@ -2355,11 +2518,18 @@
       alert(`Congratulations! Your listing "${title}" with WhatsApp contact (+91 ${sellerPhoneNumber}) is now live in your local feed.`);
     }
 
-    // GENERAL USER LISTING DELETION
+    // USER LISTING DELETION WITH STRICT OWNERSHIP CHECK
     function deleteListing(itemId) {
       const item = marketplaceItems.find(i => i.id === itemId);
-      const title = item ? item.title : 'this listing';
-      if (confirm(`Are you sure you want to delete / remove "${title}"?`)) {
+      if (!item) return;
+
+      if (!isOwnerOfItem(item)) {
+        alert('Permission Denied: You can only delete and maintain ads posted from your own account.');
+        return;
+      }
+
+      const title = item.title;
+      if (confirm(`Are you sure you want to delete your ad "${title}"?\n\nThis will remove it permanently from the marketplace feed.`)) {
         const index = marketplaceItems.findIndex(i => i.id === itemId);
         if (index > -1) {
           marketplaceItems.splice(index, 1);
@@ -2370,39 +2540,30 @@
           if (currentUser && currentUser.isAdmin) {
             renderAdminItems();
           }
-          alert(`"${title}" has been deleted successfully.`);
+          alert(`"${title}" has been deleted from your account.`);
         }
       }
     }
 
-    // RENDER PROFILE USER'S POSTED ADS
+    // RENDER PROFILE USER'S POSTED ADS (STRICT OWNERSHIP ISOLATION)
     function renderProfileMyAds() {
       const container = document.getElementById('profileMyAdsList');
       const countDisplay = document.getElementById('profileMyAdsCount');
       if (!container || !countDisplay) return;
 
-      const userEmail = currentUser ? currentUser.email.toLowerCase() : '';
-      const userName = currentUser ? currentUser.name.toLowerCase() : '';
-
-      // Find user's items or recently created items
-      const myItems = marketplaceItems.filter(item => {
-        if (!currentUser) return true;
-        if (item.sellerEmail && item.sellerEmail.toLowerCase() === userEmail) return true;
-        if (item.seller && item.seller.toLowerCase() === userName) return true;
-        if (item.seller && item.seller.includes('You')) return true;
-        // If admin, show all user listings or created listings
-        return currentUser.isAdmin;
-      });
+      // Strictly find items owned by the current logged-in user
+      const myItems = marketplaceItems.filter(item => isOwnerOfItem(item));
 
       countDisplay.textContent = `${myItems.length} Ads`;
 
       if (myItems.length === 0) {
         container.innerHTML = `
-          <div style="text-align: center; padding: 16px 10px; color: #94a3b8; font-size: 12.5px;">
-            <i class="fa-solid fa-folder-open" style="font-size: 24px; margin-bottom: 6px; color: #cbd5e1;"></i>
-            <p>No active ads posted yet.</p>
-            <button onclick="openSellModal()" style="margin-top: 8px; background: #16a34a; color: white; border: none; padding: 6px 14px; border-radius: 10px; font-size: 11.5px; font-weight: 700; cursor: pointer;">
-              <i class="fa-solid fa-plus"></i> Post Your First Ad
+          <div style="text-align: center; padding: 18px 10px; color: #94a3b8; font-size: 12.5px;">
+            <i class="fa-solid fa-boxes-stacked" style="font-size: 26px; margin-bottom: 6px; color: #cbd5e1;"></i>
+            <p style="font-weight: 700; color: #64748b;">Aapka koi active ad nahi hai.</p>
+            <p style="font-size: 11px; margin-top: 2px;">Apna purana saman ya services bechne ke liye ad post karein.</p>
+            <button onclick="openSellModal()" style="margin-top: 10px; background: #16a34a; color: white; border: none; padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);">
+              <i class="fa-solid fa-plus"></i> Post Free Ad Now
             </button>
           </div>
         `;
@@ -2410,19 +2571,19 @@
       }
 
       container.innerHTML = myItems.map(item => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; gap: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; gap: 10px;">
           <div style="display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer;" onclick="openDetailModal('${item.id}')">
             <img src="${item.image}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid #cbd5e1;">
             <div>
               <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; line-height: 1.2;">
-                ${item.title.substring(0, 28)}${item.title.length > 28 ? '...' : ''}
+                ${item.title.substring(0, 26)}${item.title.length > 26 ? '...' : ''}
               </div>
-              <div style="font-size: 11px; color: #16a34a; font-weight: 800; margin-top: 2px;">
-                ₹${item.price.toLocaleString('en-IN')} • <span style="color: #64748b; font-weight: 600;">${item.category}</span>
+              <div style="font-size: 11.5px; color: #16a34a; font-weight: 800; margin-top: 2px;">
+                ₹${item.price.toLocaleString('en-IN')} • <span style="color: #64748b; font-weight: 600; font-size: 10.5px;">${item.category}</span>
               </div>
             </div>
           </div>
-          <button onclick="deleteListing('${item.id}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+          <button onclick="deleteListing('${item.id}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; box-shadow: 0 1px 4px rgba(220, 38, 38, 0.1);">
             <i class="fa-solid fa-trash-can"></i> Delete
           </button>
         </div>
