@@ -337,7 +337,7 @@
     /* Screen Views */
     .app-screen {
       display: none;
-      padding-bottom: 85px;
+      padding-bottom: calc(135px + env(safe-area-inset-bottom, 0px));
     }
     .app-screen.active {
       display: block;
@@ -605,15 +605,94 @@
       gap: 2px;
     }
 
-    /* Fixed Bottom Navigation (Full Screen Responsive) */
-    .bottom-nav {
+    /* Bottom AdMob Banner at the very bottom (Replaces the red area / Over device nav area) */
+    .bottom-ad-banner {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
-      height: 70px;
-      background: white;
+      height: 48px;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 101;
+      border-top: 1px solid #334155;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+      font-size: 11.5px;
+    }
+    .ad-badge-label {
+      background: #f59e0b;
+      color: #0f172a;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-right: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .ad-content-carousel {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+    .ad-slide {
+      display: none;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      animation: fadeIn 0.4s ease;
+    }
+    .ad-slide.active {
+      display: flex;
+    }
+    .ad-text-main {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 11.5px;
+      color: #e2e8f0;
+      flex: 1;
+    }
+    .ad-action-pill {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .ad-action-pill:hover {
+      background: #15803d;
+    }
+
+    /* Fixed Bottom Navigation (Elevated ABOVE the Ads Bar for clear tap response without key navigator conflicts) */
+    .bottom-nav {
+      position: fixed;
+      bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 64px;
+      background: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(8px);
       border-top: 1px solid var(--border-color);
       display: flex;
       align-items: center;
@@ -621,20 +700,25 @@
       padding: 0 10px;
       z-index: 100;
       margin: 0;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.05);
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
     }
 
     .nav-item {
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 3px;
       color: #64748b;
       font-size: 11px;
       font-weight: 600;
       text-decoration: none;
       cursor: pointer;
+      min-height: 48px;
+      min-width: 54px;
+      padding: 4px;
       transition: all 0.2s;
+      -webkit-tap-highlight-color: transparent;
     }
     .nav-item i {
       font-size: 20px;
@@ -644,8 +728,8 @@
     }
 
     .nav-sell-btn {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-radius: 50%;
       background: linear-gradient(135deg, #16a34a, #15803d);
       color: white;
@@ -653,7 +737,7 @@
       align-items: center;
       justify-content: center;
       font-size: 22px;
-      margin-top: -26px;
+      margin-top: -24px;
       box-shadow: 0 8px 18px rgba(22, 163, 74, 0.4);
       border: 3px solid white;
       cursor: pointer;
@@ -1393,7 +1477,7 @@
         </div>
       </div>
 
-      <!-- Fixed Bottom Navigation Bar -->
+      <!-- Fixed Bottom Navigation Bar (Elevated Above Ads) -->
       <nav class="bottom-nav">
         <div class="nav-item active" id="navHome" onclick="switchNav('home')">
           <i class="fa-solid fa-house"></i>
@@ -1403,7 +1487,7 @@
           <i class="fa-solid fa-layer-group"></i>
           <span>Categories</span>
         </div>
-        <div class="nav-sell-btn" onclick="openSellModal()">
+        <div class="nav-sell-btn" onclick="openSellModal()" title="Post Free Ad">
           <i class="fa-solid fa-plus"></i>
         </div>
         <div class="nav-item" id="navChats" onclick="switchNav('chats')">
@@ -1415,6 +1499,25 @@
           <span>My Account</span>
         </div>
       </nav>
+
+      <!-- Bottom Fixed AdMob Banner (Positioned at the very bottom over device nav area) -->
+      <div class="bottom-ad-banner" id="bottomAdBanner" data-admob-unit="ca-app-pub-4647188052127146/7464244350">
+        <div class="ad-badge-label"><i class="fa-solid fa-rectangle-ad"></i> Ad</div>
+        <div class="ad-content-carousel" id="adCarousel">
+          <div class="ad-slide active">
+            <span class="ad-text-main">🔥 <b>Local Best Deals:</b> Post your free ads & reach thousands of buyers!</span>
+            <button class="ad-action-pill" onclick="openSellModal()">Post Free Ad</button>
+          </div>
+          <div class="ad-slide">
+            <span class="ad-text-main">📱 <b>Mobiles & Laptops:</b> Buy, sell & exchange gadgets locally with verified sellers</span>
+            <button class="ad-action-pill" onclick="filterByCat('Mobiles')">View Mobiles</button>
+          </div>
+          <div class="ad-slide">
+            <span class="ad-text-main">🚗 <b>Bikes & Cars:</b> Find genuine second-hand deals in your town</span>
+            <button class="ad-action-pill" onclick="filterByCat('Bikes')">View Vehicles</button>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -2747,6 +2850,19 @@
     // Initialize items and locations on load
     loadMarketplaceItems();
     initLocationDropdown();
+
+    // Auto-rotate bottom ad banner every 6 seconds
+    (function initAdCarousel() {
+      let currentAdIndex = 0;
+      setInterval(() => {
+        const slides = document.querySelectorAll('#adCarousel .ad-slide');
+        if (slides && slides.length > 0) {
+          slides[currentAdIndex].classList.remove('active');
+          currentAdIndex = (currentAdIndex + 1) % slides.length;
+          slides[currentAdIndex].classList.add('active');
+        }
+      }, 6000);
+    })();
   </script>
 </body>
 </html>
