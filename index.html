@@ -729,7 +729,7 @@
       outline: none;
     }
 
-    /* Image upload box */
+    /* Image upload box & Multi-photo support */
     .image-uploader-box {
       border: 2px dashed #94a3b8;
       border-radius: 14px;
@@ -745,30 +745,143 @@
       background: #f0fdf4;
     }
 
+    .multi-preview-container {
+      margin-top: 10px;
+      margin-bottom: 14px;
+    }
+    .multi-preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #334155;
+    }
+    .multi-preview-grid {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: thin;
+    }
     .preview-image-wrap {
       position: relative;
-      display: inline-block;
-      margin-top: 8px;
+      flex-shrink: 0;
+      width: 96px;
+      height: 96px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 2px solid #e2e8f0;
+      background: #f1f5f9;
     }
     .preview-image-wrap img {
-      width: 90px;
-      height: 90px;
-      border-radius: 12px;
+      width: 100%;
+      height: 100%;
       object-fit: cover;
-      border: 1px solid #cbd5e1;
+    }
+    .preview-cover-badge {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      background: rgba(21, 128, 61, 0.9);
+      color: white;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 6px;
+    }
+    .preview-num-badge {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      background: rgba(15, 23, 42, 0.75);
+      color: white;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 6px;
     }
     .preview-remove-btn {
       position: absolute;
-      top: -6px;
-      right: -6px;
+      top: 4px;
+      right: 4px;
       background: #ef4444;
       color: white;
-      border: none;
+      border: 1.5px solid white;
       border-radius: 50%;
       width: 22px;
       height: 22px;
       font-size: 11px;
+      font-weight: 800;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    .add-more-photo-card {
+      width: 96px;
+      height: 96px;
+      border-radius: 14px;
+      border: 2px dashed #16a34a;
+      background: #f0fdf4;
+      color: #16a34a;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .add-more-photo-card:hover {
+      background: #dcfce7;
+    }
+
+    /* Detail Modal Gallery */
+    .detail-main-img-wrap {
+      width: 100%;
+      height: 240px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .detail-main-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .detail-gallery-strip {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      margin-bottom: 14px;
+      padding-bottom: 4px;
+    }
+    .detail-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      opacity: 0.7;
+      transition: all 0.2s;
+    }
+    .detail-thumb.active {
+      border-color: var(--primary);
+      opacity: 1;
+      transform: scale(1.05);
+    }
+    .detail-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     /* Admin Panel Styling */
@@ -902,25 +1015,49 @@
             <div class="cat-icon-wrap"><i class="fa-solid fa-border-all"></i></div>
             <span>All</span>
           </div>
+          <div class="cat-chip" onclick="filterByCategory('Mobiles & Tablets', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-mobile-screen-button"></i></div>
+            <span>Mobiles</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Laptops & Computers', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-laptop"></i></div>
+            <span>Laptops</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Bikes & Scooters', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-motorcycle"></i></div>
+            <span>Bikes</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Cars & Vehicles', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-car-side"></i></div>
+            <span>Cars</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Personal Care & Beauty', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-spa"></i></div>
+            <span>Personal Care</span>
+          </div>
           <div class="cat-chip" onclick="filterByCategory('Grocery & Daily Needs', this)">
             <div class="cat-icon-wrap"><i class="fa-solid fa-basket-shopping"></i></div>
             <span>Grocery</span>
           </div>
-          <div class="cat-chip" onclick="filterByCategory('Mobiles & Tablets', this)">
-            <div class="cat-icon-wrap"><i class="fa-solid fa-mobile-screen-button"></i></div>
-            <span>Mobiles</span>
+          <div class="cat-chip" onclick="filterByCategory('Electronics & Appliances', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-tv"></i></div>
+            <span>Electronics</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Fashion & Clothing', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-shirt"></i></div>
+            <span>Fashion</span>
+          </div>
+          <div class="cat-chip" onclick="filterByCategory('Furniture & Home Decor', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-couch"></i></div>
+            <span>Furniture</span>
           </div>
           <div class="cat-chip" onclick="filterByCategory('Local Services', this)">
             <div class="cat-icon-wrap"><i class="fa-solid fa-screwdriver-wrench"></i></div>
             <span>Services</span>
           </div>
-          <div class="cat-chip" onclick="filterByCategory('Electronics', this)">
-            <div class="cat-icon-wrap"><i class="fa-solid fa-tv"></i></div>
-            <span>Electronics</span>
-          </div>
-          <div class="cat-chip" onclick="filterByCategory('Bikes & Scooters', this)">
-            <div class="cat-icon-wrap"><i class="fa-solid fa-motorcycle"></i></div>
-            <span>Vehicles</span>
+          <div class="cat-chip" onclick="filterByCategory('More Products & General', this)">
+            <div class="cat-icon-wrap"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <span>More Items</span>
           </div>
         </div>
 
@@ -947,44 +1084,98 @@
       <!-- SCREEN 2: ALL CATEGORIES -->
       <div class="app-screen" id="screenCategories">
         <div class="section-title">
-          <h3>All Product Categories</h3>
+          <h3>All Marketplace Categories</h3>
         </div>
         <div class="cat-list-wrap" style="padding: 0 16px;">
-          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Grocery & Daily Needs')">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-basket-shopping"></i></div>
-            <div>
-              <h4 style="font-weight: 700; font-size: 14px;">Grocery & Daily Needs</h4>
-              <p style="font-size: 12px; color: #64748b;">Fresh Veggies, Fruits, Dairy, Ration</p>
-            </div>
-          </div>
+          
           <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Mobiles & Tablets')">
             <div style="width: 44px; height: 44px; border-radius: 12px; background: #e0f2fe; color: #0284c7; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-mobile-screen-button"></i></div>
             <div>
               <h4 style="font-weight: 700; font-size: 14px;">Mobiles & Tablets</h4>
-              <p style="font-size: 12px; color: #64748b;">Smartphones, iPads, Watches, Cases</p>
+              <p style="font-size: 12px; color: #64748b;">Smartphones, iPhones, Tablets, Accessories</p>
             </div>
           </div>
-          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Electronics')">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-tv"></i></div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Laptops & Computers')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-laptop"></i></div>
             <div>
-              <h4 style="font-weight: 700; font-size: 14px;">Electronics & Appliances</h4>
-              <p style="font-size: 12px; color: #64748b;">TVs, Fridges, ACs, Washing Machines</p>
+              <h4 style="font-weight: 700; font-size: 14px;">Laptops & Computers</h4>
+              <p style="font-size: 12px; color: #64748b;">Gaming Laptops, PC, Monitors, Printers & Parts</p>
             </div>
           </div>
+
           <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Bikes & Scooters')">
             <div style="width: 44px; height: 44px; border-radius: 12px; background: #f3e8ff; color: #7e22ce; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-motorcycle"></i></div>
             <div>
               <h4 style="font-weight: 700; font-size: 14px;">Bikes & Scooters</h4>
-              <p style="font-size: 12px; color: #64748b;">Motorcycles, Scooty, EV Bicycles</p>
+              <p style="font-size: 12px; color: #64748b;">Motorcycles, Scooty, EV Scooters, Helmets</p>
             </div>
           </div>
-          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Local Services')">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Cars & Vehicles')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-car-side"></i></div>
             <div>
-              <h4 style="font-weight: 700; font-size: 14px;">Home & Repair Services</h4>
-              <p style="font-size: 12px; color: #64748b;">Plumbers, Electricians, Tutors, Mechanics</p>
+              <h4 style="font-weight: 700; font-size: 14px;">Cars & Commercial Vehicles</h4>
+              <p style="font-size: 12px; color: #64748b;">Used Cars, SUVs, Commercial Autos & Vans</p>
             </div>
           </div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Personal Care & Beauty')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fce7f3; color: #be185d; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-spa"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Personal Care & Beauty</h4>
+              <p style="font-size: 12px; color: #64748b;">Skincare, Haircare, Perfumes, Grooming Kits</p>
+            </div>
+          </div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Grocery & Daily Needs')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-basket-shopping"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Grocery & Daily Needs</h4>
+              <p style="font-size: 12px; color: #64748b;">Fresh Veggies, Fruits, Dairy, Organic Ration</p>
+            </div>
+          </div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Electronics & Appliances')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fef3c7; color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-tv"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Electronics & Appliances</h4>
+              <p style="font-size: 12px; color: #64748b;">LED TVs, Fridges, ACs, Washing Machines</p>
+            </div>
+          </div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Fashion & Clothing')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #fae8ff; color: #a21caf; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-shirt"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Fashion & Traditional Wear</h4>
+              <p style="font-size: 12px; color: #64748b;">Men, Women, Dokmanda, Sarees & Shoes</p>
+            </div>
+          </div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Furniture & Home Decor')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #ffedd5; color: #c2410c; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-couch"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Furniture & Home Decor</h4>
+              <p style="font-size: 12px; color: #64748b;">Wooden Sofas, Beds, Tables, Wardrobes</p>
+            </div>
+          </div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('Local Services')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #f1f5f9; color: #334155; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">Local Services & Home Repair</h4>
+              <p style="font-size: 12px; color: #64748b;">Electricians, Plumbers, Mechanics, Tutors</p>
+            </div>
+          </div>
+
+          <div class="cat-large-card" style="display: flex; gap: 14px; background: white; padding: 14px; border-radius: 16px; margin-bottom: 10px; border: 1px solid var(--border-color); cursor: pointer;" onclick="openCategoryFromAll('More Products & General')">
+            <div style="width: 44px; height: 44px; border-radius: 12px; background: #e0e7ff; color: #4338ca; display: flex; align-items: center; justify-content: center; font-size: 20px;"><i class="fa-solid fa-boxes-stacked"></i></div>
+            <div>
+              <h4 style="font-weight: 700; font-size: 14px;">More Products & General</h4>
+              <p style="font-size: 12px; color: #64748b;">Sports, Books, Toys, Tools & Miscellaneous</p>
+            </div>
+          </div>
+
         </div>
       </div>
 
@@ -1120,52 +1311,62 @@
     </div>
   </div>
 
-  <!-- Post Ad / Sell Modal (WITH REAL IMAGE UPLOAD) -->
+  <!-- Post Ad / Sell Modal (WITH REAL MULTI-PHOTO UPLOAD 1-5 PHOTOS) -->
   <div class="modal-overlay" id="sellModal">
     <div class="modal-sheet">
       <button class="modal-close" onclick="closeSellModal()"><i class="fa-solid fa-xmark"></i></button>
       <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px; color: #166534;">Post Free Ad / Sell</h3>
-      <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">List your product or local service with photos.</p>
+      <p style="font-size: 12px; color: #64748b; margin-bottom: 14px;">List your product or service with up to 4–5 photos.</p>
       
-      <!-- IMAGE UPLOADER -->
+      <!-- MULTI-IMAGE UPLOADER (Supports 1 to 5 Photos) -->
       <div class="form-group">
-        <label><i class="fa-solid fa-camera" style="color: #16a34a; margin-right: 4px;"></i> Product Photo</label>
-        <div class="image-uploader-box" onclick="document.getElementById('productImageInput').click()">
+        <label><i class="fa-solid fa-camera" style="color: #16a34a; margin-right: 4px;"></i> Product Photos (Upload 1 to 5 Photos)</label>
+        
+        <div class="image-uploader-box" id="mainUploaderBox" onclick="triggerPhotoUpload()">
           <i class="fa-solid fa-cloud-arrow-up" style="font-size: 28px; color: #16a34a; margin-bottom: 6px;"></i>
-          <p style="font-size: 13px; font-weight: 700; color: #1e293b;">Click to upload product image from phone / camera</p>
-          <p style="font-size: 11px; color: #64748b;">Supports JPG, PNG, WEBP (Max 5MB)</p>
-          <input type="file" id="productImageInput" accept="image/*" style="display: none;" onchange="handleProductImageSelected(this)">
+          <p style="font-size: 13px; font-weight: 700; color: #1e293b;">Click to upload photos from phone gallery / camera</p>
+          <p style="font-size: 11px; color: #64748b;">Upload 1–5 photos • Supports JPG, PNG, WEBP (Max 5MB each)</p>
+          <input type="file" id="productImageInput" accept="image/*" multiple style="display: none;" onchange="handleProductImageSelected(this)">
         </div>
-        <div id="imagePreviewContainer" style="display: none;">
-          <div class="preview-image-wrap">
-            <img id="imagePreviewTag" src="" alt="Preview">
-            <button class="preview-remove-btn" onclick="removeProductImage()">✕</button>
+
+        <div id="multiPreviewSection" class="multi-preview-container" style="display: none;">
+          <div class="multi-preview-header">
+            <span id="photoCountLabel" style="color: #15803d;">0 / 5 Photos Added</span>
+            <span style="font-size: 11px; color: #64748b; font-weight: 600;">First photo is Cover</span>
+          </div>
+          <div class="multi-preview-grid" id="multiPreviewGrid">
+            <!-- Dynamic Preview items and + Add More Card -->
           </div>
         </div>
       </div>
 
       <div class="form-group">
-        <label>Title</label>
-        <input type="text" id="postTitle" placeholder="e.g. Fresh Organic Veggies / iPhone 13 128GB">
+        <label>Listing Title</label>
+        <input type="text" id="postTitle" placeholder="e.g. iPhone 14 Pro 128GB / Royal Enfield 350 / HP Gaming Laptop">
       </div>
       <div class="form-group">
         <label>Category</label>
         <select id="postCat">
-          <option>Grocery & Daily Needs</option>
-          <option>Mobiles & Tablets</option>
-          <option>Local Services</option>
-          <option>Electronics</option>
-          <option>Bikes & Scooters</option>
-          <option>Furniture</option>
+          <option value="Mobiles & Tablets">📱 Mobiles & Tablets</option>
+          <option value="Laptops & Computers">💻 Laptops & Computers</option>
+          <option value="Bikes & Scooters">🏍️ Bikes & Scooters</option>
+          <option value="Cars & Vehicles">🚗 Cars & Commercial Vehicles</option>
+          <option value="Personal Care & Beauty">💄 Personal Care & Beauty</option>
+          <option value="Grocery & Daily Needs">🥦 Grocery & Daily Needs</option>
+          <option value="Electronics & Appliances">📺 Electronics & Appliances</option>
+          <option value="Fashion & Clothing">👕 Fashion & Clothing</option>
+          <option value="Furniture & Home Decor">🛋️ Furniture & Home Decor</option>
+          <option value="Local Services">🔧 Local Services & Repairs</option>
+          <option value="More Products & General">📦 More Products & General</option>
         </select>
       </div>
       <div class="form-group">
         <label>Price (₹)</label>
-        <input type="number" id="postPrice" placeholder="e.g. 500">
+        <input type="number" id="postPrice" placeholder="e.g. 15000">
       </div>
       <div class="form-group">
         <label>Description</label>
-        <textarea id="postDesc" rows="3" placeholder="Condition, location, warranty, etc."></textarea>
+        <textarea id="postDesc" rows="3" placeholder="Condition, bill/box, warranty, specifications, etc."></textarea>
       </div>
       <button onclick="submitPostAd()" class="btn-call" style="width: 100%; border: none; cursor: pointer; padding: 14px;">Post Listing Instantly</button>
     </div>
@@ -1214,10 +1415,26 @@
         <div id="adminUsersList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; overflow: hidden;"></div>
       </div>
 
-      <!-- Admin Tab: Items (Sell / Unsell / Remove) -->
+      <!-- Admin Tab: Items (Manage Listings by Category) -->
       <div id="adminItemsSection" style="display: none;">
-        <div style="font-size: 12px; font-weight: 700; color: #475569; margin-bottom: 8px;">ALL ACTIVE LISTINGS (<span id="adminItemsCount">0</span>)</div>
-        <div id="adminListingsList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; padding: 10px;"></div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="font-size: 12px; font-weight: 700; color: #475569;">ALL ACTIVE LISTINGS (<span id="adminItemsCount">0</span>)</div>
+          <select id="adminCategoryFilter" onchange="renderAdminItems()" style="padding: 4px 8px; font-size: 11px; border-radius: 8px; border: 1px solid #cbd5e1;">
+            <option value="all">All Categories</option>
+            <option value="Mobiles & Tablets">Mobiles</option>
+            <option value="Laptops & Computers">Laptops</option>
+            <option value="Bikes & Scooters">Bikes</option>
+            <option value="Cars & Vehicles">Cars</option>
+            <option value="Personal Care & Beauty">Personal Care</option>
+            <option value="Grocery & Daily Needs">Grocery</option>
+            <option value="Electronics & Appliances">Electronics</option>
+            <option value="Fashion & Clothing">Fashion</option>
+            <option value="Furniture & Home Decor">Furniture</option>
+            <option value="Local Services">Services</option>
+            <option value="More Products & General">More Products</option>
+          </select>
+        </div>
+        <div id="adminListingsList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; padding: 10px; max-height: 400px; overflow-y: auto;"></div>
       </div>
     </div>
   </div>
@@ -1272,56 +1489,43 @@
     ];
 
     let currentUser = null;
-    let uploadedPostImageBase64 = null;
+    let uploadedPostImages = []; // Stores array of up to 5 base64 image strings
 
     const marketplaceItems = [
       {
         id: '1',
-        title: 'Fresh Organic Farm Vegetable & Fruit Basket',
-        category: 'Grocery & Daily Needs',
-        price: 349,
-        isService: false,
-        location: 'Tura Bazaar, West Garo Hills',
-        seller: 'Kisan Fresh Organics',
-        sellerEmail: 'kisan@organics.in',
-        rating: 4.9,
-        reviews: 28,
-        badge: 'Verified Business',
-        image: '/app-icon.jpg',
-        desc: 'Directly sourced fresh vegetables, juicy farm fruits, milk, and daily essentials with same-day local home delivery.'
-      },
-      {
-        id: '2',
         title: 'OnePlus 11R 5G (16GB/256GB) Mint Condition',
         category: 'Mobiles & Tablets',
         price: 24500,
         isService: false,
         location: 'Hawakhana, West Garo Hills',
-        seller: 'Rohit Sharma',
+        seller: 'Rohit Sharma (Mobiles)',
         sellerEmail: 'rohit@tech.in',
         rating: 4.8,
         reviews: 14,
         badge: 'Verified Seller',
         image: '/app-icon.jpg',
-        desc: '6 months old phone with original box, 100W SuperVOOC charger and bill. Scratchless screen.'
+        images: ['/app-icon.jpg'],
+        desc: '6 months old phone with original box, 100W SuperVOOC charger, bill and 4 extra protective back covers. Scratchless AMOLED display.'
+      },
+      {
+        id: '2',
+        title: 'HP Pavilion Gaming Laptop (Ryzen 5 / 16GB / 512GB SSD / GTX 1650)',
+        category: 'Laptops & Computers',
+        price: 38900,
+        isService: false,
+        location: 'Tura Bazaar, West Garo Hills',
+        seller: 'TechWorld Computers',
+        sellerEmail: 'techworld@tura.in',
+        rating: 4.9,
+        reviews: 21,
+        badge: 'Verified Store',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'HP Gaming Laptop in excellent condition. 144Hz IPS display, RGB backlit keyboard, Windows 11 Home, original 150W charger and laptop bag included.'
       },
       {
         id: '3',
-        title: 'Home Electrician & AC Repairing Specialist',
-        category: 'Local Services',
-        price: 299,
-        isService: true,
-        location: 'Araimile, West Garo Hills',
-        seller: 'Sharma Electricals & Cooling',
-        sellerEmail: 'sharma@repair.in',
-        rating: 5.0,
-        reviews: 42,
-        badge: 'Certified Pro',
-        image: '/app-icon.jpg',
-        desc: 'Certified technician for AC servicing, home wiring, fan installation, inverter setup and quick doorstep repair.'
-      },
-      {
-        id: '4',
         title: 'Royal Enfield Classic 350 (2022 Dual Channel ABS)',
         category: 'Bikes & Scooters',
         price: 155000,
@@ -1333,12 +1537,93 @@
         reviews: 9,
         badge: 'Verified Seller',
         image: '/app-icon.jpg',
-        desc: 'Single owner, 12,000 KM driven, insurance valid up to 2027. Showroom serviced with complete service history.'
+        images: ['/app-icon.jpg'],
+        desc: 'Single owner, 12,000 KM driven, insurance valid up to 2027. Showroom serviced with complete service history & crash guard installed.'
+      },
+      {
+        id: '4',
+        title: 'Hyundai i20 Asta 2021 Petrol (Single Owner, Mint Condition)',
+        category: 'Cars & Vehicles',
+        price: 580000,
+        isService: false,
+        location: 'Araimile, West Garo Hills',
+        seller: 'Greja Marak',
+        sellerEmail: 'grejamarak@gmail.com',
+        rating: 5.0,
+        reviews: 6,
+        badge: 'Direct Owner',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'Top model Hyundai i20 Asta with Sunroof, 10.25 inch touchscreen, Bose audio, rear camera, brand new MRF tyres and valid comprehensive insurance.'
       },
       {
         id: '5',
+        title: 'Mamaearth & Biotique Skincare & Natural Hair Spa Combo',
+        category: 'Personal Care & Beauty',
+        price: 899,
+        isService: false,
+        location: 'Chandmary, West Garo Hills',
+        seller: 'Glow Natural Beauty Store',
+        sellerEmail: 'glow@beauty.in',
+        rating: 4.9,
+        reviews: 35,
+        badge: 'Verified Store',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'Brand new 100% authentic organic skincare combo: Ubtan Face Wash, Vitamin C Serum, Bhringraj Hair Oil and Aloe Vera Day Gel. Sealed pack.'
+      },
+      {
+        id: '6',
+        title: 'Fresh Organic Farm Vegetable & Fruit Basket',
+        category: 'Grocery & Daily Needs',
+        price: 349,
+        isService: false,
+        location: 'Tura Bazaar, West Garo Hills',
+        seller: 'Kisan Fresh Organics',
+        sellerEmail: 'kisan@organics.in',
+        rating: 4.9,
+        reviews: 28,
+        badge: 'Verified Business',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'Directly sourced farm-fresh vegetables, juicy fruits, milk and daily kitchen ration with same-day doorstep delivery.'
+      },
+      {
+        id: '7',
+        title: 'Samsung 43 inch 4K Ultra HD Smart LED TV (2023 Model)',
+        category: 'Electronics & Appliances',
+        price: 26500,
+        isService: false,
+        location: 'Hawakhana, West Garo Hills',
+        seller: 'Sharma Electronics',
+        sellerEmail: 'sharma@electronics.in',
+        rating: 4.8,
+        reviews: 18,
+        badge: 'Verified Store',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'Crystal 4K UHD display, HDR10+, Dolby Audio, Netflix/Prime/YouTube, with wall mount kit and original Bluetooth voice remote.'
+      },
+      {
+        id: '8',
+        title: 'Pure Silk Traditional Handloom Garo Dokmanda & Shawl Set',
+        category: 'Fashion & Clothing',
+        price: 3200,
+        isService: false,
+        location: 'Rongkhon, West Garo Hills',
+        seller: 'A•chik Handloom Weavers',
+        sellerEmail: 'achik@weavers.in',
+        rating: 5.0,
+        reviews: 44,
+        badge: 'Artisan Verified',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'Authentic handcrafted traditional Dokmanda with intricate border embroidery and matching soft silk shawl. Perfect for festivals and occasions.'
+      },
+      {
+        id: '9',
         title: 'Solid Sheesham Wood 6-Seater Dining Table',
-        category: 'Furniture',
+        category: 'Furniture & Home Decor',
         price: 18500,
         isService: false,
         location: 'Rongkhon, West Garo Hills',
@@ -1348,22 +1633,40 @@
         reviews: 31,
         badge: 'Verified Business',
         image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
         desc: 'Pure handcrafted Sheesham wood dining table with 6 cushioned chairs in pristine condition.'
       },
       {
-        id: '6',
-        title: 'Professional Plumber & Pipe Leakage Repair',
+        id: '10',
+        title: 'Home Electrician & AC Repairing Specialist',
         category: 'Local Services',
-        price: 249,
+        price: 299,
         isService: true,
-        location: 'Chandmary, West Garo Hills',
-        seller: 'Apex Plumbing Works',
-        sellerEmail: 'apex@plumb.in',
-        rating: 4.8,
-        reviews: 19,
+        location: 'Araimile, West Garo Hills',
+        seller: 'Sharma Electricals & Cooling',
+        sellerEmail: 'sharma@repair.in',
+        rating: 5.0,
+        reviews: 42,
         badge: 'Certified Pro',
         image: '/app-icon.jpg',
-        desc: 'Quick 30-minute doorstep service for kitchen sink leaks, bathroom fitting, motor pump repair and water tank cleaning.'
+        images: ['/app-icon.jpg'],
+        desc: 'Certified technician for AC servicing, home wiring, fan installation, inverter setup and quick doorstep repair.'
+      },
+      {
+        id: '11',
+        title: 'Cosco Tournament Badminton Racquet Set with Kit Bag',
+        category: 'More Products & General',
+        price: 1250,
+        isService: false,
+        location: 'Chandmary, West Garo Hills',
+        seller: 'Champion Sports Tura',
+        sellerEmail: 'sports@tura.in',
+        rating: 4.7,
+        reviews: 12,
+        badge: 'Verified Seller',
+        image: '/app-icon.jpg',
+        images: ['/app-icon.jpg'],
+        desc: 'Pair of lightweight carbon-fiber badminton racquets, 6 nylon shuttlecocks and a durable padded shoulder kit bag.'
       }
     ];
 
@@ -1510,24 +1813,93 @@
       switchNav('home');
     }
 
-    // IMAGE UPLOAD HANDLER FOR SELL SCREEN
+    // MULTI-IMAGE UPLOAD HANDLER FOR SELL SCREEN (1 TO 5 PHOTOS)
+    function triggerPhotoUpload() {
+      document.getElementById('productImageInput').click();
+    }
+
     function handleProductImageSelected(input) {
-      if (input.files && input.files[0]) {
-        const file = input.files[0];
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          uploadedPostImageBase64 = e.target.result;
-          document.getElementById('imagePreviewTag').src = uploadedPostImageBase64;
-          document.getElementById('imagePreviewContainer').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+      if (input.files && input.files.length > 0) {
+        const files = Array.from(input.files);
+        const maxAllowed = 5 - uploadedPostImages.length;
+        if (maxAllowed <= 0) {
+          alert('Maximum 5 photos allowed. Remove a photo to add a new one.');
+          input.value = '';
+          return;
+        }
+
+        const filesToProcess = files.slice(0, maxAllowed);
+        let loadedCount = 0;
+
+        filesToProcess.forEach(file => {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            if (uploadedPostImages.length < 5) {
+              uploadedPostImages.push(e.target.result);
+            }
+            loadedCount++;
+            if (loadedCount === filesToProcess.length) {
+              renderMultiPhotoPreviews();
+              input.value = '';
+            }
+          };
+          reader.readAsDataURL(file);
+        });
       }
     }
 
+    function renderMultiPhotoPreviews() {
+      const container = document.getElementById('multiPreviewSection');
+      const grid = document.getElementById('multiPreviewGrid');
+      const countLabel = document.getElementById('photoCountLabel');
+      const mainBox = document.getElementById('mainUploaderBox');
+
+      if (!container || !grid) return;
+
+      if (uploadedPostImages.length === 0) {
+        container.style.display = 'none';
+        if (mainBox) mainBox.style.display = 'block';
+        return;
+      }
+
+      container.style.display = 'block';
+      if (countLabel) {
+        countLabel.textContent = `${uploadedPostImages.length} / 5 Photos Added`;
+      }
+
+      let html = uploadedPostImages.map((imgSrc, idx) => `
+        <div class="multi-preview-item">
+          <img src="${imgSrc}" alt="Photo ${idx + 1}">
+          <span class="multi-preview-badge">${idx === 0 ? 'Cover Photo' : 'Photo ' + (idx + 1)}</span>
+          <button type="button" class="multi-preview-remove" onclick="event.stopPropagation(); removeSelectedPhoto(${idx})" title="Remove this photo">✕</button>
+        </div>
+      `).join('');
+
+      if (uploadedPostImages.length < 5) {
+        html += `
+          <div class="multi-preview-add-more" onclick="triggerPhotoUpload()">
+            <i class="fa-solid fa-plus"></i>
+            <span>Add More (${uploadedPostImages.length}/5)</span>
+          </div>
+        `;
+        if (mainBox) mainBox.style.display = 'none';
+      } else {
+        if (mainBox) mainBox.style.display = 'none';
+      }
+
+      grid.innerHTML = html;
+    }
+
+    function removeSelectedPhoto(index) {
+      uploadedPostImages.splice(index, 1);
+      renderMultiPhotoPreviews();
+    }
+
     function removeProductImage() {
-      uploadedPostImageBase64 = null;
-      document.getElementById('productImageInput').value = '';
-      document.getElementById('imagePreviewContainer').style.display = 'none';
+      uploadedPostImages = [];
+      const input = document.getElementById('productImageInput');
+      if (input) input.value = '';
+      renderMultiPhotoPreviews();
     }
 
     // RENDER LISTINGS
@@ -1547,50 +1919,63 @@
       if (filtered.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px 10px; color: #64748b;">
           <i class="fa-solid fa-basket-shopping" style="font-size: 36px; margin-bottom: 12px; color: #cbd5e1;"></i>
-          <p style="font-size: 14px; font-weight: 700;">No items found</p>
-          <p style="font-size: 12px;">Try changing categories or location filters</p>
+          <p style="font-size: 14px; font-weight: 700;">No items found in this category</p>
+          <p style="font-size: 12px;">Try selecting another category or clear search filters</p>
         </div>`;
         return;
       }
 
-      grid.innerHTML = filtered.map(item => `
-        <div class="listing-card" onclick="openDetailModal('${item.id}')">
-          <div class="card-img-wrap">
-            <img src="${item.image}" alt="${item.title}">
-            <span class="card-badge">${item.isService ? 'Service' : 'Item'}</span>
-            <button class="card-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');">
-              <i class="fa-solid fa-heart"></i>
-            </button>
-          </div>
-          <div class="card-body">
-            <div>
-              <div class="card-price">₹${item.price.toLocaleString('en-IN')}</div>
-              <div class="card-title">${item.title}</div>
+      grid.innerHTML = filtered.map(item => {
+        const photoCount = (item.images && item.images.length > 1) ? item.images.length : null;
+        return `
+          <div class="listing-card" onclick="openDetailModal('${item.id}')">
+            <div class="card-img-wrap">
+              <img src="${item.image}" alt="${item.title}">
+              <span class="card-badge">${item.isService ? 'Service' : 'Item'}</span>
+              ${photoCount ? `<span style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.7); color: white; padding: 2px 6px; border-radius: 8px; font-size: 10px; font-weight: 700;"><i class="fa-solid fa-camera"></i> ${photoCount}</span>` : ''}
+              <button class="card-fav-btn" onclick="event.stopPropagation(); this.classList.toggle('active');">
+                <i class="fa-solid fa-heart"></i>
+              </button>
             </div>
-            <div>
-              <div class="card-loc">
-                <i class="fa-solid fa-location-dot" style="font-size: 10px; color: #dc2626;"></i>
-                <span>${item.location}</span>
+            <div class="card-body">
+              <div>
+                <div class="card-price">₹${item.price.toLocaleString('en-IN')}</div>
+                <div class="card-title">${item.title}</div>
               </div>
-              <div class="card-footer-seller">
-                <span>${item.seller}</span>
-                <span class="seller-rating"><i class="fa-solid fa-star"></i> ${item.rating}</span>
-              </div>
-              <div style="margin-top: 6px;" onclick="event.stopPropagation();">
-                <a href="https://wa.me/919876543210?text=Hi%2C+I+am+interested+in+your+listing+${encodeURIComponent(item.title)}+on+Meri+Local+Bazaar" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: #25d366; color: white; text-decoration: none; padding: 7px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 800; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);">
-                  <i class="fa-brands fa-whatsapp" style="font-size: 14px;"></i> WhatsApp Seller
-                </a>
+              <div>
+                <div class="card-loc">
+                  <i class="fa-solid fa-location-dot" style="font-size: 10px; color: #dc2626;"></i>
+                  <span>${item.location}</span>
+                </div>
+                <div class="card-footer-seller">
+                  <span>${item.seller}</span>
+                  <span class="seller-rating"><i class="fa-solid fa-star"></i> ${item.rating}</span>
+                </div>
+                <div style="margin-top: 6px;" onclick="event.stopPropagation();">
+                  <a href="https://wa.me/919876543210?text=Hi%2C+I+am+interested+in+your+listing+${encodeURIComponent(item.title)}+on+Meri+Local+Bazaar" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: #25d366; color: white; text-decoration: none; padding: 7px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 800; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);">
+                    <i class="fa-brands fa-whatsapp" style="font-size: 14px;"></i> WhatsApp Seller
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
     function filterByCategory(cat, element) {
       currentCategory = cat;
       document.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
-      if (element) element.classList.add('active');
+      if (element) {
+        element.classList.add('active');
+      } else {
+        // Find matching cat-chip if exists
+        document.querySelectorAll('.cat-chip').forEach(c => {
+          if (c.textContent.trim().toLowerCase().includes(cat.toLowerCase())) {
+            c.classList.add('active');
+          }
+        });
+      }
       renderListings();
     }
 
@@ -1625,14 +2010,39 @@
       const item = marketplaceItems.find(i => i.id === id);
       if (!item) return;
 
+      const itemImages = (item.images && item.images.length > 0) ? item.images : [item.image || '/app-icon.jpg'];
+      const initialMainImg = itemImages[0];
+
+      let galleryStripHtml = '';
+      if (itemImages.length > 1) {
+        galleryStripHtml = `
+          <div class="detail-gallery-strip">
+            ${itemImages.map((imgUrl, idx) => `
+              <img src="${imgUrl}" class="detail-thumb ${idx === 0 ? 'active' : ''}" onclick="switchDetailPhoto('${imgUrl}', this)" alt="Photo ${idx + 1}">
+            `).join('')}
+          </div>
+        `;
+      }
+
       document.getElementById('modalContent').innerHTML = `
-        <div style="text-align: center; margin-bottom: 16px;">
-          <img src="${item.image}" style="width: 140px; height: 140px; border-radius: 18px; object-fit: cover; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div style="position: relative; text-align: center; margin-bottom: 12px;">
+          <img id="detailMainImage" src="${initialMainImg}" style="width: 100%; max-height: 230px; border-radius: 18px; object-fit: cover; box-shadow: 0 4px 14px rgba(0,0,0,0.1);">
+          ${itemImages.length > 1 ? `
+            <span style="position: absolute; bottom: 10px; right: 12px; background: rgba(0,0,0,0.7); color: white; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 700;">
+              <i class="fa-solid fa-camera"></i> ${itemImages.length} Photos
+            </span>
+          ` : ''}
         </div>
-        <div style="display: inline-block; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; margin-bottom: 8px;">
-          ${item.badge}
+        ${galleryStripHtml}
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px;">
+          <div style="display: inline-block; background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">
+            ${item.badge || 'Verified Listing'}
+          </div>
+          <div style="display: inline-block; background: #eff6ff; color: #1e40af; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 700;">
+            ${item.category}
+          </div>
         </div>
-        <h2 style="font-size: 19px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">${item.title}</h2>
+        <h2 style="font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 6px;">${item.title}</h2>
         <div style="font-size: 22px; font-weight: 800; color: #15803d; margin-bottom: 12px;">₹${item.price.toLocaleString('en-IN')}</div>
         
         <p style="font-size: 13px; color: #475569; line-height: 1.5; margin-bottom: 16px;">
@@ -1651,13 +2061,20 @@
           <a href="tel:+919876543210" class="btn-call">
             <i class="fa-solid fa-phone"></i> Call Seller
           </a>
-          <a href="https://wa.me/919876543210?text=Hi%2C+I+am+interested+in+your+listing+on+Meri+Local+Bazaar" target="_blank" class="btn-wa">
+          <a href="https://wa.me/919876543210?text=Hi%2C+I+am+interested+in+your+listing+${encodeURIComponent(item.title)}+on+Meri+Local+Bazaar" target="_blank" class="btn-wa">
             <i class="fa-brands fa-whatsapp"></i> WhatsApp
           </a>
         </div>
       `;
 
       document.getElementById('detailModal').classList.add('active');
+    }
+
+    function switchDetailPhoto(src, thumbEl) {
+      const mainImg = document.getElementById('detailMainImage');
+      if (mainImg) mainImg.src = src;
+      document.querySelectorAll('.detail-thumb').forEach(t => t.classList.remove('active'));
+      if (thumbEl) thumbEl.classList.add('active');
     }
 
     function closeDetailModal() {
@@ -1717,21 +2134,23 @@
         return;
       }
 
-      const imgToUse = uploadedPostImageBase64 || '/app-icon.jpg';
+      const photosList = uploadedPostImages.length > 0 ? [...uploadedPostImages] : ['/app-icon.jpg'];
+      const coverPhoto = photosList[0];
 
       marketplaceItems.unshift({
         id: Date.now().toString(),
         title: title,
         category: cat,
         price: parseInt(price),
-        isService: cat === 'Local Services',
+        isService: cat.includes('Services'),
         location: document.getElementById('locDisplay').textContent,
         seller: currentUser ? currentUser.name : 'You (Local Seller)',
         sellerEmail: currentUser ? currentUser.email : 'user@localbazaar.in',
         rating: 5.0,
         reviews: 1,
         badge: 'New Listing',
-        image: imgToUse,
+        image: coverPhoto,
+        images: photosList,
         desc: desc || 'Newly listed on Meri Local Bazaar.'
       });
 
@@ -1744,7 +2163,7 @@
       closeSellModal();
       switchNav('home');
       renderListings();
-      alert('Congratulations! Your product/service with image is now live in your local feed.');
+      alert(`Congratulations! Your listing "${title}" with ${photosList.length} photo(s) is now live in your local feed.`);
     }
 
     // ADMIN MODERATION PANEL LOGIC
@@ -1816,18 +2235,30 @@
 
     function renderAdminItems() {
       const container = document.getElementById('adminListingsList');
-      document.getElementById('adminItemsCount').textContent = marketplaceItems.length;
+      const catFilter = document.getElementById('adminCategoryFilter') ? document.getElementById('adminCategoryFilter').value : 'all';
+      
+      let itemsToRender = marketplaceItems;
+      if (catFilter && catFilter !== 'all') {
+        itemsToRender = marketplaceItems.filter(i => i.category === catFilter);
+      }
 
-      container.innerHTML = marketplaceItems.map(item => `
+      document.getElementById('adminItemsCount').textContent = itemsToRender.length;
+
+      if (itemsToRender.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 24px 10px; color: #64748b; font-size: 13px;">No listings found in <b>${catFilter}</b></div>`;
+        return;
+      }
+
+      container.innerHTML = itemsToRender.map(item => `
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border-radius: 10px; margin-bottom: 8px; border: 1px solid #e2e8f0;">
-          <div style="display: flex; gap: 10px; align-items: center;">
+          <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
             <img src="${item.image}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover;">
             <div>
-              <div style="font-size: 13px; font-weight: 700; color: #0f172a;">${item.title.substring(0, 32)}...</div>
-              <div style="font-size: 11px; color: #16a34a; font-weight: 800;">₹${item.price} • ${item.seller}</div>
+              <div style="font-size: 13px; font-weight: 700; color: #0f172a;">${item.title.substring(0, 32)}${item.title.length > 32 ? '...' : ''}</div>
+              <div style="font-size: 11px; color: #16a34a; font-weight: 800;">₹${item.price.toLocaleString('en-IN')} • <span style="color: #64748b; font-weight: 600;">${item.category}</span></div>
             </div>
           </div>
-          <button onclick="adminDeleteListing('${item.id}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">
+          <button onclick="adminDeleteListing('${item.id}')" style="background: #fee2e2; color: #dc2626; border: none; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer; white-space: nowrap;">
             <i class="fa-solid fa-trash"></i> Remove
           </button>
         </div>
