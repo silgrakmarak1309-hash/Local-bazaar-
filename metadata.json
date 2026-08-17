@@ -1,0 +1,6 @@
+{
+  "name": "LocalBazaar",
+  "description": "India-focused local marketplace to discover, buy, sell, and promote products and services within State, District, and Local Area.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

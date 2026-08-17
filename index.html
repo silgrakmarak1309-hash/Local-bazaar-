@@ -657,102 +657,151 @@
       gap: 2px;
     }
 
-    /* Bottom AdMob Banner at the very bottom (Replaces the red area / Over device nav area) */
-    .bottom-ad-banner {
+    /* ==========================================================================
+       GOOGLE ADMOB ADS & FIXED BOTTOM NAVIGATION INTEGRATION
+       ========================================================================== */
+
+    /* 1. Responsive Google AdMob Banner Bar (Positioned DIRECTLY ABOVE Bottom Navigation) */
+    .admob-banner-bar {
       position: fixed;
-      bottom: 0;
+      bottom: calc(60px + env(safe-area-inset-bottom, 0px));
       left: 0;
       right: 0;
       width: 100%;
-      height: 48px;
+      height: 52px;
       background: #0f172a;
       color: white;
       display: flex;
       align-items: center;
+      justify-content: center;
+      z-index: 99;
+      border-top: 1px solid #334155;
+      border-bottom: 1px solid #1e293b;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.12);
+      transition: all 0.2s ease;
+    }
+
+    .admob-banner-bar.hidden {
+      display: none !important;
+    }
+
+    .admob-banner-inner {
+      width: 100%;
+      max-width: 540px;
+      height: 100%;
+      display: flex;
+      align-items: center;
       justify-content: space-between;
       padding: 0 12px;
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-      z-index: 101;
-      border-top: 1px solid #334155;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
-      font-size: 11.5px;
+      gap: 10px;
     }
-    .ad-badge-label {
+
+    .admob-badge-tag {
       background: #f59e0b;
       color: #0f172a;
-      font-size: 9.5px;
+      font-size: 9px;
       font-weight: 800;
       padding: 2px 6px;
       border-radius: 4px;
-      margin-right: 8px;
       flex-shrink: 0;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 3px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    .ad-content-carousel {
+
+    .admob-content-carousel {
       flex: 1;
       overflow: hidden;
       position: relative;
-      height: 32px;
+      height: 36px;
       display: flex;
       align-items: center;
     }
-    .ad-slide {
+
+    .admob-slide {
       display: none;
       width: 100%;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      animation: fadeIn 0.4s ease;
+      animation: fadeIn 0.35s ease;
     }
-    .ad-slide.active {
+
+    .admob-slide.active {
       display: flex;
     }
-    .ad-text-main {
+
+    .admob-text-wrap {
+      flex: 1;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .admob-text-main {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #f8fafc;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      font-size: 11.5px;
-      color: #e2e8f0;
-      flex: 1;
+      line-height: 1.2;
     }
-    .ad-action-pill {
+
+    .admob-text-sub {
+      font-size: 9.5px;
+      color: #94a3b8;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .admob-action-pill {
       background: #16a34a;
       color: white;
       border: none;
-      padding: 4px 10px;
+      padding: 5px 11px;
       border-radius: 12px;
-      font-size: 10.5px;
-      font-weight: 700;
+      font-size: 11px;
+      font-weight: 800;
       cursor: pointer;
       flex-shrink: 0;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
+      white-space: nowrap;
     }
-    .ad-action-pill:hover {
+
+    .admob-action-pill:hover {
       background: #15803d;
     }
 
-    /* Fixed Bottom Navigation (Elevated ABOVE the Ads Bar for clear tap response without key navigator conflicts) */
+    .admob-action-pill:active {
+      transform: scale(0.96);
+    }
+
+    /* 2. Fixed Bottom Navigation (At the very bottom of the viewport) */
     .bottom-nav {
       position: fixed;
-      bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+      bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
-      height: 64px;
+      height: 60px;
+      padding-bottom: env(safe-area-inset-bottom, 0px);
       background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       border-top: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-around;
-      padding: 0 10px;
+      padding-left: 8px;
+      padding-right: 8px;
       z-index: 100;
       margin: 0;
-      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
+      box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
     }
 
     .nav-item {
@@ -793,6 +842,119 @@
       box-shadow: 0 8px 18px rgba(22, 163, 74, 0.4);
       border: 3px solid white;
       cursor: pointer;
+    }
+
+    /* 3. Google AdMob Interstitial Ad (Fullscreen Modal Overlay) */
+    .admob-interstitial-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      animation: fadeIn 0.25s ease;
+    }
+    .admob-interstitial-overlay.active {
+      display: flex;
+    }
+    .admob-interstitial-card {
+      width: 100%;
+      max-width: 380px;
+      background: white;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      animation: popIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.92); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .admob-interstitial-topbar {
+      background: #0f172a;
+      color: white;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #334155;
+    }
+    .admob-interstitial-tag {
+      font-size: 10px;
+      font-weight: 800;
+      background: #f59e0b;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .admob-interstitial-close-btn {
+      background: rgba(255, 255, 255, 0.18);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .admob-interstitial-close-btn:hover {
+      background: rgba(255, 255, 255, 0.35);
+    }
+    .admob-interstitial-body {
+      padding: 18px;
+      text-align: center;
+      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+    }
+    .admob-creative-img-wrap {
+      width: 100%;
+      height: 170px;
+      border-radius: 16px;
+      background: #e2e8f0;
+      overflow: hidden;
+      position: relative;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+    .admob-creative-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .admob-interstitial-cta {
+      width: 100%;
+      background: linear-gradient(135deg, #0284c7, #0369a1);
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+      margin-top: 14px;
     }
 
     /* Modals */
@@ -1721,8 +1883,45 @@
         </div>
       </div>
 
-      <!-- Fixed Bottom Navigation Bar (Elevated Above Ads) -->
-      <nav class="bottom-nav">
+      <!-- Responsive Google AdMob Banner Ad (Fixed directly above bottom navigation) -->
+      <div class="admob-banner-bar" id="admobBannerBar">
+        <div class="admob-banner-inner">
+          <div class="admob-badge-tag"><i class="fa-solid fa-rectangle-ad"></i> Ad</div>
+          <div class="admob-content-carousel" id="admobCarousel">
+            <div class="admob-slide active">
+              <div class="admob-text-wrap">
+                <span class="admob-text-main">🔥 <b>Local Best Deals:</b> Post your ads & reach verified local buyers!</span>
+                <span class="admob-text-sub">AdMob Test • ca-app-pub-3940256099942544/6300978111</span>
+              </div>
+              <button class="admob-action-pill" onclick="openSellModal()">Post Free Ad</button>
+            </div>
+            <div class="admob-slide">
+              <div class="admob-text-wrap">
+                <span class="admob-text-main">📱 <b>Top Mobiles & Gadgets:</b> Great discounts from nearby verified sellers</span>
+                <span class="admob-text-sub">Sponsored by Google Mobile Ads</span>
+              </div>
+              <button class="admob-action-pill" onclick="openCategoryFromAll('Mobiles & Tablets')">View Mobiles</button>
+            </div>
+            <div class="admob-slide">
+              <div class="admob-text-wrap">
+                <span class="admob-text-main">🚗 <b>Bikes & Pre-owned Cars:</b> Clean inspected vehicles with test drive</span>
+                <span class="admob-text-sub">Verified Local Deals</span>
+              </div>
+              <button class="admob-action-pill" onclick="openCategoryFromAll('Bikes & Scooters')">View Vehicles</button>
+            </div>
+            <div class="admob-slide">
+              <div class="admob-text-wrap">
+                <span class="admob-text-main">🛒 <b>Fresh Local Grocery:</b> Farm fresh veggies & daily needs delivered</span>
+                <span class="admob-text-sub">Meri Local Bazaar Express</span>
+              </div>
+              <button class="admob-action-pill" onclick="openCategoryFromAll('Grocery & Daily Needs')">Shop Grocery</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fixed Bottom Navigation Bar (Sticks to the very bottom of the screen) -->
+      <nav class="bottom-nav" id="mainBottomNav">
         <div class="nav-item active" id="navHome" onclick="switchNav('home')">
           <i class="fa-solid fa-house"></i>
           <span>Home</span>
@@ -1743,25 +1942,6 @@
           <span>My Account</span>
         </div>
       </nav>
-
-      <!-- Bottom Fixed AdMob Banner (Positioned at the very bottom over device nav area) -->
-      <div class="bottom-ad-banner" id="bottomAdBanner" data-admob-unit="ca-app-pub-4647188052127146/7464244350">
-        <div class="ad-badge-label"><i class="fa-solid fa-rectangle-ad"></i> Ad</div>
-        <div class="ad-content-carousel" id="adCarousel">
-          <div class="ad-slide active">
-            <span class="ad-text-main">🔥 <b>Local Best Deals:</b> Post your free ads & reach thousands of buyers!</span>
-            <button class="ad-action-pill" onclick="openSellModal()">Post Free Ad</button>
-          </div>
-          <div class="ad-slide">
-            <span class="ad-text-main">📱 <b>Mobiles & Laptops:</b> Buy, sell & exchange gadgets locally with verified sellers</span>
-            <button class="ad-action-pill" onclick="filterByCat('Mobiles')">View Mobiles</button>
-          </div>
-          <div class="ad-slide">
-            <span class="ad-text-main">🚗 <b>Bikes & Cars:</b> Find genuine second-hand deals in your town</span>
-            <button class="ad-action-pill" onclick="filterByCat('Bikes')">View Vehicles</button>
-          </div>
-        </div>
-      </div>
     </div>
 
   </div>
@@ -1929,8 +2109,8 @@
       </div>
       <p style="font-size: 11.5px; color: #64748b; margin-bottom: 12px;">Admin Account: <b>silgrakmarak1309@gmail.com</b></p>
       
-      <!-- 3 SEPARATE DEDICATED ADMIN BUTTONS / TABS -->
-      <div class="admin-tab-nav">
+      <!-- 5 SEPARATE DEDICATED ADMIN BUTTONS / TABS -->
+      <div class="admin-tab-nav" style="flex-wrap: wrap;">
         <button id="adminTabItems" class="admin-tab-btn active" onclick="switchAdminTab('items')">
           <i class="fa-solid fa-list-check"></i> Manage Listings
         </button>
@@ -1939,6 +2119,12 @@
         </button>
         <button id="adminTabPayments" class="admin-tab-btn" onclick="switchAdminTab('payments')">
           <i class="fa-solid fa-receipt"></i> Paid Users (₹50)
+        </button>
+        <button id="adminTabSettings" class="admin-tab-btn" onclick="switchAdminTab('settings')">
+          <i class="fa-solid fa-qrcode"></i> QR & UPI Settings
+        </button>
+        <button id="adminTabAdmob" class="admin-tab-btn" onclick="switchAdminTab('admob')">
+          <i class="fa-solid fa-rectangle-ad"></i> AdMob Ads
         </button>
       </div>
 
@@ -2009,6 +2195,114 @@
 
         <div id="adminPaymentsList" style="background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; padding: 8px; max-height: 380px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;"></div>
       </div>
+
+      <!-- SECTION 4: PAYMENT QR CODE & UPI ID CONFIGURATION (Admin can update anytime) -->
+      <div id="adminSettingsSection" style="display: none;">
+        <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px;">
+          <div style="font-size: 13px; font-weight: 800; color: #166534; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-qrcode"></i> Admin UPI ID & QR Code Settings
+          </div>
+          <p style="font-size: 11.5px; color: #15803d; margin-top: 4px; line-height: 1.4;">
+            Yahan aap apna official UPI ID aur custom QR Code image upload kar sakte hain. Jab bhi koi user ₹50 pay karega, unhe yehi QR Code aur UPI ID dikhega.
+          </p>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Official Admin UPI ID (VPA)</label>
+          <input type="text" id="adminUpiIdInput" placeholder="e.g. silgrakmarak1309@okaxis" style="font-family: monospace; font-size: 13px; font-weight: 700;">
+          <p style="font-size: 10.5px; color: #64748b; margin-top: 3px;">Example: name@okaxis, number@paytm, name@ybl</p>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Payee Display Name</label>
+          <input type="text" id="adminPayeeNameInput" placeholder="e.g. Silgrak Marak / Local Bazaar" style="font-size: 13px;">
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Upload Custom Scanner / QR Code Image (Optional)</label>
+          <input type="file" id="adminQrFileInput" accept="image/*" style="display: none;" onchange="handleAdminQrFile(this)">
+          
+          <div style="display: flex; gap: 12px; align-items: center; margin-top: 6px;">
+            <div id="adminQrPreviewBox" style="width: 100px; height: 100px; border-radius: 12px; border: 2px dashed #cbd5e1; background: white; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+              <img id="adminQrPreviewImg" src="" style="width: 100%; height: 100%; object-fit: contain; display: none;">
+              <span id="adminQrPreviewPlaceholder" style="font-size: 10px; color: #94a3b8; text-align: center; padding: 4px;">No Custom QR Uploaded</span>
+            </div>
+            <div>
+              <button type="button" onclick="document.getElementById('adminQrFileInput').click()" style="background: #0284c7; color: white; border: none; padding: 8px 14px; border-radius: 10px; font-size: 11.5px; font-weight: 800; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Upload QR Image
+              </button>
+              <button type="button" onclick="removeAdminQrCode()" id="removeQrBtn" style="display: none; background: #fee2e2; color: #dc2626; border: none; padding: 8px 12px; border-radius: 10px; font-size: 11.5px; font-weight: 800; cursor: pointer; margin-left: 6px;">
+                <i class="fa-solid fa-trash"></i> Remove
+              </button>
+              <div style="font-size: 10.5px; color: #64748b; margin-top: 4px;">Supports JPG, PNG Scanner screenshots. Agar custom upload nahi karenge to automatic standard UPI QR generate hoga.</div>
+            </div>
+          </div>
+        </div>
+
+        <button onclick="saveAdminPaymentSettings()" style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; width: 100%; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); display: flex; align-items: center; justify-content: center; gap: 8px;">
+          <i class="fa-solid fa-floppy-disk"></i> Save UPI ID & QR Code Settings
+        </button>
+      </div>
+
+      <!-- SECTION 5: GOOGLE ADMOB ADS CONFIGURATION -->
+      <div id="adminAdmobSection" style="display: none;">
+        <div style="background: #eff6ff; border: 1px solid #93c5fd; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px;">
+          <div style="font-size: 13px; font-weight: 800; color: #1e40af; display: flex; align-items: center; gap: 6px;">
+            <i class="fa-solid fa-rectangle-ad"></i> Google AdMob Ads Monetization
+          </div>
+          <p style="font-size: 11.5px; color: #1d4ed8; margin-top: 4px; line-height: 1.4;">
+            App mein Google AdMob Banner aur Interstitial ads integrated hain. Testing ke dauran Google ke official test IDs use hote hain. Production me aap apne live AdMob Unit IDs yahan enter karke save kar sakte hain.
+          </p>
+        </div>
+
+        <div style="background: white; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Enable AdMob Ads</div>
+            <div style="font-size: 11px; color: #64748b;">Show Banner & Interstitial ads in the app</div>
+          </div>
+          <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
+            <input type="checkbox" id="admobEnabledToggle" checked style="opacity: 0; width: 0; height: 0;">
+            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;" id="admobToggleSlider"></span>
+          </label>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Google AdMob App ID</label>
+          <input type="text" id="admobAppIdInput" placeholder="ca-app-pub-3940256099942544~3347511713" style="font-family: monospace; font-size: 12px; font-weight: 600;">
+          <span style="font-size: 10px; color: #64748b;">Google Official Test App ID default set hai.</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Banner Ad Unit ID (Fixed Above Bottom Nav)</label>
+          <input type="text" id="admobBannerIdInput" placeholder="ca-app-pub-3940256099942544/6300978111" style="font-family: monospace; font-size: 12px; font-weight: 600;">
+          <span style="font-size: 10px; color: #64748b;">Test Banner: ca-app-pub-3940256099942544/6300978111</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Interstitial Ad Unit ID (Natural Transitions)</label>
+          <input type="text" id="admobInterstitialIdInput" placeholder="ca-app-pub-3940256099942544/1033173712" style="font-family: monospace; font-size: 12px; font-weight: 600;">
+          <span style="font-size: 10px; color: #64748b;">Test Interstitial: ca-app-pub-3940256099942544/1033173712</span>
+        </div>
+
+        <div class="form-group" style="margin-bottom: 14px;">
+          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Interstitial Ad Frequency</label>
+          <select id="admobFrequencySelect" style="width: 100%; padding: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; background: white;">
+            <option value="4">Every 4 Natural Transitions (Moderate)</option>
+            <option value="6" selected>Every 6 Natural Transitions (Recommended - Smooth UX)</option>
+            <option value="9">Every 9 Natural Transitions (Light Frequency)</option>
+          </select>
+          <span style="font-size: 10px; color: #64748b; margin-top: 3px; display: block;">60 seconds minimum cooldown rule hamesha active rahega taki continuous product browsing smooth rahe.</span>
+        </div>
+
+        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+          <button type="button" onclick="previewInterstitialAd()" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 11px 14px; border-radius: 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-solid fa-play"></i> Preview Interstitial
+          </button>
+          <button type="button" onclick="saveAdminAdmobSettings()" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: none; padding: 11px 16px; border-radius: 12px; font-size: 13px; font-weight: 900; cursor: pointer; flex: 1.4; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); display: flex; align-items: center; justify-content: center; gap: 6px;">
+            <i class="fa-solid fa-floppy-disk"></i> Save Ad Settings
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -2043,19 +2337,34 @@
         </div>
       </div>
 
-      <!-- PAYMENT METHODS -->
+      <!-- PAYMENT METHODS & QR CODE DISPLAY -->
       <div style="margin-bottom: 14px;">
-        <label style="font-size: 12px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 8px;"><i class="fa-solid fa-wallet" style="color: #16a34a; margin-right: 4px;"></i> Pay ₹50 via UPI (Google Pay / PhonePe / Paytm)</label>
+        <label style="font-size: 12px; font-weight: 800; color: #0f172a; display: block; margin-bottom: 8px;"><i class="fa-solid fa-qrcode" style="color: #16a34a; margin-right: 4px;"></i> Scan QR Code or Pay via UPI</label>
         
+        <!-- DYNAMIC QR CODE DISPLAY BOX -->
+        <div style="background: white; border: 1.5px solid #cbd5e1; border-radius: 16px; padding: 14px; text-align: center; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+          <div style="font-size: 11px; font-weight: 700; color: #64748b; margin-bottom: 6px;">SCAN USING ANY UPI APP (GPAY, PHONEPE, PAYTM)</div>
+          <div style="width: 170px; height: 170px; margin: 0 auto 10px auto; background: #f8fafc; border-radius: 12px; padding: 8px; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;">
+            <img id="subModalQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=upi%3A%2F%2Fpay%3Fpa%3Dsilgrakmarak1309%40okaxis%26pn%3DSilgrak%20Marak%26am%3D50%26cu%3DINR%26tn%3DLocalBazaar%2520PRO%2520Seller%2520Plan" alt="Pay ₹50 UPI QR Code" style="width: 100%; height: 100%; object-fit: contain; border-radius: 6px;">
+          </div>
+          <div style="font-size: 13px; font-weight: 900; color: #166534; margin-bottom: 4px;">Amount: ₹50.00</div>
+          <div id="subModalPayeeLabel" style="font-size: 10.5px; color: #64748b; font-weight: 600;">Payee: Silgrak Marak (Admin)</div>
+        </div>
+
         <div style="background: #f0fdf4; border: 1px solid #86efac; border-radius: 12px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
           <div>
-            <div style="font-size: 10px; font-weight: 700; color: #166534;">UPI ID:</div>
-            <div style="font-size: 13px; font-weight: 800; color: #14532d; font-family: monospace;">silgrakmarak1309@okaxis</div>
+            <div style="font-size: 10px; font-weight: 700; color: #166534;">ADMIN UPI ID:</div>
+            <div id="subModalUpiIdText" style="font-size: 13px; font-weight: 800; color: #14532d; font-family: monospace;">silgrakmarak1309@okaxis</div>
           </div>
-          <button onclick="copyUpiId()" style="background: #16a34a; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer;">
+          <button type="button" onclick="copyUpiId()" style="background: #16a34a; color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px;">
             <i class="fa-solid fa-copy"></i> Copy
           </button>
         </div>
+
+        <!-- FAST APP INTENT BUTTON -->
+        <a id="subDirectUpiPayLink" href="upi://pay?pa=silgrakmarak1309@okaxis&pn=Silgrak%20Marak&am=50&cu=INR&tn=LocalBazaar%20PRO%20Seller%20Plan" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 8px; background: #0284c7; color: white; text-decoration: none; padding: 10px 14px; border-radius: 12px; font-size: 12.5px; font-weight: 800; margin-bottom: 12px; box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);">
+          <i class="fa-solid fa-mobile-screen-button"></i> Open UPI App (GPay / PhonePe / Paytm)
+        </a>
 
         <div class="form-group" style="margin-bottom: 10px;">
           <label style="font-size: 11.5px; font-weight: 700; color: #475569;">Enter UPI 12-Digit Reference / UTR No. (Optional):</label>
@@ -2134,6 +2443,42 @@
     </div>
   </div>
 
+  <!-- GOOGLE ADMOB FULLSCREEN INTERSTITIAL AD MODAL (Natural Transitions & Smooth Skip) -->
+  <div class="admob-interstitial-overlay" id="admobInterstitialModal">
+    <div class="admob-interstitial-card">
+      <div class="admob-interstitial-topbar">
+        <div class="admob-interstitial-tag">
+          <i class="fa-solid fa-rectangle-ad"></i> AdMob Interstitial
+        </div>
+        <button class="admob-interstitial-close-btn" id="admobInterstitialCloseBtn" onclick="closeInterstitialAd()">
+          <span id="admobCountdownText">Ad closes in 4s</span> <i class="fa-solid fa-xmark" id="admobCloseIcon" style="display: none;"></i>
+        </button>
+      </div>
+
+      <div class="admob-interstitial-body">
+        <div class="admob-creative-img-wrap" id="admobInterstitialCreativeWrap">
+          <img id="admobInterstitialImg" src="app-icon.jpg" onerror="this.src='/app-icon.jpg'" alt="Sponsored Ad">
+        </div>
+        
+        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px;">
+          <span style="font-size: 10px; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 10px; font-weight: 800;">Sponsored Google Ad</span>
+          <span style="font-size: 10px; color: #94a3b8; font-family: monospace;">ca-app-pub-3940256099942544/1033173712</span>
+        </div>
+
+        <h3 id="admobInterstitialTitle" style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Grow Your Local Business Fast</h3>
+        <p id="admobInterstitialDesc" style="font-size: 12px; color: #64748b; line-height: 1.4;">Get 10x more inquiries on your local products and services with Meri Local Bazaar sponsored promotions.</p>
+
+        <button class="admob-interstitial-cta" id="admobInterstitialCtaBtn" onclick="handleInterstitialCtaClick()">
+          <span id="admobInterstitialCtaText">Explore Deals Now</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 12px;"></i>
+        </button>
+
+        <div style="margin-top: 10px; font-size: 10px; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 4px;">
+          <i class="fa-solid fa-shield-check" style="color: #16a34a;"></i> Verified Safe Ad • Google Mobile Ads SDK
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // FULL ALL-INDIA 28 STATES & 8 UTs DATA
     const allIndiaLocations = {
@@ -2189,6 +2534,68 @@
       { id: 'pay_02', userId: 'usr_seller_01', userName: 'Kisan Fresh Organics', email: 'kisan@organics.in', phone: '+91 98765 11223', amount: 50, plan: 'Monthly Pro Seller', status: 'Paid', date: '10 Aug 2026', expiry: '10 Sep 2026', txnId: 'UPI-9876511223', method: 'PhonePe' },
       { id: 'pay_03', userId: 'usr_seller_03', userName: 'Rohit Sharma (Mobiles)', email: 'rohit@tech.in', phone: '+91 91672 99887', amount: 50, plan: 'Monthly Pro Seller', status: 'Paid', date: '05 Aug 2026', expiry: '05 Sep 2026', txnId: 'UPI-9167299887', method: 'Paytm' }
     ];
+
+    // ADMIN DYNAMIC PAYMENT & QR CONFIGURATION STATE
+    let adminPaymentConfig = {
+      upiId: 'silgrakmarak1309@okaxis',
+      payeeName: 'Silgrak Marak (Admin)',
+      qrImage: '', // Custom uploaded QR code base64 or empty for auto-generated
+      planAmount: 50
+    };
+
+    function getAdminUpiId() {
+      return (adminPaymentConfig && adminPaymentConfig.upiId) ? adminPaymentConfig.upiId.trim() : 'silgrakmarak1309@okaxis';
+    }
+
+    function getAdminPayeeName() {
+      return (adminPaymentConfig && adminPaymentConfig.payeeName) ? adminPaymentConfig.payeeName.trim() : 'Silgrak Marak (Admin)';
+    }
+
+    function getAdminQrCodeUrl() {
+      if (adminPaymentConfig && adminPaymentConfig.qrImage && adminPaymentConfig.qrImage.length > 50) {
+        return adminPaymentConfig.qrImage;
+      }
+      const upi = getAdminUpiId();
+      const payee = encodeURIComponent(getAdminPayeeName());
+      const upiUri = `upi://pay?pa=${upi}&pn=${payee}&am=50&cu=INR&tn=LocalBazaar%20PRO%20Seller%20Plan`;
+      return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
+    }
+
+    // CHECK IF A USER IS PAID / PRO SELLER
+    function isUserPaidMember(userOrEmail) {
+      if (!userOrEmail) return false;
+      let email = typeof userOrEmail === 'string' ? userOrEmail.toLowerCase().trim() : (userOrEmail.email || '').toLowerCase().trim();
+      let phone = typeof userOrEmail === 'object' && userOrEmail.phone ? userOrEmail.phone.replace(/[^0-9]/g, '') : '';
+
+      // Admin always has full access
+      if (typeof userOrEmail === 'object' && userOrEmail.isAdmin) return true;
+      if (email === 'silgrakmarak1309@gmail.com') return true;
+
+      // Check current user session directly
+      if (currentUser && currentUser.email && currentUser.email.toLowerCase() === email) {
+        if (currentUser.isAdmin || currentUser.isPaid) return true;
+      }
+
+      // Check in usersList database
+      const found = usersList.find(u => {
+        const uEmail = (u.email || '').toLowerCase().trim();
+        const uPhone = (u.phone || '').replace(/[^0-9]/g, '');
+        if (email && uEmail && email === uEmail) return true;
+        if (phone && uPhone && phone.length >= 10 && uPhone.includes(phone)) return true;
+        return false;
+      });
+
+      if (found) {
+        return !!(found.isPaid || found.isAdmin);
+      }
+
+      // Default demo initial sellers
+      if (email.includes('greja') || email.includes('silgrak') || email.includes('kisan') || email.includes('rohit')) {
+        return true;
+      }
+
+      return false;
+    }
 
     let currentUser = null;
     let uploadedPostImages = []; // Stores array of up to 5 base64 image strings
@@ -2907,10 +3314,21 @@
       renderMultiPhotoPreviews();
     }
 
-    // RENDER LISTINGS
+    // RENDER LISTINGS (AUTOMATICALLY HIDE UNPAID USERS' OLD LISTINGS)
     function renderListings() {
       const grid = document.getElementById('listingsGrid');
-      let filtered = marketplaceItems.filter(item => {
+      
+      // Step 1: Strict Paid Sellers Filter - Unpaid users' listings are hidden from public feed
+      let activePaidListings = marketplaceItems.filter(item => {
+        return isUserPaidMember({
+          email: item.sellerEmail,
+          phone: item.phone,
+          isAdmin: item.sellerEmail === 'silgrakmarak1309@gmail.com'
+        });
+      });
+
+      // Step 2: Category, Search and Service type filter
+      let filtered = activePaidListings.filter(item => {
         const matchesCat = currentCategory === 'all' || item.category === currentCategory;
         const matchesSearch = item.title.toLowerCase().includes(currentSearch.toLowerCase()) || 
                               item.category.toLowerCase().includes(currentSearch.toLowerCase()) ||
@@ -2919,13 +3337,13 @@
         return matchesCat && matchesSearch && matchesType;
       });
 
-      document.getElementById('itemsCount').textContent = `${filtered.length} items found`;
+      document.getElementById('itemsCount').textContent = `${filtered.length} active listings`;
 
       if (filtered.length === 0) {
         grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px 10px; color: #64748b;">
           <i class="fa-solid fa-basket-shopping" style="font-size: 36px; margin-bottom: 12px; color: #cbd5e1;"></i>
-          <p style="font-size: 14px; font-weight: 700;">No items found in this category</p>
-          <p style="font-size: 12px;">Try selecting another category or clear search filters</p>
+          <p style="font-size: 14px; font-weight: 700;">No active listings found in this category</p>
+          <p style="font-size: 12px;">Only verified PRO Seller listings are shown. Upgrade to post your ad!</p>
         </div>`;
         return;
       }
@@ -2934,8 +3352,7 @@
         const photoCount = (item.images && item.images.length > 1) ? item.images.length : null;
         const sellerPhone = (item.phone || '9876543210').replace(/[^0-9]/g, '');
         const isOwner = isOwnerOfItem(item);
-        const sellerUser = usersList.find(u => (item.sellerEmail && u.email && u.email.toLowerCase() === item.sellerEmail.toLowerCase()) || (u.phone && item.phone && u.phone.includes(item.phone)));
-        const isProSeller = (sellerUser && (sellerUser.isPaid || sellerUser.isAdmin)) || (item.seller && (item.seller.includes('Greja') || item.seller.includes('Silgrak') || item.seller.includes('Kisan') || item.seller.includes('Rohit')));
+        const isProSeller = true; // All active listings are from verified PRO sellers
         return `
           <div class="listing-card" onclick="openDetailModal('${item.id}')">
             <div class="card-img-wrap">
@@ -2964,13 +3381,13 @@
                 <div class="card-footer-seller">
                   <span style="display: inline-flex; align-items: center; gap: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                     ${item.seller}
-                    ${isProSeller ? '<span style="background: #fef08a; color: #854d0e; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px; border: 1px solid #fde047; flex-shrink: 0;"><i class="fa-solid fa-crown" style="font-size: 8px;"></i> PRO</span>' : ''}
+                    <span style="background: #fef08a; color: #854d0e; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 4px; border: 1px solid #fde047; flex-shrink: 0;"><i class="fa-solid fa-crown" style="font-size: 8px;"></i> PRO</span>
                   </span>
                   <span class="seller-rating"><i class="fa-solid fa-star"></i> ${item.rating}</span>
                 </div>
                 <div style="margin-top: 6px;" onclick="event.stopPropagation();">
                   <a href="https://wa.me/91${sellerPhone}?text=Hi%2C+I+am+interested+in+your+listing+${encodeURIComponent(item.title)}+on+Meri+Local+Bazaar" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 6px; background: #25d366; color: white; text-decoration: none; padding: 7px 10px; border-radius: 10px; font-size: 11.5px; font-weight: 800; box-shadow: 0 2px 6px rgba(37, 211, 102, 0.3);">
-                    <i class="fa-brands fa-whatsapp" style="font-size: 14px;"></i> WhatsApp Seller
+                    <i class="fa-brands fa-whatsapp"></i> Chat WhatsApp
                   </a>
                 </div>
               </div>
@@ -3136,6 +3553,8 @@
 
     function closeDetailModal() {
       document.getElementById('detailModal').classList.remove('active');
+      // Trigger ad check upon closing product details (natural transition)
+      maybeTriggerInterstitial();
     }
 
     function showLocationPicker() {
@@ -3171,9 +3590,34 @@
         document.getElementById('navProfile').classList.add('active');
         renderProfileMyAds();
       }
+
+      // Check interstitial on tab switches (excluding immediate home reload)
+      if (tab !== 'home') {
+        maybeTriggerInterstitial();
+      }
     }
 
     function openSellModal() {
+      if (!currentUser) {
+        showCustomAlert('Please Sign In', 'Please sign in or create an account to post listings on Meri Local Bazaar.', 'info');
+        return;
+      }
+
+      // STRICT PAID USER CHECK: Unpaid users cannot post new listings
+      const isPaid = isUserPaidMember(currentUser);
+      if (!isPaid) {
+        showCustomConfirm({
+          title: 'PRO Seller Membership Required 👑',
+          message: 'Naya ad post karne ke liye ₹50/Month PRO Seller membership lena anivarya hai. Unlimited ads post karein aur verified badge payen.',
+          confirmText: 'Pay ₹50 & Activate PRO',
+          type: 'info',
+          onConfirm: () => {
+            openSubscriptionPayModal();
+          }
+        });
+        return;
+      }
+
       if (currentUser && currentUser.phone && !document.getElementById('postPhone').value) {
         document.getElementById('postPhone').value = currentUser.phone.replace(/[^0-9]/g, '');
       }
@@ -3190,6 +3634,19 @@
     }
 
     function submitPostAd() {
+      if (!currentUser) {
+        showCustomAlert('Please Sign In', 'Please sign in to submit your listing.', 'danger');
+        return;
+      }
+
+      // STRICT PAID SELLER VALIDATION
+      if (!isUserPaidMember(currentUser)) {
+        closeSellModal();
+        openSubscriptionPayModal();
+        showCustomAlert('PRO Plan Required', 'Unpaid users cannot post listings. Please complete ₹50 membership payment.', 'danger');
+        return;
+      }
+
       const title = document.getElementById('postTitle').value.trim();
       const price = document.getElementById('postPrice').value.trim();
       const cat = document.getElementById('postCat').value;
@@ -3222,7 +3679,7 @@
         phone: sellerPhoneNumber,
         rating: 5.0,
         reviews: 1,
-        badge: 'New Listing',
+        badge: 'Verified PRO Listing',
         image: coverPhoto,
         images: photosList,
         desc: desc || 'Newly listed on Meri Local Bazaar.'
@@ -3282,7 +3739,7 @@
       });
     }
 
-    // RENDER PROFILE USER'S POSTED ADS (STRICT OWNERSHIP ISOLATION)
+    // RENDER PROFILE USER'S POSTED ADS (STRICT OWNERSHIP ISOLATION & PAID STATUS)
     function renderProfileMyAds() {
       const container = document.getElementById('profileMyAdsList');
       const countDisplay = document.getElementById('profileMyAdsCount');
@@ -3290,6 +3747,7 @@
 
       // Strictly find items owned by the current logged-in user
       const myItems = marketplaceItems.filter(item => isOwnerOfItem(item));
+      const userIsPaid = currentUser ? isUserPaidMember(currentUser) : false;
 
       countDisplay.textContent = `${myItems.length} Ads`;
 
@@ -3298,9 +3756,9 @@
           <div style="text-align: center; padding: 18px 10px; color: #94a3b8; font-size: 12.5px;">
             <i class="fa-solid fa-boxes-stacked" style="font-size: 26px; margin-bottom: 6px; color: #cbd5e1;"></i>
             <p style="font-weight: 700; color: #64748b;">Aapka koi active ad nahi hai.</p>
-            <p style="font-size: 11px; margin-top: 2px;">Apna purana saman ya services bechne ke liye ad post karein.</p>
+            <p style="font-size: 11px; margin-top: 2px;">Apna saman ya local services bechne ke liye PRO membership le kar ad post karein.</p>
             <button onclick="openSellModal()" style="margin-top: 10px; background: #16a34a; color: white; border: none; padding: 8px 16px; border-radius: 10px; font-size: 12px; font-weight: 800; cursor: pointer; box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);">
-              <i class="fa-solid fa-plus"></i> Post Free Ad Now
+              <i class="fa-solid fa-plus"></i> Post Ad Now
             </button>
           </div>
         `;
@@ -3308,21 +3766,38 @@
       }
 
       container.innerHTML = myItems.map(item => `
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0; gap: 10px;">
-          <div style="display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer;" onclick="openDetailModal('${item.id}')">
-            <img src="${item.image}" style="width: 44px; height: 44px; border-radius: 8px; object-fit: cover; border: 1px solid #cbd5e1;">
-            <div>
-              <div style="font-size: 12.5px; font-weight: 700; color: #0f172a; line-height: 1.2;">
-                ${item.title.substring(0, 26)}${item.title.length > 26 ? '...' : ''}
-              </div>
-              <div style="font-size: 11.5px; color: #16a34a; font-weight: 800; margin-top: 2px;">
-                ₹${item.price.toLocaleString('en-IN')} • <span style="color: #64748b; font-weight: 600; font-size: 10.5px;">${item.category}</span>
+        <div style="padding: 12px; background: #f8fafc; border-radius: 14px; border: 1px solid #e2e8f0; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+            <div style="display: flex; align-items: center; gap: 10px; flex: 1; cursor: pointer;" onclick="openDetailModal('${item.id}')">
+              <img src="${item.image}" style="width: 46px; height: 46px; border-radius: 10px; object-fit: cover; border: 1px solid #cbd5e1;">
+              <div>
+                <div style="font-size: 13px; font-weight: 700; color: #0f172a; line-height: 1.2;">
+                  ${item.title.substring(0, 26)}${item.title.length > 26 ? '...' : ''}
+                </div>
+                <div style="font-size: 11.5px; color: #16a34a; font-weight: 800; margin-top: 2px;">
+                  ₹${item.price.toLocaleString('en-IN')} • <span style="color: #64748b; font-weight: 600; font-size: 10.5px;">${item.category}</span>
+                </div>
               </div>
             </div>
+            <button onclick="deleteListing('${item.id}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; box-shadow: 0 1px 4px rgba(220, 38, 38, 0.1);">
+              <i class="fa-solid fa-trash-can"></i> Delete
+            </button>
           </div>
-          <button onclick="deleteListing('${item.id}')" style="background: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 6px 10px; border-radius: 8px; font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 4px; white-space: nowrap; box-shadow: 0 1px 4px rgba(220, 38, 38, 0.1);">
-            <i class="fa-solid fa-trash-can"></i> Delete
-          </button>
+          
+          <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed #e2e8f0; display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+            ${userIsPaid ? `
+              <span style="color: #166534; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-circle-check" style="color: #16a34a;"></i> Active & Visible in Feed (👑 PRO)
+              </span>
+            ` : `
+              <span style="color: #dc2626; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;">
+                <i class="fa-solid fa-circle-pause" style="color: #dc2626;"></i> Paused (Unpaid User - Not visible in feed)
+              </span>
+              <button onclick="openSubscriptionPayModal()" style="background: #eab308; color: #713f12; border: none; padding: 4px 8px; border-radius: 6px; font-size: 10.5px; font-weight: 800; cursor: pointer;">
+                Activate for ₹50
+              </button>
+            `}
+          </div>
         </div>
       `).join('');
     }
@@ -3458,6 +3933,25 @@
         showCustomAlert('Please Sign In', 'Sign in to activate your Monthly Pro Seller Plan.', 'danger');
         return;
       }
+
+      // Update QR Code and UPI ID dynamically from admin config
+      const upi = getAdminUpiId();
+      const payee = getAdminPayeeName();
+      const qrUrl = getAdminQrCodeUrl();
+      const directPayUri = `upi://pay?pa=${encodeURIComponent(upi)}&pn=${encodeURIComponent(payee)}&am=50&cu=INR&tn=LocalBazaar%20PRO%20Seller%20Plan`;
+
+      const upiEl = document.getElementById('subModalUpiIdText');
+      if (upiEl) upiEl.textContent = upi;
+
+      const qrImg = document.getElementById('subModalQrImg');
+      if (qrImg) qrImg.src = qrUrl;
+
+      const payeeEl = document.getElementById('subModalPayeeLabel');
+      if (payeeEl) payeeEl.textContent = `Payee: ${payee}`;
+
+      const directLink = document.getElementById('subDirectUpiPayLink');
+      if (directLink) directLink.href = directPayUri;
+
       document.getElementById('subscriptionPayModal').classList.add('active');
     }
 
@@ -3466,10 +3960,10 @@
     }
 
     function copyUpiId() {
-      const upi = 'silgrakmarak1309@okaxis';
+      const upi = getAdminUpiId();
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(upi).then(() => {
-          showCustomAlert('UPI ID Copied', 'silgrakmarak1309@okaxis copied to clipboard. Open GPay / PhonePe / Paytm to complete ₹50 transfer.', 'success');
+          showCustomAlert('UPI ID Copied', `${upi} copied to clipboard. Open GPay / PhonePe / Paytm to complete ₹50 transfer.`, 'success');
         }).catch(() => {
           prompt('Copy Admin UPI ID:', upi);
         });
@@ -3584,35 +4078,301 @@
       const itemsSec = document.getElementById('adminItemsSection');
       const usersSec = document.getElementById('adminUsersSection');
       const paySec = document.getElementById('adminPaymentsSection');
+      const settSec = document.getElementById('adminSettingsSection');
+      const admobSec = document.getElementById('adminAdmobSection');
 
       const tabItems = document.getElementById('adminTabItems');
       const tabUsers = document.getElementById('adminTabUsers');
       const tabPayments = document.getElementById('adminTabPayments');
+      const tabSettings = document.getElementById('adminTabSettings');
+      const tabAdmob = document.getElementById('adminTabAdmob');
 
-      // Reset all buttons
-      [tabItems, tabUsers, tabPayments].forEach(btn => {
+      // Reset all buttons and sections
+      [tabItems, tabUsers, tabPayments, tabSettings, tabAdmob].forEach(btn => {
         if (btn) btn.classList.remove('active');
+      });
+      [itemsSec, usersSec, paySec, settSec, admobSec].forEach(sec => {
+        if (sec) sec.style.display = 'none';
       });
 
       if (tab === 'items') {
-        itemsSec.style.display = 'block';
-        usersSec.style.display = 'none';
-        paySec.style.display = 'none';
-        tabItems.classList.add('active');
+        if (itemsSec) itemsSec.style.display = 'block';
+        if (tabItems) tabItems.classList.add('active');
         renderAdminItems();
       } else if (tab === 'users') {
-        itemsSec.style.display = 'none';
-        usersSec.style.display = 'block';
-        paySec.style.display = 'none';
-        tabUsers.classList.add('active');
+        if (usersSec) usersSec.style.display = 'block';
+        if (tabUsers) tabUsers.classList.add('active');
         renderAdminUsers();
       } else if (tab === 'payments') {
-        itemsSec.style.display = 'none';
-        usersSec.style.display = 'none';
-        paySec.style.display = 'block';
-        tabPayments.classList.add('active');
+        if (paySec) paySec.style.display = 'block';
+        if (tabPayments) tabPayments.classList.add('active');
         renderAdminPayments();
+      } else if (tab === 'settings') {
+        if (settSec) settSec.style.display = 'block';
+        if (tabSettings) tabSettings.classList.add('active');
+        populateAdminPaymentSettings();
+      } else if (tab === 'admob') {
+        if (admobSec) admobSec.style.display = 'block';
+        if (tabAdmob) tabAdmob.classList.add('active');
+        populateAdminAdmobSettings();
       }
+    }
+
+    function populateAdminPaymentSettings() {
+      const upiInput = document.getElementById('adminUpiIdInput');
+      const payeeInput = document.getElementById('adminPayeeNameInput');
+      const qrImg = document.getElementById('adminQrPreviewImg');
+      const qrPlaceholder = document.getElementById('adminQrPreviewPlaceholder');
+      const removeBtn = document.getElementById('removeQrBtn');
+
+      if (upiInput) upiInput.value = adminPaymentConfig.upiId || 'silgrakmarak1309@okaxis';
+      if (payeeInput) payeeInput.value = adminPaymentConfig.payeeName || 'Silgrak Marak (Admin)';
+
+      if (adminPaymentConfig.qrImage && adminPaymentConfig.qrImage.length > 50) {
+        if (qrImg) {
+          qrImg.src = adminPaymentConfig.qrImage;
+          qrImg.style.display = 'block';
+        }
+        if (qrPlaceholder) qrPlaceholder.style.display = 'none';
+        if (removeBtn) removeBtn.style.display = 'inline-flex';
+      } else {
+        if (qrImg) qrImg.style.display = 'none';
+        if (qrPlaceholder) qrPlaceholder.style.display = 'block';
+        if (removeBtn) removeBtn.style.display = 'none';
+      }
+    }
+
+    // =========================================================================
+    // GOOGLE ADMOB CONFIGURATION & AD ENGINE
+    // =========================================================================
+    let admobConfig = {
+      adsEnabled: true,
+      appId: 'ca-app-pub-3940256099942544~3347511713', // Official Google Test App ID
+      bannerId: 'ca-app-pub-3940256099942544/6300978111', // Official Google Test Banner ID
+      interstitialId: 'ca-app-pub-3940256099942544/1033173712', // Official Google Test Interstitial ID
+      frequency: 6, // Show interstitial every 6 natural screen transitions
+      minCooldownMs: 60000, // 60 seconds minimum cooldown between interstitials
+      lastInterstitialTime: 0,
+      actionCounter: 0
+    };
+
+    let interstitialCountdownTimer = null;
+    let pendingInterstitialCallback = null;
+
+    function populateAdminAdmobSettings() {
+      const toggle = document.getElementById('admobEnabledToggle');
+      const appIdInput = document.getElementById('admobAppIdInput');
+      const bannerIdInput = document.getElementById('admobBannerIdInput');
+      const interstitialIdInput = document.getElementById('admobInterstitialIdInput');
+      const freqSelect = document.getElementById('admobFrequencySelect');
+
+      if (toggle) toggle.checked = !!admobConfig.adsEnabled;
+      if (appIdInput) appIdInput.value = admobConfig.appId || 'ca-app-pub-3940256099942544~3347511713';
+      if (bannerIdInput) bannerIdInput.value = admobConfig.bannerId || 'ca-app-pub-3940256099942544/6300978111';
+      if (interstitialIdInput) interstitialIdInput.value = admobConfig.interstitialId || 'ca-app-pub-3940256099942544/1033173712';
+      if (freqSelect) freqSelect.value = String(admobConfig.frequency || 6);
+    }
+
+    function saveAdminAdmobSettings() {
+      const toggle = document.getElementById('admobEnabledToggle');
+      const appIdInput = document.getElementById('admobAppIdInput');
+      const bannerIdInput = document.getElementById('admobBannerIdInput');
+      const interstitialIdInput = document.getElementById('admobInterstitialIdInput');
+      const freqSelect = document.getElementById('admobFrequencySelect');
+
+      admobConfig.adsEnabled = toggle ? toggle.checked : true;
+      admobConfig.appId = appIdInput && appIdInput.value.trim() ? appIdInput.value.trim() : 'ca-app-pub-3940256099942544~3347511713';
+      admobConfig.bannerId = bannerIdInput && bannerIdInput.value.trim() ? bannerIdInput.value.trim() : 'ca-app-pub-3940256099942544/6300978111';
+      admobConfig.interstitialId = interstitialIdInput && interstitialIdInput.value.trim() ? interstitialIdInput.value.trim() : 'ca-app-pub-3940256099942544/1033173712';
+      admobConfig.frequency = freqSelect ? parseInt(freqSelect.value, 10) || 6 : 6;
+
+      try {
+        localStorage.setItem('localbazaar_admob_config', JSON.stringify({
+          adsEnabled: admobConfig.adsEnabled,
+          appId: admobConfig.appId,
+          bannerId: admobConfig.bannerId,
+          interstitialId: admobConfig.interstitialId,
+          frequency: admobConfig.frequency
+        }));
+      } catch (e) {
+        console.warn('Failed to save AdMob config', e);
+      }
+
+      renderAdmobBannerState();
+      showCustomAlert(
+        'AdMob Settings Saved! 📢',
+        `AdMob configuration has been updated. Ads are currently ${admobConfig.adsEnabled ? 'ENABLED' : 'DISABLED'}.`,
+        'success'
+      );
+    }
+
+    function renderAdmobBannerState() {
+      const banner = document.getElementById('admobBannerBar');
+      if (!banner) return;
+      if (admobConfig.adsEnabled) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    function previewInterstitialAd() {
+      showInterstitialAdModal(() => {
+        showCustomAlert('Preview Complete', 'AdMob Interstitial test ad was dismissed successfully.', 'info');
+      });
+    }
+
+    // Natural Screen Transition Trigger with Rate Limiting & Cooldown Protection
+    function maybeTriggerInterstitial(onComplete) {
+      if (!admobConfig.adsEnabled) {
+        if (onComplete) onComplete();
+        return;
+      }
+
+      admobConfig.actionCounter++;
+      const now = Date.now();
+      const timeSinceLast = now - (admobConfig.lastInterstitialTime || 0);
+
+      // Check frequency threshold & 60s minimum cooldown to prevent annoying users
+      if (admobConfig.actionCounter >= admobConfig.frequency && timeSinceLast >= admobConfig.minCooldownMs) {
+        admobConfig.actionCounter = 0;
+        admobConfig.lastInterstitialTime = now;
+        showInterstitialAdModal(onComplete);
+      } else {
+        if (onComplete) onComplete();
+      }
+    }
+
+    const sampleInterstitialCreatives = [
+      {
+        title: "Supercharge Your Local Store",
+        desc: "Reach 50,000+ local buyers around your area with Google Sponsored Ads & Meri Local Bazaar Verified Seller badge.",
+        cta: "Explore Seller Pro",
+        img: "app-icon.jpg"
+      },
+      {
+        title: "Best Second-Hand Mobiles & Laptops",
+        desc: "Verified electronics with warranty & local shop pickup available across all 28 Indian states.",
+        cta: "Browse Gadgets",
+        img: "app-icon.jpg"
+      },
+      {
+        title: "Local Fast Delivery & Daily Needs",
+        desc: "Get fresh groceries and daily essentials from trusted neighborhood shops at best prices.",
+        cta: "Order Nearby",
+        img: "app-icon.jpg"
+      }
+    ];
+
+    function showInterstitialAdModal(onComplete) {
+      pendingInterstitialCallback = onComplete;
+
+      const modal = document.getElementById('admobInterstitialModal');
+      const countText = document.getElementById('admobCountdownText');
+      const closeIcon = document.getElementById('admobCloseIcon');
+      const closeBtn = document.getElementById('admobInterstitialCloseBtn');
+      const titleEl = document.getElementById('admobInterstitialTitle');
+      const descEl = document.getElementById('admobInterstitialDesc');
+      const ctaText = document.getElementById('admobInterstitialCtaText');
+
+      // Pick a creative
+      const creative = sampleInterstitialCreatives[Math.floor(Math.random() * sampleInterstitialCreatives.length)];
+      if (titleEl) titleEl.textContent = creative.title;
+      if (descEl) descEl.textContent = creative.desc;
+      if (ctaText) ctaText.textContent = creative.cta;
+
+      let secondsLeft = 4;
+      if (countText) countText.textContent = `Ad closes in ${secondsLeft}s`;
+      if (closeIcon) closeIcon.style.display = 'none';
+
+      if (interstitialCountdownTimer) {
+        clearInterval(interstitialCountdownTimer);
+      }
+
+      interstitialCountdownTimer = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft > 0) {
+          if (countText) countText.textContent = `Ad closes in ${secondsLeft}s`;
+        } else {
+          clearInterval(interstitialCountdownTimer);
+          interstitialCountdownTimer = null;
+          if (countText) countText.textContent = 'Skip Ad';
+          if (closeIcon) closeIcon.style.display = 'inline-block';
+        }
+      }, 1000);
+
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeInterstitialAd() {
+      if (interstitialCountdownTimer) {
+        clearInterval(interstitialCountdownTimer);
+        interstitialCountdownTimer = null;
+      }
+      const modal = document.getElementById('admobInterstitialModal');
+      if (modal) modal.classList.remove('active');
+
+      if (typeof pendingInterstitialCallback === 'function') {
+        const cb = pendingInterstitialCallback;
+        pendingInterstitialCallback = null;
+        cb();
+      }
+    }
+
+    function handleInterstitialCtaClick() {
+      closeInterstitialAd();
+      showCustomAlert('Ad Partner Visit', 'Navigating to sponsored offer...', 'info');
+    }
+
+    async function handleAdminQrFile(input) {
+      if (!input || !input.files || input.files.length === 0) return;
+      const file = input.files[0];
+      try {
+        const qrBase64 = await compressImageFile(file);
+        if (qrBase64) {
+          adminPaymentConfig.qrImage = qrBase64;
+          populateAdminPaymentSettings();
+          showCustomAlert('QR Code Selected', 'Scanner image selected. Click "Save UPI ID & QR Code Settings" to apply.', 'info');
+        }
+      } catch (err) {
+        console.warn('QR Code read error', err);
+      } finally {
+        input.value = '';
+      }
+    }
+
+    function removeAdminQrCode() {
+      adminPaymentConfig.qrImage = '';
+      populateAdminPaymentSettings();
+      showCustomAlert('Custom QR Removed', 'Reverted to auto-generated dynamic UPI QR Code.', 'info');
+    }
+
+    function saveAdminPaymentSettings() {
+      const upiInput = document.getElementById('adminUpiIdInput');
+      const payeeInput = document.getElementById('adminPayeeNameInput');
+
+      const upi = upiInput ? upiInput.value.trim() : '';
+      const payee = payeeInput ? payeeInput.value.trim() : '';
+
+      if (!upi || !upi.includes('@')) {
+        showCustomAlert('Invalid UPI ID', 'Please enter a valid UPI ID (e.g. yourname@okaxis, number@paytm).', 'danger');
+        return;
+      }
+
+      adminPaymentConfig.upiId = upi;
+      adminPaymentConfig.payeeName = payee || 'Silgrak Marak (Admin)';
+
+      try {
+        localStorage.setItem('localbazaar_admin_payment_config', JSON.stringify(adminPaymentConfig));
+      } catch (e) {
+        console.warn('Failed to save payment config to localStorage', e);
+      }
+
+      showCustomAlert(
+        'Payment Settings Saved! ✅',
+        `UPI ID updated to "${adminPaymentConfig.upiId}". All users will now scan this QR Code and pay to this account.`,
+        'success'
+      );
     }
 
     // 1. MANAGE LISTINGS (Search, Filter by Category & Delete)
@@ -3876,6 +4636,23 @@
     // Session restore helper
     function initAuthSession() {
       try {
+        const savedAdmobConfig = localStorage.getItem('localbazaar_admob_config');
+        if (savedAdmobConfig) {
+          const parsedAdmob = JSON.parse(savedAdmobConfig);
+          if (parsedAdmob) {
+            admobConfig = { ...admobConfig, ...parsedAdmob };
+          }
+        }
+        renderAdmobBannerState();
+
+        const savedConfig = localStorage.getItem('localbazaar_admin_payment_config');
+        if (savedConfig) {
+          const parsedConfig = JSON.parse(savedConfig);
+          if (parsedConfig && parsedConfig.upiId) {
+            adminPaymentConfig = { ...adminPaymentConfig, ...parsedConfig };
+          }
+        }
+
         const savedUsers = localStorage.getItem('localbazaar_users_list');
         if (savedUsers) {
           const parsed = JSON.parse(savedUsers);

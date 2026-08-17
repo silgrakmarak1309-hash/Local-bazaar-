@@ -1,0 +1,63 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // User Profiles
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Listings
+    match /listings/{listingId} {
+      allow read: if true;
+      allow create: if request.auth != null && request.resource.data.sellerId == request.auth.uid;
+      allow update, delete: if request.auth != null && resource.data.sellerId == request.auth.uid;
+    }
+    
+    // Categories (Public read, admin write)
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if request.auth != null;
+    }
+
+    // Favourites
+    match /favourites/{favId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Conversations & Messages
+    match /conversations/{conversationId} {
+      allow read, write: if request.auth != null;
+      
+      match /messages/{messageId} {
+        allow read, write: if request.auth != null;
+      }
+    }
+    
+    // Reviews
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.auth != null;
+      allow update, delete: if request.auth != null && resource.data.reviewerId == request.auth.uid;
+    }
+    
+    // Safety Reports
+    match /reports/{reportId} {
+      allow create: if request.auth != null;
+      allow read, write: if request.auth != null;
+    }
+
+    // Notifications
+    match /notifications/{notificationId} {
+      allow read, write: if request.auth != null;
+    }
+
+    // Businesses
+    match /businesses/{businessId} {
+      allow read: if true;
+      allow write: if request.auth != null && (resource == null || resource.data.ownerId == request.auth.uid);
+    }
+  }
+}
