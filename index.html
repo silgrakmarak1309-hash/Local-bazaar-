@@ -802,8 +802,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(5px);
       display: none;
       align-items: flex-end;
       justify-content: center;
@@ -814,14 +814,15 @@
     }
     .modal-sheet {
       width: 100%;
-      max-width: 600px;
+      max-width: 480px;
       background: white;
-      border-radius: 28px 28px 0 0;
-      padding: 24px;
-      max-height: 88vh;
+      border-radius: 24px 24px 0 0;
+      padding: 20px 18px 24px 18px;
+      max-height: 85vh;
       overflow-y: auto;
-      animation: slideUp 0.3s ease;
+      animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
       margin: 0 auto;
+      box-shadow: 0 -8px 30px rgba(0,0,0,0.18);
     }
     @keyframes slideUp {
       from { transform: translateY(100%); }
@@ -831,12 +832,120 @@
       float: right;
       background: #f1f5f9;
       border: none;
-      width: 32px;
-      height: 32px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
-      font-size: 14px;
+      font-size: 13px;
       cursor: pointer;
       color: #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Compact Dialog / Popups (Centred, Modern, No browser headers) */
+    .compact-dialog-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+      padding: 16px;
+    }
+    .compact-dialog-overlay.active {
+      display: flex;
+    }
+    .compact-dialog-box {
+      width: 100%;
+      max-width: 320px;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 22px 18px 18px 18px;
+      box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      animation: popIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+      box-sizing: border-box;
+    }
+    @keyframes popIn {
+      from { transform: scale(0.9); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .compact-dialog-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .compact-dialog-icon.danger {
+      background: #fee2e2;
+      color: #dc2626;
+    }
+    .compact-dialog-icon.success {
+      background: #dcfce7;
+      color: #15803d;
+    }
+    .compact-dialog-icon.info {
+      background: #e0f2fe;
+      color: #0284c7;
+    }
+    .compact-dialog-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-bottom: 6px;
+      line-height: 1.3;
+    }
+    .compact-dialog-msg {
+      font-size: 12px;
+      color: #64748b;
+      line-height: 1.45;
+      margin-bottom: 16px;
+      word-break: break-word;
+    }
+    .compact-dialog-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .compact-dialog-btn {
+      flex: 1;
+      padding: 9px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+    }
+    .compact-dialog-btn:active {
+      opacity: 0.85;
+    }
+    .compact-dialog-btn.cancel {
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .compact-dialog-btn.danger {
+      background: #dc2626;
+      color: #ffffff;
+    }
+    .compact-dialog-btn.primary {
+      background: #15803d;
+      color: #ffffff;
     }
 
     .action-btn-row {
@@ -1443,7 +1552,7 @@
         <div class="section-title">
           <h3>Messages & Inquiries</h3>
         </div>
-        <div class="chat-item" style="display: flex; gap: 12px; padding: 14px 16px; background: white; border-bottom: 1px solid #f1f5f9; align-items: center; cursor: pointer;" onclick="alert('Chat with Kisan Fresh Organics: Hi, your order basket will be delivered today!')">
+        <div class="chat-item" style="display: flex; gap: 12px; padding: 14px 16px; background: white; border-bottom: 1px solid #f1f5f9; align-items: center; cursor: pointer;" onclick="showCustomAlert('Kisan Fresh Organics', 'Hi, your order basket will be delivered today! Feel free to WhatsApp or call us.', 'info')">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #475569;"><i class="fa-solid fa-store"></i></div>
           <div style="flex:1;">
             <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
@@ -1453,7 +1562,7 @@
             <p style="font-size: 12px; color: #64748b;">Hi, your vegetable basket is packed and ready.</p>
           </div>
         </div>
-        <div class="chat-item" style="display: flex; gap: 12px; padding: 14px 16px; background: white; border-bottom: 1px solid #f1f5f9; align-items: center; cursor: pointer;" onclick="alert('Chat with Sharma Electricals: Technician will arrive at your address.')">
+        <div class="chat-item" style="display: flex; gap: 12px; padding: 14px 16px; background: white; border-bottom: 1px solid #f1f5f9; align-items: center; cursor: pointer;" onclick="showCustomAlert('Sharma Electricals', 'Technician will arrive at your address today at 3:00 PM.', 'info')">
           <div style="width: 48px; height: 48px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #475569;"><i class="fa-solid fa-bolt"></i></div>
           <div style="flex:1;">
             <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
@@ -1808,6 +1917,35 @@
     </div>
   </div>
 
+  <!-- COMPACT CUSTOM CONFIRMATION MODAL (Small, Sleek, No bulky browser header) -->
+  <div class="compact-dialog-overlay" id="compactConfirmModal">
+    <div class="compact-dialog-box">
+      <div class="compact-dialog-icon danger" id="confirmDialogIcon">
+        <i class="fa-solid fa-trash-can"></i>
+      </div>
+      <div class="compact-dialog-title" id="confirmDialogTitle">Delete Ad?</div>
+      <div class="compact-dialog-msg" id="confirmDialogMsg">Are you sure you want to delete this listing?</div>
+      <div class="compact-dialog-actions">
+        <button class="compact-dialog-btn cancel" onclick="closeConfirmDialog(false)">Cancel</button>
+        <button class="compact-dialog-btn danger" id="confirmDialogActionBtn" onclick="closeConfirmDialog(true)">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPACT CUSTOM ALERT / NOTICE MODAL -->
+  <div class="compact-dialog-overlay" id="compactAlertModal">
+    <div class="compact-dialog-box">
+      <div class="compact-dialog-icon success" id="alertDialogIcon">
+        <i class="fa-solid fa-circle-check"></i>
+      </div>
+      <div class="compact-dialog-title" id="alertDialogTitle">Meri Local Bazaar</div>
+      <div class="compact-dialog-msg" id="alertDialogMsg">Action completed successfully.</div>
+      <div class="compact-dialog-actions">
+        <button class="compact-dialog-btn primary" style="width: 100%;" onclick="closeAlertDialog()">OK</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // FULL ALL-INDIA 28 STATES & 8 UTs DATA
     const allIndiaLocations = {
@@ -1859,6 +1997,68 @@
 
     let currentUser = null;
     let uploadedPostImages = []; // Stores array of up to 5 base64 image strings
+
+    // COMPACT CUSTOM POPUP / CONFIRMATION DIALOG HANDLERS
+    let confirmDialogCallback = null;
+
+    function showCustomConfirm({
+      title = 'Delete Ad?',
+      message = 'Are you sure you want to proceed?',
+      confirmText = 'Delete',
+      type = 'danger',
+      onConfirm = null
+    }) {
+      confirmDialogCallback = onConfirm;
+      document.getElementById('confirmDialogTitle').textContent = title;
+      document.getElementById('confirmDialogMsg').textContent = message;
+      
+      const iconEl = document.getElementById('confirmDialogIcon');
+      const actionBtn = document.getElementById('confirmDialogActionBtn');
+      
+      actionBtn.textContent = confirmText;
+      actionBtn.className = `compact-dialog-btn ${type}`;
+      iconEl.className = `compact-dialog-icon ${type}`;
+      
+      if (type === 'danger') {
+        iconEl.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+      } else {
+        iconEl.innerHTML = '<i class="fa-solid fa-circle-question"></i>';
+      }
+
+      document.getElementById('compactConfirmModal').classList.add('active');
+    }
+
+    function closeConfirmDialog(isConfirmed) {
+      document.getElementById('compactConfirmModal').classList.remove('active');
+      if (isConfirmed && typeof confirmDialogCallback === 'function') {
+        confirmDialogCallback();
+      }
+      confirmDialogCallback = null;
+    }
+
+    function showCustomAlert(title, message, type = 'success') {
+      document.getElementById('alertDialogTitle').textContent = title;
+      document.getElementById('alertDialogMsg').textContent = message;
+      
+      const iconEl = document.getElementById('alertDialogIcon');
+      iconEl.className = `compact-dialog-icon ${type}`;
+      
+      if (type === 'success') {
+        iconEl.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+      } else if (type === 'danger' || type === 'error') {
+        iconEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+        iconEl.className = 'compact-dialog-icon danger';
+      } else {
+        iconEl.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+        iconEl.className = 'compact-dialog-icon info';
+      }
+
+      document.getElementById('compactAlertModal').classList.add('active');
+    }
+
+    function closeAlertDialog() {
+      document.getElementById('compactAlertModal').classList.remove('active');
+    }
 
     const marketplaceItems = [
       {
@@ -2142,11 +2342,11 @@
       const name = document.getElementById('authName').value.trim();
 
       if (!email || !email.includes('@')) {
-        alert('Please enter a valid email address.');
+        showCustomAlert('Invalid Email', 'Please enter a valid email address.', 'danger');
         return;
       }
       if (pwd.length < 4) {
-        alert('Please enter your password (at least 4 characters).');
+        showCustomAlert('Password Required', 'Please enter your password (at least 4 characters).', 'danger');
         return;
       }
 
@@ -2158,7 +2358,7 @@
       // Check if user is blocked
       const matchedUser = usersList.find(u => u.email.toLowerCase() === email.toLowerCase());
       if (matchedUser && matchedUser.isBlocked) {
-        alert('Account Suspended: This user ID has been blocked by Administrator.');
+        showCustomAlert('Account Suspended', 'This user ID has been blocked by Administrator.', 'danger');
         return;
       }
 
@@ -2177,18 +2377,18 @@
       const submitBtn = document.getElementById('otpSubmitBtn');
 
       if (!phone || phone.length < 10) {
-        alert('Please enter valid 10-digit mobile number');
+        showCustomAlert('Invalid Mobile', 'Please enter valid 10-digit mobile number.', 'danger');
         return;
       }
 
       if (otpWrapper.style.display === 'none') {
         otpWrapper.style.display = 'block';
         submitBtn.textContent = 'Verify OTP & Login';
-        alert('OTP sent to +91 ' + phone + '\n(Use demo OTP: 123456)');
+        showCustomAlert('OTP Sent', 'OTP sent to +91 ' + phone + '\n(Use demo OTP: 123456)', 'info');
       } else {
         const otp = document.getElementById('authOtp').value.trim();
         if (otp.length !== 6) {
-          alert('Please enter 6-digit OTP code');
+          showCustomAlert('Invalid OTP', 'Please enter 6-digit OTP code (123456).', 'danger');
           return;
         }
         currentUser = {
@@ -2268,11 +2468,11 @@
       const newPhone = document.getElementById('editProfilePhoneInput').value.trim().replace(/[^0-9]/g, '');
 
       if (!newName) {
-        alert('Please enter your name');
+        showCustomAlert('Name Required', 'Please enter your full name.', 'danger');
         return;
       }
       if (newPhone.length !== 10) {
-        alert('Please enter a valid 10-digit WhatsApp number');
+        showCustomAlert('Invalid Phone', 'Please enter a valid 10-digit WhatsApp number.', 'danger');
         return;
       }
 
@@ -2300,7 +2500,7 @@
       closeEditProfileModal();
       renderListings();
       renderProfileMyAds();
-      alert('Your My Account profile details and WhatsApp number have been updated successfully!');
+      showCustomAlert('Profile Updated', 'Your profile details and WhatsApp number have been updated successfully!', 'success');
     }
 
     function handleSignOut() {
@@ -2325,7 +2525,7 @@
         const files = Array.from(input.files);
         const maxAllowed = 5 - uploadedPostImages.length;
         if (maxAllowed <= 0) {
-          alert('Maximum 5 photos allowed. Remove a photo to add a new one.');
+          showCustomAlert('Limit Reached', 'Maximum 5 photos allowed. Remove a photo to add a new one.', 'info');
           input.value = '';
           return;
         }
@@ -2691,7 +2891,7 @@
       const desc = document.getElementById('postDesc').value.trim();
 
       if (!title || !price) {
-        alert('Please enter listing title and price');
+        showCustomAlert('Required Fields', 'Please enter listing title and price.', 'danger');
         return;
       }
 
@@ -2735,7 +2935,11 @@
       switchNav('home');
       renderListings();
       renderProfileMyAds();
-      alert(`Congratulations! Your listing "${title}" with WhatsApp contact (+91 ${sellerPhoneNumber}) & address is now live in your local feed.`);
+      showCustomAlert(
+        'Listing Live! 🎉',
+        `Your listing "${title}" with WhatsApp contact (+91 ${sellerPhoneNumber}) & address is now live in your local feed!`,
+        'success'
+      );
     }
 
     // USER LISTING DELETION WITH STRICT OWNERSHIP CHECK
@@ -2744,25 +2948,31 @@
       if (!item) return;
 
       if (!isOwnerOfItem(item)) {
-        alert('Permission Denied: You can only delete and maintain ads posted from your own account.');
+        showCustomAlert('Permission Denied', 'You can only delete ads posted from your own account.', 'danger');
         return;
       }
 
       const title = item.title;
-      if (confirm(`Are you sure you want to delete your ad "${title}"?\n\nThis will remove it permanently from the marketplace feed.`)) {
-        const index = marketplaceItems.findIndex(i => i.id === itemId);
-        if (index > -1) {
-          marketplaceItems.splice(index, 1);
-          saveMarketplaceItems();
-          closeDetailModal();
-          renderListings();
-          renderProfileMyAds();
-          if (currentUser && currentUser.isAdmin) {
-            renderAdminItems();
+      showCustomConfirm({
+        title: 'Delete this ad?',
+        message: `Are you sure you want to delete "${title}"? This will permanently remove it from the marketplace feed.`,
+        confirmText: 'Delete',
+        type: 'danger',
+        onConfirm: () => {
+          const index = marketplaceItems.findIndex(i => i.id === itemId);
+          if (index > -1) {
+            marketplaceItems.splice(index, 1);
+            saveMarketplaceItems();
+            closeDetailModal();
+            renderListings();
+            renderProfileMyAds();
+            if (currentUser && currentUser.isAdmin) {
+              renderAdminItems();
+            }
+            showCustomAlert('Ad Deleted', `"${title}" has been deleted from your account.`, 'success');
           }
-          alert(`"${title}" has been deleted from your account.`);
         }
-      }
+      });
     }
 
     // RENDER PROFILE USER'S POSTED ADS (STRICT OWNERSHIP ISOLATION)
@@ -2837,7 +3047,7 @@
     // ADMIN MODERATION PANEL LOGIC
     function openAdminPanelModal() {
       if (!currentUser || !currentUser.isAdmin) {
-        alert('Access Denied: Only Administrator (silgrakmarak1309@gmail.com) can access this.');
+        showCustomAlert('Access Denied', 'Only Administrator (silgrakmarak1309@gmail.com) can access Super Admin Panel.', 'danger');
         return;
       }
       renderAdminUsers();
@@ -2898,7 +3108,11 @@
       if (!user) return;
       user.isBlocked = !user.isBlocked;
       renderAdminUsers();
-      alert(user.name + (user.isBlocked ? ' has been BLOCKED from LocalBazaar.' : ' has been UNBLOCKED.'));
+      showCustomAlert(
+        user.isBlocked ? 'User Blocked' : 'User Unblocked',
+        user.name + (user.isBlocked ? ' has been BLOCKED from LocalBazaar.' : ' has been UNBLOCKED.'),
+        user.isBlocked ? 'danger' : 'success'
+      );
     }
 
     function renderAdminItems() {
@@ -2934,14 +3148,22 @@
     }
 
     function adminDeleteListing(itemId) {
-      if (confirm('Are you sure you want to remove this listing?')) {
-        const index = marketplaceItems.findIndex(i => i.id === itemId);
-        if (index > -1) {
-          marketplaceItems.splice(index, 1);
-          renderAdminItems();
-          renderListings();
+      showCustomConfirm({
+        title: 'Remove Listing?',
+        message: 'Are you sure you want to remove this listing from the platform?',
+        confirmText: 'Remove',
+        type: 'danger',
+        onConfirm: () => {
+          const index = marketplaceItems.findIndex(i => i.id === itemId);
+          if (index > -1) {
+            marketplaceItems.splice(index, 1);
+            saveMarketplaceItems();
+            renderAdminItems();
+            renderListings();
+            showCustomAlert('Listing Removed', 'The ad has been removed by Administrator.', 'success');
+          }
         }
-      }
+      });
     }
 
     // Session restore helper
