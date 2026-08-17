@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="mobile-web-app-capable" content="yes" />
   <title>Meri Local Bazaar - Your Local Market, One App</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" type="image/jpeg" href="app-icon.jpg" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" type="image/jpeg" href="/app-icon.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -657,151 +657,102 @@
       gap: 2px;
     }
 
-    /* ==========================================================================
-       GOOGLE ADMOB ADS & FIXED BOTTOM NAVIGATION INTEGRATION
-       ========================================================================== */
-
-    /* 1. Responsive Google AdMob Banner Bar (Positioned DIRECTLY ABOVE Bottom Navigation) */
-    .admob-banner-bar {
-      position: fixed;
-      bottom: calc(60px + env(safe-area-inset-bottom, 0px));
-      left: 0;
-      right: 0;
-      width: 100%;
-      height: 52px;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 99;
-      border-top: 1px solid #334155;
-      border-bottom: 1px solid #1e293b;
-      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.12);
-      transition: all 0.2s ease;
-    }
-
-    .admob-banner-bar.hidden {
-      display: none !important;
-    }
-
-    .admob-banner-inner {
-      width: 100%;
-      max-width: 540px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 12px;
-      gap: 10px;
-    }
-
-    .admob-badge-tag {
-      background: #f59e0b;
-      color: #0f172a;
-      font-size: 9px;
-      font-weight: 800;
-      padding: 2px 6px;
-      border-radius: 4px;
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .admob-content-carousel {
-      flex: 1;
-      overflow: hidden;
-      position: relative;
-      height: 36px;
-      display: flex;
-      align-items: center;
-    }
-
-    .admob-slide {
-      display: none;
-      width: 100%;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      animation: fadeIn 0.35s ease;
-    }
-
-    .admob-slide.active {
-      display: flex;
-    }
-
-    .admob-text-wrap {
-      flex: 1;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .admob-text-main {
-      font-size: 11.5px;
-      font-weight: 700;
-      color: #f8fafc;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      line-height: 1.2;
-    }
-
-    .admob-text-sub {
-      font-size: 9.5px;
-      color: #94a3b8;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .admob-action-pill {
-      background: #16a34a;
-      color: white;
-      border: none;
-      padding: 5px 11px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background 0.2s, transform 0.1s;
-      box-shadow: 0 2px 6px rgba(22, 163, 74, 0.3);
-      white-space: nowrap;
-    }
-
-    .admob-action-pill:hover {
-      background: #15803d;
-    }
-
-    .admob-action-pill:active {
-      transform: scale(0.96);
-    }
-
-    /* 2. Fixed Bottom Navigation (At the very bottom of the viewport) */
-    .bottom-nav {
+    /* Bottom AdMob Banner at the very bottom (Replaces the red area / Over device nav area) */
+    .bottom-ad-banner {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       width: 100%;
-      height: 60px;
+      height: 48px;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
       padding-bottom: env(safe-area-inset-bottom, 0px);
+      z-index: 101;
+      border-top: 1px solid #334155;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+      font-size: 11.5px;
+    }
+    .ad-badge-label {
+      background: #f59e0b;
+      color: #0f172a;
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-right: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .ad-content-carousel {
+      flex: 1;
+      overflow: hidden;
+      position: relative;
+      height: 32px;
+      display: flex;
+      align-items: center;
+    }
+    .ad-slide {
+      display: none;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      animation: fadeIn 0.4s ease;
+    }
+    .ad-slide.active {
+      display: flex;
+    }
+    .ad-text-main {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 11.5px;
+      color: #e2e8f0;
+      flex: 1;
+    }
+    .ad-action-pill {
+      background: #16a34a;
+      color: white;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 10.5px;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .ad-action-pill:hover {
+      background: #15803d;
+    }
+
+    /* Fixed Bottom Navigation (Elevated ABOVE the Ads Bar for clear tap response without key navigator conflicts) */
+    .bottom-nav {
+      position: fixed;
+      bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 64px;
       background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(8px);
       border-top: 1px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-around;
-      padding-left: 8px;
-      padding-right: 8px;
+      padding: 0 10px;
       z-index: 100;
       margin: 0;
-      box-shadow: 0 -3px 12px rgba(0,0,0,0.05);
+      box-shadow: 0 -4px 16px rgba(0,0,0,0.06);
     }
 
     .nav-item {
@@ -842,119 +793,6 @@
       box-shadow: 0 8px 18px rgba(22, 163, 74, 0.4);
       border: 3px solid white;
       cursor: pointer;
-    }
-
-    /* 3. Google AdMob Interstitial Ad (Fullscreen Modal Overlay) */
-    .admob-interstitial-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 23, 42, 0.88);
-      backdrop-filter: blur(8px);
-      z-index: 10000;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      animation: fadeIn 0.25s ease;
-    }
-    .admob-interstitial-overlay.active {
-      display: flex;
-    }
-    .admob-interstitial-card {
-      width: 100%;
-      max-width: 380px;
-      background: white;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      animation: popIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes popIn {
-      from { transform: scale(0.92); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
-    }
-    .admob-interstitial-topbar {
-      background: #0f172a;
-      color: white;
-      padding: 10px 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #334155;
-    }
-    .admob-interstitial-tag {
-      font-size: 10px;
-      font-weight: 800;
-      background: #f59e0b;
-      color: #0f172a;
-      padding: 2px 6px;
-      border-radius: 4px;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .admob-interstitial-close-btn {
-      background: rgba(255, 255, 255, 0.18);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: background 0.15s;
-    }
-    .admob-interstitial-close-btn:hover {
-      background: rgba(255, 255, 255, 0.35);
-    }
-    .admob-interstitial-body {
-      padding: 18px;
-      text-align: center;
-      background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-    }
-    .admob-creative-img-wrap {
-      width: 100%;
-      height: 170px;
-      border-radius: 16px;
-      background: #e2e8f0;
-      overflow: hidden;
-      position: relative;
-      margin-bottom: 14px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    }
-    .admob-creative-img-wrap img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .admob-interstitial-cta {
-      width: 100%;
-      background: linear-gradient(135deg, #0284c7, #0369a1);
-      color: white;
-      border: none;
-      padding: 13px;
-      border-radius: 14px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
-      margin-top: 14px;
     }
 
     /* Modals */
@@ -1883,45 +1721,8 @@
         </div>
       </div>
 
-      <!-- Responsive Google AdMob Banner Ad (Fixed directly above bottom navigation) -->
-      <div class="admob-banner-bar" id="admobBannerBar">
-        <div class="admob-banner-inner">
-          <div class="admob-badge-tag"><i class="fa-solid fa-rectangle-ad"></i> Ad</div>
-          <div class="admob-content-carousel" id="admobCarousel">
-            <div class="admob-slide active">
-              <div class="admob-text-wrap">
-                <span class="admob-text-main">🔥 <b>Local Best Deals:</b> Post your ads & reach verified local buyers!</span>
-                <span class="admob-text-sub">AdMob Test • ca-app-pub-3940256099942544/6300978111</span>
-              </div>
-              <button class="admob-action-pill" onclick="openSellModal()">Post Free Ad</button>
-            </div>
-            <div class="admob-slide">
-              <div class="admob-text-wrap">
-                <span class="admob-text-main">📱 <b>Top Mobiles & Gadgets:</b> Great discounts from nearby verified sellers</span>
-                <span class="admob-text-sub">Sponsored by Google Mobile Ads</span>
-              </div>
-              <button class="admob-action-pill" onclick="openCategoryFromAll('Mobiles & Tablets')">View Mobiles</button>
-            </div>
-            <div class="admob-slide">
-              <div class="admob-text-wrap">
-                <span class="admob-text-main">🚗 <b>Bikes & Pre-owned Cars:</b> Clean inspected vehicles with test drive</span>
-                <span class="admob-text-sub">Verified Local Deals</span>
-              </div>
-              <button class="admob-action-pill" onclick="openCategoryFromAll('Bikes & Scooters')">View Vehicles</button>
-            </div>
-            <div class="admob-slide">
-              <div class="admob-text-wrap">
-                <span class="admob-text-main">🛒 <b>Fresh Local Grocery:</b> Farm fresh veggies & daily needs delivered</span>
-                <span class="admob-text-sub">Meri Local Bazaar Express</span>
-              </div>
-              <button class="admob-action-pill" onclick="openCategoryFromAll('Grocery & Daily Needs')">Shop Grocery</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Fixed Bottom Navigation Bar (Sticks to the very bottom of the screen) -->
-      <nav class="bottom-nav" id="mainBottomNav">
+      <!-- Fixed Bottom Navigation Bar (Elevated Above Ads) -->
+      <nav class="bottom-nav">
         <div class="nav-item active" id="navHome" onclick="switchNav('home')">
           <i class="fa-solid fa-house"></i>
           <span>Home</span>
@@ -1942,6 +1743,25 @@
           <span>My Account</span>
         </div>
       </nav>
+
+      <!-- Bottom Fixed AdMob Banner (Positioned at the very bottom over device nav area) -->
+      <div class="bottom-ad-banner" id="bottomAdBanner" data-admob-unit="ca-app-pub-4647188052127146/7464244350">
+        <div class="ad-badge-label"><i class="fa-solid fa-rectangle-ad"></i> Ad</div>
+        <div class="ad-content-carousel" id="adCarousel">
+          <div class="ad-slide active">
+            <span class="ad-text-main">🔥 <b>Local Best Deals:</b> Post your free ads & reach thousands of buyers!</span>
+            <button class="ad-action-pill" onclick="openSellModal()">Post Free Ad</button>
+          </div>
+          <div class="ad-slide">
+            <span class="ad-text-main">📱 <b>Mobiles & Laptops:</b> Buy, sell & exchange gadgets locally with verified sellers</span>
+            <button class="ad-action-pill" onclick="filterByCat('Mobiles')">View Mobiles</button>
+          </div>
+          <div class="ad-slide">
+            <span class="ad-text-main">🚗 <b>Bikes & Cars:</b> Find genuine second-hand deals in your town</span>
+            <button class="ad-action-pill" onclick="filterByCat('Bikes')">View Vehicles</button>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -2109,7 +1929,7 @@
       </div>
       <p style="font-size: 11.5px; color: #64748b; margin-bottom: 12px;">Admin Account: <b>silgrakmarak1309@gmail.com</b></p>
       
-      <!-- 5 SEPARATE DEDICATED ADMIN BUTTONS / TABS -->
+      <!-- 4 SEPARATE DEDICATED ADMIN BUTTONS / TABS -->
       <div class="admin-tab-nav" style="flex-wrap: wrap;">
         <button id="adminTabItems" class="admin-tab-btn active" onclick="switchAdminTab('items')">
           <i class="fa-solid fa-list-check"></i> Manage Listings
@@ -2122,9 +1942,6 @@
         </button>
         <button id="adminTabSettings" class="admin-tab-btn" onclick="switchAdminTab('settings')">
           <i class="fa-solid fa-qrcode"></i> QR & UPI Settings
-        </button>
-        <button id="adminTabAdmob" class="admin-tab-btn" onclick="switchAdminTab('admob')">
-          <i class="fa-solid fa-rectangle-ad"></i> AdMob Ads
         </button>
       </div>
 
@@ -2242,66 +2059,6 @@
         <button onclick="saveAdminPaymentSettings()" style="background: linear-gradient(135deg, #16a34a, #15803d); color: white; width: 100%; border: none; padding: 13px; border-radius: 12px; font-size: 14px; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25); display: flex; align-items: center; justify-content: center; gap: 8px;">
           <i class="fa-solid fa-floppy-disk"></i> Save UPI ID & QR Code Settings
         </button>
-      </div>
-
-      <!-- SECTION 5: GOOGLE ADMOB ADS CONFIGURATION -->
-      <div id="adminAdmobSection" style="display: none;">
-        <div style="background: #eff6ff; border: 1px solid #93c5fd; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px;">
-          <div style="font-size: 13px; font-weight: 800; color: #1e40af; display: flex; align-items: center; gap: 6px;">
-            <i class="fa-solid fa-rectangle-ad"></i> Google AdMob Ads Monetization
-          </div>
-          <p style="font-size: 11.5px; color: #1d4ed8; margin-top: 4px; line-height: 1.4;">
-            App mein Google AdMob Banner aur Interstitial ads integrated hain. Testing ke dauran Google ke official test IDs use hote hain. Production me aap apne live AdMob Unit IDs yahan enter karke save kar sakte hain.
-          </p>
-        </div>
-
-        <div style="background: white; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 12px 14px; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between;">
-          <div>
-            <div style="font-size: 13px; font-weight: 800; color: #0f172a;">Enable AdMob Ads</div>
-            <div style="font-size: 11px; color: #64748b;">Show Banner & Interstitial ads in the app</div>
-          </div>
-          <label style="position: relative; display: inline-block; width: 44px; height: 24px;">
-            <input type="checkbox" id="admobEnabledToggle" checked style="opacity: 0; width: 0; height: 0;">
-            <span style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .3s; border-radius: 24px;" id="admobToggleSlider"></span>
-          </label>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 12px;">
-          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Google AdMob App ID</label>
-          <input type="text" id="admobAppIdInput" placeholder="ca-app-pub-3940256099942544~3347511713" style="font-family: monospace; font-size: 12px; font-weight: 600;">
-          <span style="font-size: 10px; color: #64748b;">Google Official Test App ID default set hai.</span>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 12px;">
-          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Banner Ad Unit ID (Fixed Above Bottom Nav)</label>
-          <input type="text" id="admobBannerIdInput" placeholder="ca-app-pub-3940256099942544/6300978111" style="font-family: monospace; font-size: 12px; font-weight: 600;">
-          <span style="font-size: 10px; color: #64748b;">Test Banner: ca-app-pub-3940256099942544/6300978111</span>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 12px;">
-          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Interstitial Ad Unit ID (Natural Transitions)</label>
-          <input type="text" id="admobInterstitialIdInput" placeholder="ca-app-pub-3940256099942544/1033173712" style="font-family: monospace; font-size: 12px; font-weight: 600;">
-          <span style="font-size: 10px; color: #64748b;">Test Interstitial: ca-app-pub-3940256099942544/1033173712</span>
-        </div>
-
-        <div class="form-group" style="margin-bottom: 14px;">
-          <label style="font-size: 12px; font-weight: 800; color: #0f172a;">Interstitial Ad Frequency</label>
-          <select id="admobFrequencySelect" style="width: 100%; padding: 10px; border-radius: 12px; border: 1.5px solid #cbd5e1; font-size: 13px; font-weight: 600; background: white;">
-            <option value="4">Every 4 Natural Transitions (Moderate)</option>
-            <option value="6" selected>Every 6 Natural Transitions (Recommended - Smooth UX)</option>
-            <option value="9">Every 9 Natural Transitions (Light Frequency)</option>
-          </select>
-          <span style="font-size: 10px; color: #64748b; margin-top: 3px; display: block;">60 seconds minimum cooldown rule hamesha active rahega taki continuous product browsing smooth rahe.</span>
-        </div>
-
-        <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-          <button type="button" onclick="previewInterstitialAd()" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 11px 14px; border-radius: 12px; font-size: 12.5px; font-weight: 800; cursor: pointer; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
-            <i class="fa-solid fa-play"></i> Preview Interstitial
-          </button>
-          <button type="button" onclick="saveAdminAdmobSettings()" style="background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border: none; padding: 11px 16px; border-radius: 12px; font-size: 13px; font-weight: 900; cursor: pointer; flex: 1.4; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25); display: flex; align-items: center; justify-content: center; gap: 6px;">
-            <i class="fa-solid fa-floppy-disk"></i> Save Ad Settings
-          </button>
-        </div>
       </div>
     </div>
   </div>
@@ -2439,42 +2196,6 @@
       <div class="compact-dialog-msg" id="alertDialogMsg">Action completed successfully.</div>
       <div class="compact-dialog-actions">
         <button class="compact-dialog-btn primary" style="width: 100%;" onclick="closeAlertDialog()">OK</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- GOOGLE ADMOB FULLSCREEN INTERSTITIAL AD MODAL (Natural Transitions & Smooth Skip) -->
-  <div class="admob-interstitial-overlay" id="admobInterstitialModal">
-    <div class="admob-interstitial-card">
-      <div class="admob-interstitial-topbar">
-        <div class="admob-interstitial-tag">
-          <i class="fa-solid fa-rectangle-ad"></i> AdMob Interstitial
-        </div>
-        <button class="admob-interstitial-close-btn" id="admobInterstitialCloseBtn" onclick="closeInterstitialAd()">
-          <span id="admobCountdownText">Ad closes in 4s</span> <i class="fa-solid fa-xmark" id="admobCloseIcon" style="display: none;"></i>
-        </button>
-      </div>
-
-      <div class="admob-interstitial-body">
-        <div class="admob-creative-img-wrap" id="admobInterstitialCreativeWrap">
-          <img id="admobInterstitialImg" src="app-icon.jpg" onerror="this.src='/app-icon.jpg'" alt="Sponsored Ad">
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 4px;">
-          <span style="font-size: 10px; background: #e0f2fe; color: #0284c7; padding: 2px 8px; border-radius: 10px; font-weight: 800;">Sponsored Google Ad</span>
-          <span style="font-size: 10px; color: #94a3b8; font-family: monospace;">ca-app-pub-3940256099942544/1033173712</span>
-        </div>
-
-        <h3 id="admobInterstitialTitle" style="font-size: 16px; font-weight: 800; color: #0f172a; margin-bottom: 4px;">Grow Your Local Business Fast</h3>
-        <p id="admobInterstitialDesc" style="font-size: 12px; color: #64748b; line-height: 1.4;">Get 10x more inquiries on your local products and services with Meri Local Bazaar sponsored promotions.</p>
-
-        <button class="admob-interstitial-cta" id="admobInterstitialCtaBtn" onclick="handleInterstitialCtaClick()">
-          <span id="admobInterstitialCtaText">Explore Deals Now</span> <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 12px;"></i>
-        </button>
-
-        <div style="margin-top: 10px; font-size: 10px; color: #94a3b8; display: flex; align-items: center; justify-content: center; gap: 4px;">
-          <i class="fa-solid fa-shield-check" style="color: #16a34a;"></i> Verified Safe Ad • Google Mobile Ads SDK
-        </div>
       </div>
     </div>
   </div>
@@ -3553,8 +3274,6 @@
 
     function closeDetailModal() {
       document.getElementById('detailModal').classList.remove('active');
-      // Trigger ad check upon closing product details (natural transition)
-      maybeTriggerInterstitial();
     }
 
     function showLocationPicker() {
@@ -3589,11 +3308,6 @@
         document.getElementById('screenProfile').classList.add('active');
         document.getElementById('navProfile').classList.add('active');
         renderProfileMyAds();
-      }
-
-      // Check interstitial on tab switches (excluding immediate home reload)
-      if (tab !== 'home') {
-        maybeTriggerInterstitial();
       }
     }
 
@@ -4079,19 +3793,17 @@
       const usersSec = document.getElementById('adminUsersSection');
       const paySec = document.getElementById('adminPaymentsSection');
       const settSec = document.getElementById('adminSettingsSection');
-      const admobSec = document.getElementById('adminAdmobSection');
 
       const tabItems = document.getElementById('adminTabItems');
       const tabUsers = document.getElementById('adminTabUsers');
       const tabPayments = document.getElementById('adminTabPayments');
       const tabSettings = document.getElementById('adminTabSettings');
-      const tabAdmob = document.getElementById('adminTabAdmob');
 
       // Reset all buttons and sections
-      [tabItems, tabUsers, tabPayments, tabSettings, tabAdmob].forEach(btn => {
+      [tabItems, tabUsers, tabPayments, tabSettings].forEach(btn => {
         if (btn) btn.classList.remove('active');
       });
-      [itemsSec, usersSec, paySec, settSec, admobSec].forEach(sec => {
+      [itemsSec, usersSec, paySec, settSec].forEach(sec => {
         if (sec) sec.style.display = 'none';
       });
 
@@ -4111,10 +3823,6 @@
         if (settSec) settSec.style.display = 'block';
         if (tabSettings) tabSettings.classList.add('active');
         populateAdminPaymentSettings();
-      } else if (tab === 'admob') {
-        if (admobSec) admobSec.style.display = 'block';
-        if (tabAdmob) tabAdmob.classList.add('active');
-        populateAdminAdmobSettings();
       }
     }
 
@@ -4140,188 +3848,6 @@
         if (qrPlaceholder) qrPlaceholder.style.display = 'block';
         if (removeBtn) removeBtn.style.display = 'none';
       }
-    }
-
-    // =========================================================================
-    // GOOGLE ADMOB CONFIGURATION & AD ENGINE
-    // =========================================================================
-    let admobConfig = {
-      adsEnabled: true,
-      appId: 'ca-app-pub-3940256099942544~3347511713', // Official Google Test App ID
-      bannerId: 'ca-app-pub-3940256099942544/6300978111', // Official Google Test Banner ID
-      interstitialId: 'ca-app-pub-3940256099942544/1033173712', // Official Google Test Interstitial ID
-      frequency: 6, // Show interstitial every 6 natural screen transitions
-      minCooldownMs: 60000, // 60 seconds minimum cooldown between interstitials
-      lastInterstitialTime: 0,
-      actionCounter: 0
-    };
-
-    let interstitialCountdownTimer = null;
-    let pendingInterstitialCallback = null;
-
-    function populateAdminAdmobSettings() {
-      const toggle = document.getElementById('admobEnabledToggle');
-      const appIdInput = document.getElementById('admobAppIdInput');
-      const bannerIdInput = document.getElementById('admobBannerIdInput');
-      const interstitialIdInput = document.getElementById('admobInterstitialIdInput');
-      const freqSelect = document.getElementById('admobFrequencySelect');
-
-      if (toggle) toggle.checked = !!admobConfig.adsEnabled;
-      if (appIdInput) appIdInput.value = admobConfig.appId || 'ca-app-pub-3940256099942544~3347511713';
-      if (bannerIdInput) bannerIdInput.value = admobConfig.bannerId || 'ca-app-pub-3940256099942544/6300978111';
-      if (interstitialIdInput) interstitialIdInput.value = admobConfig.interstitialId || 'ca-app-pub-3940256099942544/1033173712';
-      if (freqSelect) freqSelect.value = String(admobConfig.frequency || 6);
-    }
-
-    function saveAdminAdmobSettings() {
-      const toggle = document.getElementById('admobEnabledToggle');
-      const appIdInput = document.getElementById('admobAppIdInput');
-      const bannerIdInput = document.getElementById('admobBannerIdInput');
-      const interstitialIdInput = document.getElementById('admobInterstitialIdInput');
-      const freqSelect = document.getElementById('admobFrequencySelect');
-
-      admobConfig.adsEnabled = toggle ? toggle.checked : true;
-      admobConfig.appId = appIdInput && appIdInput.value.trim() ? appIdInput.value.trim() : 'ca-app-pub-3940256099942544~3347511713';
-      admobConfig.bannerId = bannerIdInput && bannerIdInput.value.trim() ? bannerIdInput.value.trim() : 'ca-app-pub-3940256099942544/6300978111';
-      admobConfig.interstitialId = interstitialIdInput && interstitialIdInput.value.trim() ? interstitialIdInput.value.trim() : 'ca-app-pub-3940256099942544/1033173712';
-      admobConfig.frequency = freqSelect ? parseInt(freqSelect.value, 10) || 6 : 6;
-
-      try {
-        localStorage.setItem('localbazaar_admob_config', JSON.stringify({
-          adsEnabled: admobConfig.adsEnabled,
-          appId: admobConfig.appId,
-          bannerId: admobConfig.bannerId,
-          interstitialId: admobConfig.interstitialId,
-          frequency: admobConfig.frequency
-        }));
-      } catch (e) {
-        console.warn('Failed to save AdMob config', e);
-      }
-
-      renderAdmobBannerState();
-      showCustomAlert(
-        'AdMob Settings Saved! 📢',
-        `AdMob configuration has been updated. Ads are currently ${admobConfig.adsEnabled ? 'ENABLED' : 'DISABLED'}.`,
-        'success'
-      );
-    }
-
-    function renderAdmobBannerState() {
-      const banner = document.getElementById('admobBannerBar');
-      if (!banner) return;
-      if (admobConfig.adsEnabled) {
-        banner.classList.remove('hidden');
-      } else {
-        banner.classList.add('hidden');
-      }
-    }
-
-    function previewInterstitialAd() {
-      showInterstitialAdModal(() => {
-        showCustomAlert('Preview Complete', 'AdMob Interstitial test ad was dismissed successfully.', 'info');
-      });
-    }
-
-    // Natural Screen Transition Trigger with Rate Limiting & Cooldown Protection
-    function maybeTriggerInterstitial(onComplete) {
-      if (!admobConfig.adsEnabled) {
-        if (onComplete) onComplete();
-        return;
-      }
-
-      admobConfig.actionCounter++;
-      const now = Date.now();
-      const timeSinceLast = now - (admobConfig.lastInterstitialTime || 0);
-
-      // Check frequency threshold & 60s minimum cooldown to prevent annoying users
-      if (admobConfig.actionCounter >= admobConfig.frequency && timeSinceLast >= admobConfig.minCooldownMs) {
-        admobConfig.actionCounter = 0;
-        admobConfig.lastInterstitialTime = now;
-        showInterstitialAdModal(onComplete);
-      } else {
-        if (onComplete) onComplete();
-      }
-    }
-
-    const sampleInterstitialCreatives = [
-      {
-        title: "Supercharge Your Local Store",
-        desc: "Reach 50,000+ local buyers around your area with Google Sponsored Ads & Meri Local Bazaar Verified Seller badge.",
-        cta: "Explore Seller Pro",
-        img: "app-icon.jpg"
-      },
-      {
-        title: "Best Second-Hand Mobiles & Laptops",
-        desc: "Verified electronics with warranty & local shop pickup available across all 28 Indian states.",
-        cta: "Browse Gadgets",
-        img: "app-icon.jpg"
-      },
-      {
-        title: "Local Fast Delivery & Daily Needs",
-        desc: "Get fresh groceries and daily essentials from trusted neighborhood shops at best prices.",
-        cta: "Order Nearby",
-        img: "app-icon.jpg"
-      }
-    ];
-
-    function showInterstitialAdModal(onComplete) {
-      pendingInterstitialCallback = onComplete;
-
-      const modal = document.getElementById('admobInterstitialModal');
-      const countText = document.getElementById('admobCountdownText');
-      const closeIcon = document.getElementById('admobCloseIcon');
-      const closeBtn = document.getElementById('admobInterstitialCloseBtn');
-      const titleEl = document.getElementById('admobInterstitialTitle');
-      const descEl = document.getElementById('admobInterstitialDesc');
-      const ctaText = document.getElementById('admobInterstitialCtaText');
-
-      // Pick a creative
-      const creative = sampleInterstitialCreatives[Math.floor(Math.random() * sampleInterstitialCreatives.length)];
-      if (titleEl) titleEl.textContent = creative.title;
-      if (descEl) descEl.textContent = creative.desc;
-      if (ctaText) ctaText.textContent = creative.cta;
-
-      let secondsLeft = 4;
-      if (countText) countText.textContent = `Ad closes in ${secondsLeft}s`;
-      if (closeIcon) closeIcon.style.display = 'none';
-
-      if (interstitialCountdownTimer) {
-        clearInterval(interstitialCountdownTimer);
-      }
-
-      interstitialCountdownTimer = setInterval(() => {
-        secondsLeft--;
-        if (secondsLeft > 0) {
-          if (countText) countText.textContent = `Ad closes in ${secondsLeft}s`;
-        } else {
-          clearInterval(interstitialCountdownTimer);
-          interstitialCountdownTimer = null;
-          if (countText) countText.textContent = 'Skip Ad';
-          if (closeIcon) closeIcon.style.display = 'inline-block';
-        }
-      }, 1000);
-
-      if (modal) modal.classList.add('active');
-    }
-
-    function closeInterstitialAd() {
-      if (interstitialCountdownTimer) {
-        clearInterval(interstitialCountdownTimer);
-        interstitialCountdownTimer = null;
-      }
-      const modal = document.getElementById('admobInterstitialModal');
-      if (modal) modal.classList.remove('active');
-
-      if (typeof pendingInterstitialCallback === 'function') {
-        const cb = pendingInterstitialCallback;
-        pendingInterstitialCallback = null;
-        cb();
-      }
-    }
-
-    function handleInterstitialCtaClick() {
-      closeInterstitialAd();
-      showCustomAlert('Ad Partner Visit', 'Navigating to sponsored offer...', 'info');
     }
 
     async function handleAdminQrFile(input) {
@@ -4636,15 +4162,6 @@
     // Session restore helper
     function initAuthSession() {
       try {
-        const savedAdmobConfig = localStorage.getItem('localbazaar_admob_config');
-        if (savedAdmobConfig) {
-          const parsedAdmob = JSON.parse(savedAdmobConfig);
-          if (parsedAdmob) {
-            admobConfig = { ...admobConfig, ...parsedAdmob };
-          }
-        }
-        renderAdmobBannerState();
-
         const savedConfig = localStorage.getItem('localbazaar_admin_payment_config');
         if (savedConfig) {
           const parsedConfig = JSON.parse(savedConfig);

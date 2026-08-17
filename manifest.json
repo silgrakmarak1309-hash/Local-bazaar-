@@ -2,20 +2,20 @@
   "name": "Meri Local Bazaar",
   "short_name": "LocalBazaar",
   "description": "Your Local Market, One App - Buy and sell groceries, mobiles, and local services",
-  "start_url": "./",
+  "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#15803d",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "app-icon.jpg",
+      "src": "/app-icon.jpg",
       "sizes": "192x192",
       "type": "image/jpeg",
       "purpose": "any maskable"
     },
     {
-      "src": "app-icon.jpg",
+      "src": "/app-icon.jpg",
       "sizes": "512x512",
       "type": "image/jpeg",
       "purpose": "any maskable"
